@@ -72,7 +72,6 @@ class _RootAppState extends State<RootApp> {
                         locale: provider.locale,
                         onGenerateTitle: (context) => 'Web Admin',
                         theme: AppThemeData.instance.light(),
-                        darkTheme: AppThemeData.instance.dark(),
                         themeMode: provider.themeMode,
                       );
                     },

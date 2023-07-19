@@ -108,7 +108,7 @@ class PortalMasterLayout extends StatelessWidget {
       selectedMenuUri: selectedMenuUri,
       onAccountButtonPressed: () => goRouter.go(RouteUri.myProfile),
       onLogoutButtonPressed: () => goRouter.go(RouteUri.logout),
-      sidebarConfigs: sidebarMenuConfigs,
+      sidebarConfigs: sideBarMenuConfigs_Verifikator,
     );
   }
 

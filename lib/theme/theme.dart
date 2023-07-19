@@ -64,7 +64,7 @@ class AppThemeData {
 
     final appSidebarTheme = AppSidebarTheme(
       backgroundColor: themeData.drawerTheme.backgroundColor!,
-      foregroundColor: const Color(0xFFC2C7D0),
+      foregroundColor: Colors.white,
       sidebarWidth: 304.0,
       sidebarLeftPadding: kDefaultPadding,
       sidebarTopPadding: kDefaultPadding,
@@ -95,69 +95,6 @@ class AppThemeData {
         bodyColor: kTextColor,
         displayColor: kTextColor,
       ),
-      extensions: [
-        AppButtonTheme.fromAppColorScheme(appColorScheme),
-        appColorScheme,
-        AppDataTableTheme.fromTheme(themeData),
-        appSidebarTheme,
-      ],
-    );
-  }
-
-  ThemeData dark() {
-    final themeData = ThemeData.dark().copyWith(
-      drawerTheme: const DrawerThemeData(backgroundColor: Color(0xFF343A40)),
-      appBarTheme: const AppBarTheme(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: kPrimaryColor,
-        foregroundColor: Colors.white,
-      ),
-      cardTheme: const CardTheme(
-        margin: EdgeInsets.zero,
-      ),
-    );
-
-    final appColorScheme = AppColorScheme(
-      primary: kPrimaryColor,
-      secondary: kSecondaryColor,
-      error: kErrorColor,
-      success: kSuccessColor,
-      info: kInfoColor,
-      warning: kWarningColor,
-      hyperlink: const Color(0xFF6BBBF7),
-      buttonTextBlack: kTextColor,
-      buttonTextDisabled: Colors.white.withOpacity(0.38),
-    );
-
-    final appSidebarTheme = AppSidebarTheme(
-      backgroundColor: themeData.drawerTheme.backgroundColor!,
-      foregroundColor: const Color(0xFFC2C7D0),
-      sidebarWidth: 304.0,
-      sidebarLeftPadding: kDefaultPadding,
-      sidebarTopPadding: kDefaultPadding,
-      sidebarRightPadding: kDefaultPadding,
-      sidebarBottomPadding: kDefaultPadding,
-      headerUserProfileRadius: 20.0,
-      headerUsernameFontSize: 14.0,
-      headerTextButtonFontSize: 14.0,
-      menuFontSize: 14.0,
-      menuBorderRadius: 5.0,
-      menuLeftPadding: 0.0,
-      menuTopPadding: 2.0,
-      menuRightPadding: 0.0,
-      menuBottomPadding: 2.0,
-      menuHoverColor: Colors.white.withOpacity(0.2),
-      menuSelectedFontColor: Colors.white,
-      menuSelectedBackgroundColor: appColorScheme.primary,
-      menuExpandedBackgroundColor: Colors.white.withOpacity(0.1),
-      menuExpandedHoverColor: Colors.white.withOpacity(0.1),
-      menuExpandedChildLeftPadding: 4.0,
-      menuExpandedChildTopPadding: 2.0,
-      menuExpandedChildRightPadding: 4.0,
-      menuExpandedChildBottomPadding: 2.0,
-    );
-
-    return themeData.copyWith(
       extensions: [
         AppButtonTheme.fromAppColorScheme(appColorScheme),
         appColorScheme,
