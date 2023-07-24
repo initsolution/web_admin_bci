@@ -174,7 +174,7 @@ class _SidebarState extends State<Sidebar> {
             currentLocation,
           );
         }
-      }).toList(growable: false) : sideBarMenuConfigs_Verifikator.map<Widget>((menu) {
+      }).toList(growable: false) : sidebarMenuConfigs.map<Widget>((menu) {
         if (menu.children.isEmpty) {
           return _sidebarMenu(
             context,

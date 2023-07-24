@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 
 class EmployeeScreen extends StatefulWidget {
@@ -12,14 +13,14 @@ class EmployeeScreen extends StatefulWidget {
 class _EmployeeScreenState extends State<EmployeeScreen> {
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    // final themeData = Theme.of(context);
     return PortalMasterLayout(
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Text(
-            'Employee Screen',
-            style: themeData.textTheme.headlineMedium,
+          const Header(
+            title: 'Employee',
+            subMenu: 'submenu employee',
           ),
           Table(
             border: TableBorder.all(),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/app_router.dart';
-import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/sidebar.dart';
 
 final sidebarMenuConfigs = [
