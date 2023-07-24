@@ -11,7 +11,7 @@ final sidebarMenuConfigs = [
   ),
   SidebarMenuConfig(
     uri: RouteUri.site,
-    icon: Icons.edit_note_rounded,
+    icon: Icons.cell_tower,
     title: (context) => 'Site',
   ),
   SidebarMenuConfig(
@@ -26,19 +26,32 @@ final sidebarMenuConfigs = [
   ),
 ];
 
-const localeMenuConfigs = [
-  LocaleMenuConfig(
-    languageCode: 'en',
-    name: 'English',
+final sideBarMenuConfigs_Verifikator = [
+  SidebarMenuConfig(
+    uri: RouteUri.dashboard,
+    icon: Icons.dashboard_rounded,
+    title: (context) => 'Dashboard',
   ),
-  LocaleMenuConfig(
-    languageCode: 'zh',
-    scriptCode: 'Hans',
-    name: '中文 (简体)',
-  ),
-  LocaleMenuConfig(
-    languageCode: 'zh',
-    scriptCode: 'Hant',
-    name: '中文 (繁體)',
+  SidebarMenuConfig(
+    uri: RouteUri.task,
+    icon: Icons.task,
+    title: (context) => 'Task',
   ),
 ];
+
+// const localeMenuConfigs = [
+//   LocaleMenuConfig(
+//     languageCode: 'en',
+//     name: 'English',
+//   ),
+//   LocaleMenuConfig(
+//     languageCode: 'zh',
+//     scriptCode: 'Hans',
+//     name: '中文 (简体)',
+//   ),
+//   LocaleMenuConfig(
+//     languageCode: 'zh',
+//     scriptCode: 'Hant',
+//     name: '中文 (繁體)',
+//   ),
+// ];
