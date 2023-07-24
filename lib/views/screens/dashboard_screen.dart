@@ -39,9 +39,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Text(
-            'Dashboard',
-            style: themeData.textTheme.headlineMedium,
+          Card(
+            child: Row(
+              children: [
+                Text(
+                  'Dashboard',
+                  style: themeData.textTheme.headlineMedium,
+                ),
+                Text(
+                  'Akun',
+                  style: themeData.textTheme.headlineMedium,
+                  textAlign: TextAlign.right,
+                ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),

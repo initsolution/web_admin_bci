@@ -52,27 +52,6 @@ class PortalMasterLayout extends StatelessWidget {
         : null);
 
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: (drawer != null),
-        title: ResponsiveAppBarTitle(
-          onAppBarTitlePressed: () => GoRouter.of(context).go(RouteUri.home),
-        ),
-        // actions: [
-        // _toggleThemeButton(context),
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 4.0),
-        //   child: VerticalDivider(
-        //     width: 1.0,
-        //     thickness: 1.0,
-        //     color: themeData.appBarTheme.foregroundColor!.withOpacity(0.5),
-        //     indent: 14.0,
-        //     endIndent: 14.0,
-        //   ),
-        // ),
-        // _changeLanguageButton(context),
-        // const SizedBox(width: kDefaultPadding * 0.5),
-        // ],
-      ),
       drawer: drawer,
       drawerEnableOpenDragGesture: false,
       onDrawerChanged: onDrawerChanged,

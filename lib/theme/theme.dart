@@ -31,7 +31,8 @@ class AppThemeData {
         foregroundColor: Colors.white,
       ),
       scaffoldBackgroundColor: kScreenBackgroundColor,
-      drawerTheme: const DrawerThemeData(backgroundColor: Color(0xFF343A40)),
+      drawerTheme: const DrawerThemeData(
+          backgroundColor: kPrimaryColor), //sidebar background
       colorScheme: const ColorScheme(
         brightness: Brightness.light,
         primary: kPrimaryColor,
@@ -51,7 +52,7 @@ class AppThemeData {
     );
 
     final appColorScheme = AppColorScheme(
-      primary: kPrimaryColor,
+      primary: kInfoColor, //setting selected item
       secondary: kSecondaryColor,
       error: kErrorColor,
       success: kSuccessColor,
@@ -64,7 +65,7 @@ class AppThemeData {
 
     final appSidebarTheme = AppSidebarTheme(
       backgroundColor: themeData.drawerTheme.backgroundColor!,
-      foregroundColor: const Color(0xFFC2C7D0),
+      foregroundColor: Colors.white, //default textcolor sidebar
       sidebarWidth: 304.0,
       sidebarLeftPadding: kDefaultPadding,
       sidebarTopPadding: kDefaultPadding,
@@ -80,7 +81,7 @@ class AppThemeData {
       menuRightPadding: 0.0,
       menuBottomPadding: 2.0,
       menuHoverColor: Colors.white.withOpacity(0.2),
-      menuSelectedFontColor: Colors.white,
+      menuSelectedFontColor: Colors.yellow, //selected textcolor sidebar
       menuSelectedBackgroundColor: appColorScheme.primary,
       menuExpandedBackgroundColor: Colors.white.withOpacity(0.1),
       menuExpandedHoverColor: Colors.white.withOpacity(0.1),
