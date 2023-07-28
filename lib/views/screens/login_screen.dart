@@ -1,8 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/providers/employee_provider.dart';
+import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
 import 'package:flutter_web_ptb/utils/app_focus_helper.dart';
@@ -11,18 +14,48 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final _formData = FormData();
 
   var _isFormLoading = false;
+
+  _doLogin() {
+    if (_formKey.currentState?.validate() ?? false) {
+      // Validation passed.
+      _formKey.currentState!.save();
+
+      // setState(() => _isFormLoading = true);
+
+      // Future.delayed(const Duration(seconds: 1), () async {
+      //   if (_formData.username != 'admin' || _formData.password != 'admin') {
+      //     onError.call('Invalid username or password.');
+      //   } else {
+      //     await userDataProvider.setUserDataAsync(
+      //       username: 'Admin ABC',
+      //       userProfileImageUrl: 'https://picsum.photos/id/1005/300/300',
+      //     );
+
+      //     onSuccess.call();
+      //   }
+
+      //   setState(() => _isFormLoading = false);
+      // });
+
+      // _formData.username
+      ref
+          .read(employeeNotifierProvider.notifier)
+          .loginEmployee(_formData.username, _formData.password);
+      // setState(() => _isFormLoading = false);
+    }
+  }
 
   Future<void> _doLoginAsync({
     required UserDataProvider userDataProvider,
@@ -74,7 +107,29 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
+    ref.listen<EmployeeState>(employeeNotifierProvider, (prev, next) {
+      debugPrint(
+          'state prev : ${prev.toString()} state next: ${next.toString()}');
+      if (next is EmployeeLoginHTTPResponse) {
+        //status code 404 -> user tidak ditemukan
+        //status code 401 -> password salah
+        //status code 202 -> betul
+        String message = next.httpResponse.data['message'];
+        int statusCode = next.httpResponse.data['statusCode'];
 
+        // debugPrint(next.httpResponse.data.toString());
+        debugPrint('message : $message status code : $statusCode');
+
+        if (statusCode == 202) {
+          debugPrint('masuk if');
+          // token di var message
+          GoRouter.of(context).go(RouteUri.home);
+        } else {
+          debugPrint('masuk else');
+          // tampilkan message error
+        }
+      }
+    });
     return PublicMasterLayout(
       body: SingleChildScrollView(
         child: Align(
@@ -121,8 +176,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: FormBuilderTextField(
                               name: 'username',
                               decoration: const InputDecoration(
-                                labelText: 'Username',
-                                hintText: 'Username',
+                                labelText: 'email',
+                                hintText: 'Email',
                                 helperText: '* Demo username: admin',
                                 border: OutlineInputBorder(),
                                 floatingLabelBehavior:
@@ -164,16 +219,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                 style: themeData
                                     .extension<AppButtonTheme>()!
                                     .primaryElevated,
-                                onPressed: (_isFormLoading
-                                    ? null
-                                    : () => _doLoginAsync(
-                                          userDataProvider:
-                                              context.read<UserDataProvider>(),
-                                          onSuccess: () =>
-                                              _onLoginSuccess(context),
-                                          onError: (message) =>
-                                              _onLoginError(context, message),
-                                        )),
+                                onPressed:
+                                    (_isFormLoading ? null : () => _doLogin()
+                                    // _doLoginAsync(
+                                    //       userDataProvider:
+                                    //           context.read<UserDataProvider>(),
+                                    //       onSuccess: () =>
+                                    //           _onLoginSuccess(context),
+                                    //       onError: (message) =>
+                                    //           _onLoginError(context, message),
+                                    //     )
+
+                                    ),
                                 child: const Text('Login'),
                               ),
                             ),
