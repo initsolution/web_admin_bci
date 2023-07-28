@@ -6,9 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Environment.init(
-    apiBaseUrl: 'https://example.com',
-  );
+  Environment.init();
 
   runApp(const ProviderScope(child: RootApp()));
 }

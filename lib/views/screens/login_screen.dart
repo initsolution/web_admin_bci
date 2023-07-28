@@ -31,25 +31,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       // Validation passed.
       _formKey.currentState!.save();
-
-      // setState(() => _isFormLoading = true);
-
-      // Future.delayed(const Duration(seconds: 1), () async {
-      //   if (_formData.username != 'admin' || _formData.password != 'admin') {
-      //     onError.call('Invalid username or password.');
-      //   } else {
-      //     await userDataProvider.setUserDataAsync(
-      //       username: 'Admin ABC',
-      //       userProfileImageUrl: 'https://picsum.photos/id/1005/300/300',
-      //     );
-
-      //     onSuccess.call();
-      //   }
-
-      //   setState(() => _isFormLoading = false);
-      // });
-
-      // _formData.username
       ref
           .read(employeeNotifierProvider.notifier)
           .loginEmployee(_formData.username, _formData.password);
@@ -57,34 +38,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  Future<void> _doLoginAsync({
+  Future<void> _loginAsync({
     required UserDataProvider userDataProvider,
+    required token,
+    required username,
     required VoidCallback onSuccess,
-    required void Function(String message) onError,
   }) async {
-    AppFocusHelper.instance.requestUnfocus();
+    await userDataProvider.setUserDataAsync(
+      username: username,
+      token: token,
+    );
 
-    if (_formKey.currentState?.validate() ?? false) {
-      // Validation passed.
-      _formKey.currentState!.save();
-
-      setState(() => _isFormLoading = true);
-
-      Future.delayed(const Duration(seconds: 1), () async {
-        if (_formData.username != 'admin' || _formData.password != 'admin') {
-          onError.call('Invalid username or password.');
-        } else {
-          await userDataProvider.setUserDataAsync(
-            username: 'Admin ABC',
-            userProfileImageUrl: 'https://picsum.photos/id/1005/300/300',
-          );
-
-          onSuccess.call();
-        }
-
-        setState(() => _isFormLoading = false);
-      });
-    }
+    onSuccess.call();
   }
 
   void _onLoginSuccess(BuildContext context) {
@@ -123,7 +88,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         if (statusCode == 202) {
           debugPrint('masuk if');
           // token di var message
-          GoRouter.of(context).go(RouteUri.home);
+          // GoRouter.of(context).go(RouteUri.home);
+          _loginAsync(
+            userDataProvider: context.read<UserDataProvider>(),
+            onSuccess: () => _onLoginSuccess(context), token: message, username: _formData.username,
+          );
         } else {
           debugPrint('masuk else');
           // tampilkan message error
@@ -220,17 +189,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     .extension<AppButtonTheme>()!
                                     .primaryElevated,
                                 onPressed:
-                                    (_isFormLoading ? null : () => _doLogin()
-                                    // _doLoginAsync(
-                                    //       userDataProvider:
-                                    //           context.read<UserDataProvider>(),
-                                    //       onSuccess: () =>
-                                    //           _onLoginSuccess(context),
-                                    //       onError: (message) =>
-                                    //           _onLoginError(context, message),
-                                    //     )
-
-                                    ),
+                                    (_isFormLoading ? null : () => _doLogin()                                    ),
                                 child: const Text('Login'),
                               ),
                             ),

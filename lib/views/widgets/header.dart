@@ -5,7 +5,8 @@ import 'package:flutter_web_ptb/theme/theme.dart';
 class Header extends StatelessWidget {
   final String title;
   final String subMenu;
-  const Header({super.key, required this.title, required this.subMenu});
+  final String userName;
+  const Header({super.key, required this.title, required this.subMenu, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -32,25 +33,18 @@ class Header extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            const ProfileCard(),
+            ProfileCard(userName),
           ],
         ),
       ),
     );
   }
-}
 
-class ProfileCard extends StatelessWidget {
-  const ProfileCard({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget ProfileCard(String userName){
     return Container(
       margin: const EdgeInsets.only(left: kDefaultPadding),
       padding: const EdgeInsets.symmetric(
-        horizontal: kDefaultPadding,
+        horizontal: kDefaultPadding /3 ,
         vertical: kDefaultPadding / 2,
       ),
       decoration: BoxDecoration(
@@ -64,11 +58,11 @@ class ProfileCard extends StatelessWidget {
             "assets/images/profile_pic.jpg",
             height: 38,
           ),
-          const Padding(
-              padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
               child: Text(
-                "admin@gmail.com",
-                style: TextStyle(color: Colors.white),
+                userName,
+                style: const TextStyle(color: Colors.white),
               )),
           const Icon(
             Icons.keyboard_arrow_down,
@@ -79,3 +73,4 @@ class ProfileCard extends StatelessWidget {
     );
   }
 }
+

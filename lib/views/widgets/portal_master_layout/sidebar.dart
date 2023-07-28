@@ -143,69 +143,71 @@ class _SidebarState extends State<Sidebar> {
     var data = 1;
 
     return Column(
-      children: data == 0? sidebarMenuConfigs.map<Widget>((menu) {
-        if (menu.children.isEmpty) {
-          return _sidebarMenu(
-            context,
-            EdgeInsets.fromLTRB(
-              sidebarTheme.menuLeftPadding,
-              sidebarTheme.menuTopPadding,
-              sidebarTheme.menuRightPadding,
-              sidebarTheme.menuBottomPadding,
-            ),
-            menu.uri,
-            menu.icon,
-            menu.title(context),
-            (currentLocation.startsWith(menu.uri)),
-          );
-        } else {
-          return _expandableSidebarMenu(
-            context,
-            EdgeInsets.fromLTRB(
-              sidebarTheme.menuLeftPadding,
-              sidebarTheme.menuTopPadding,
-              sidebarTheme.menuRightPadding,
-              sidebarTheme.menuBottomPadding,
-            ),
-            menu.uri,
-            menu.icon,
-            menu.title(context),
-            menu.children,
-            currentLocation,
-          );
-        }
-      }).toList(growable: false) : sidebarMenuConfigs.map<Widget>((menu) {
-        if (menu.children.isEmpty) {
-          return _sidebarMenu(
-            context,
-            EdgeInsets.fromLTRB(
-              sidebarTheme.menuLeftPadding,
-              sidebarTheme.menuTopPadding,
-              sidebarTheme.menuRightPadding,
-              sidebarTheme.menuBottomPadding,
-            ),
-            menu.uri,
-            menu.icon,
-            menu.title(context),
-            (currentLocation.startsWith(menu.uri)),
-          );
-        } else {
-          return _expandableSidebarMenu(
-            context,
-            EdgeInsets.fromLTRB(
-              sidebarTheme.menuLeftPadding,
-              sidebarTheme.menuTopPadding,
-              sidebarTheme.menuRightPadding,
-              sidebarTheme.menuBottomPadding,
-            ),
-            menu.uri,
-            menu.icon,
-            menu.title(context),
-            menu.children,
-            currentLocation,
-          );
-        }
-      }).toList(growable: false),
+      children: data == 0
+          ? sidebarMenuConfigs.map<Widget>((menu) {
+              if (menu.children.isEmpty) {
+                return _sidebarMenu(
+                  context,
+                  EdgeInsets.fromLTRB(
+                    sidebarTheme.menuLeftPadding,
+                    sidebarTheme.menuTopPadding,
+                    sidebarTheme.menuRightPadding,
+                    sidebarTheme.menuBottomPadding,
+                  ),
+                  menu.uri,
+                  menu.icon,
+                  menu.title(context),
+                  (currentLocation.startsWith(menu.uri)),
+                );
+              } else {
+                return _expandableSidebarMenu(
+                  context,
+                  EdgeInsets.fromLTRB(
+                    sidebarTheme.menuLeftPadding,
+                    sidebarTheme.menuTopPadding,
+                    sidebarTheme.menuRightPadding,
+                    sidebarTheme.menuBottomPadding,
+                  ),
+                  menu.uri,
+                  menu.icon,
+                  menu.title(context),
+                  menu.children,
+                  currentLocation,
+                );
+              }
+            }).toList(growable: false)
+          : sidebarMenuConfigs.map<Widget>((menu) {
+              if (menu.children.isEmpty) {
+                return _sidebarMenu(
+                  context,
+                  EdgeInsets.fromLTRB(
+                    sidebarTheme.menuLeftPadding,
+                    sidebarTheme.menuTopPadding,
+                    sidebarTheme.menuRightPadding,
+                    sidebarTheme.menuBottomPadding,
+                  ),
+                  menu.uri,
+                  menu.icon,
+                  menu.title(context),
+                  (currentLocation.startsWith(menu.uri)),
+                );
+              } else {
+                return _expandableSidebarMenu(
+                  context,
+                  EdgeInsets.fromLTRB(
+                    sidebarTheme.menuLeftPadding,
+                    sidebarTheme.menuTopPadding,
+                    sidebarTheme.menuRightPadding,
+                    sidebarTheme.menuBottomPadding,
+                  ),
+                  menu.uri,
+                  menu.icon,
+                  menu.title(context),
+                  menu.children,
+                  currentLocation,
+                );
+              }
+            }).toList(growable: false),
     );
   }
 
@@ -366,15 +368,13 @@ class SidebarHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            Selector<UserDataProvider, String>(
-              selector: (context, provider) => provider.userProfileImageUrl,
-              builder: (context, value, child) {
-                return CircleAvatar(
-                  backgroundColor: Colors.white,
-                  backgroundImage: NetworkImage(value),
-                  radius: 20.0,
-                );
-              },
+            CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 20.0,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.asset("assets/hospital_ic.png"),
+              ),
             ),
             const SizedBox(width: kDefaultPadding * 0.5),
             Selector<UserDataProvider, String>(

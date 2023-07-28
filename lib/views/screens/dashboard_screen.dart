@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_color_scheme.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/card_elements.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -40,9 +42,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          const Header(
-            title: 'Dashboard',
-            subMenu: 'submenu dashboard',
+          Selector<UserDataProvider, String>(
+            selector: (context, provider) => provider.username,
+            builder: (context, value, child) {
+              return Header(
+                title: 'Dashboard',
+                subMenu: 'submenu dashboard',
+                userName: value,
+              );
+            },
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),

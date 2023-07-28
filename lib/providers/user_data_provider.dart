@@ -3,10 +3,10 @@ import 'package:flutter_web_ptb/constants/values.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserDataProvider extends ChangeNotifier {
-  var _userProfileImageUrl = '';
+  var _token = '';
   var _username = '';
 
-  String get userProfileImageUrl => _userProfileImageUrl;
+  String get token => _token;
 
   String get username => _username;
 
@@ -14,25 +14,25 @@ class UserDataProvider extends ChangeNotifier {
     final sharedPref = await SharedPreferences.getInstance();
 
     _username = sharedPref.getString(StorageKeys.username) ?? '';
-    _userProfileImageUrl =
-        sharedPref.getString(StorageKeys.userProfileImageUrl) ?? '';
+    _token =
+        sharedPref.getString(StorageKeys.token) ?? '';
 
     notifyListeners();
   }
 
   Future<void> setUserDataAsync({
-    String? userProfileImageUrl,
+    String? token,
     String? username,
   }) async {
     final sharedPref = await SharedPreferences.getInstance();
     var shouldNotify = false;
 
-    if (userProfileImageUrl != null &&
-        userProfileImageUrl != _userProfileImageUrl) {
-      _userProfileImageUrl = userProfileImageUrl;
+    if (token != null &&
+        token != _token) {
+      _token = token;
 
       await sharedPref.setString(
-          StorageKeys.userProfileImageUrl, _userProfileImageUrl);
+          StorageKeys.token, _token);
 
       shouldNotify = true;
     }
@@ -54,10 +54,10 @@ class UserDataProvider extends ChangeNotifier {
     final sharedPref = await SharedPreferences.getInstance();
 
     await sharedPref.remove(StorageKeys.username);
-    await sharedPref.remove(StorageKeys.userProfileImageUrl);
+    await sharedPref.remove(StorageKeys.token);
 
     _username = '';
-    _userProfileImageUrl = '';
+    _token = '';
 
     notifyListeners();
   }
