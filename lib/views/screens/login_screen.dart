@@ -40,16 +40,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _loginAsync({
     required UserDataProvider userDataProvider,
-    required token,
+    required response,
     required username,
     required VoidCallback onSuccess,
+    required void Function(String message) onError,
   }) async {
-    await userDataProvider.setUserDataAsync(
-      username: username,
-      token: token,
-    );
+    String message = response['message'];
+    int statusCode = response['statusCode'];
 
-    onSuccess.call();
+    if (statusCode == 202) {
+      await userDataProvider.setUserDataAsync(
+        username: username,
+        token: message,
+      );
+      onSuccess.call();
+    } else {
+      // debugPrint('masuk else');
+      // tampilkan message error
+      onError.call('$message');
+    }
   }
 
   void _onLoginSuccess(BuildContext context) {
@@ -85,18 +94,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // debugPrint(next.httpResponse.data.toString());
         debugPrint('message : $message status code : $statusCode');
 
-        if (statusCode == 202) {
-          debugPrint('masuk if');
-          // token di var message
-          // GoRouter.of(context).go(RouteUri.home);
-          _loginAsync(
-            userDataProvider: context.read<UserDataProvider>(),
-            onSuccess: () => _onLoginSuccess(context), token: message, username: _formData.username,
-          );
-        } else {
-          debugPrint('masuk else');
-          // tampilkan message error
-        }
+        // if (statusCode == 202) {
+        // debugPrint('masuk if');
+        // token di var message
+        // GoRouter.of(context).go(RouteUri.home);
+        _loginAsync(
+          userDataProvider: context.read<UserDataProvider>(),
+          onSuccess: () => _onLoginSuccess(context),
+          onError: (message) => _onLoginError(context, message),
+          response: next.httpResponse.data,
+          username: _formData.username,
+        );
+        // } else {
+        // debugPrint('masuk else');
+        // tampilkan message error
+        // }
       }
     });
     return PublicMasterLayout(
@@ -189,7 +201,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                     .extension<AppButtonTheme>()!
                                     .primaryElevated,
                                 onPressed:
-                                    (_isFormLoading ? null : () => _doLogin()                                    ),
+                                    (_isFormLoading ? null : () => _doLogin()),
                                 child: const Text('Login'),
                               ),
                             ),
