@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:provider/provider.dart';
@@ -87,6 +88,16 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               ),
             ],
           ),
+          ElevatedButton(
+              onPressed: () => {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Container(child: DialogAddEmployee());
+                      },
+                    ),
+                  },
+              child: Text('click me'))
         ],
       ),
     );
