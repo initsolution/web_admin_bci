@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
-<<<<<<< HEAD
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
-=======
 import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
->>>>>>> refs/remotes/origin/master
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 // import 'package:provider/provider.dart';
@@ -79,7 +76,6 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
               Center(child: tableEmployee()),
             ],
           ),
-<<<<<<< HEAD
           // Table(
           //   border: TableBorder.all(),
           //   columnWidths: const <int, TableColumnWidth>{
@@ -136,7 +132,6 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
           //     ),
           //   ],
           // ),
-=======
           ElevatedButton(
               onPressed: () => {
                     showDialog(
@@ -147,7 +142,6 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                     ),
                   },
               child: Text('click me'))
->>>>>>> refs/remotes/origin/master
         ],
       ),
     );
