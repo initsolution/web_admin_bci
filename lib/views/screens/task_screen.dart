@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
@@ -8,15 +9,16 @@ import 'package:provider/provider.dart';
 
 import '../../providers/user_data_provider.dart';
 
-class TaskScreen extends StatefulWidget {
+class TaskScreen extends ConsumerStatefulWidget {
   const TaskScreen({super.key});
 
   @override
-  State<TaskScreen> createState() => _TaskScreenState();
+  ConsumerState<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen> {
+class _TaskScreenState extends ConsumerState<TaskScreen> {
   final DataTableSource _data = MyData();
+
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);

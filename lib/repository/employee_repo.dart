@@ -10,7 +10,8 @@ abstract class EmployeeRepo {
   factory EmployeeRepo(Dio dio, {String baseUrl}) = _EmployeeRepo;
 
   @GET('/employee')
-  Future<List<Employee>> getAllEmployee(Map<String, dynamic>? header);
+  Future<HttpResponse<dynamic>> getAllEmployee(
+      @Header('Authorization') String token, Map<String, dynamic>? header);
 
   @POST('/employee')
   Future<HttpResponse> createEmployee(@Body() Employee employee);

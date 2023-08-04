@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/master_layout_config.dart';
+import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_sidebar_theme.dart';
 import 'package:go_router/go_router.dart';
@@ -32,7 +34,7 @@ class SidebarChildMenuConfig {
   });
 }
 
-class Sidebar extends StatefulWidget {
+class Sidebar extends ConsumerStatefulWidget {
   final bool autoSelectMenu;
   final String? selectedMenuUri;
   final void Function() onAccountButtonPressed;
@@ -49,10 +51,10 @@ class Sidebar extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<Sidebar> createState() => _SidebarState();
+  ConsumerState<Sidebar> createState() => _SidebarState();
 }
 
-class _SidebarState extends State<Sidebar> {
+class _SidebarState extends ConsumerState<Sidebar> {
   final _scrollController = ScrollController();
 
   @override
@@ -252,7 +254,10 @@ class _SidebarState extends State<Sidebar> {
               ),
             ],
           ),
-          onTap: () => GoRouter.of(context).go(uri),
+          onTap: () {
+            ref.read(employeeNotifierProvider.notifier).getAllEmployee();
+            GoRouter.of(context).go(uri);
+          },
           selected: isSelected,
           selectedTileColor: sidebarTheme.menuSelectedBackgroundColor,
           shape: RoundedRectangleBorder(

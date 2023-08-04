@@ -21,14 +21,18 @@ class _EmployeeRepo implements EmployeeRepo {
   String? baseUrl;
 
   @override
-  Future<List<Employee>> getAllEmployee(Map<String, dynamic>? header) async {
+  Future<HttpResponse<dynamic>> getAllEmployee(
+    String token,
+    Map<String, dynamic>? header,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result =
-        await _dio.fetch<List<dynamic>>(_setStreamType<List<Employee>>(Options(
+        await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -44,10 +48,9 @@ class _EmployeeRepo implements EmployeeRepo {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    var value = _result.data!
-        .map((dynamic i) => Employee.fromJson(i as Map<String, dynamic>))
-        .toList();
-    return value;
+    final value = _result.data;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
   }
 
   @override
