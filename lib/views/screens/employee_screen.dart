@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
+import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart' as prov;
 // import 'package:provider/provider.dart';
 
-import '../../providers/user_data_provider.dart';
+// import '../../providers/user_data_provider.dart';
 
 class EmployeeScreen extends ConsumerStatefulWidget {
   const EmployeeScreen({super.key});
@@ -59,7 +63,17 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
-
+    ref.listen(employeeNotifierProvider, (previous, next) {
+      if (next is EmployeeErrorServer) {
+        if (next.statusCode == 401) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please login again')),
+          );
+          context.read<UserDataProvider>().clearUserDataAsync();
+          GoRouter.of(context).go(RouteUri.login);
+        }
+      }
+    });
     return PortalMasterLayout(
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
@@ -137,11 +151,11 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return Container(child: DialogAddEmployee());
+                        return SizedBox(child: DialogAddEmployee());
                       },
                     ),
                   },
-              child: Text('click me'))
+              child: const Text('click me'))
         ],
       ),
     );

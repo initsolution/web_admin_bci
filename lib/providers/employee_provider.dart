@@ -10,6 +10,10 @@ import 'package:riverpod/riverpod.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+String role = 'Maker';
+
+final employeeRoleProvider = StateProvider<String>((ref) => role);
+
 final employeeNotifierProvider =
     NotifierProvider<EmployeeNotifier, EmployeeState>(
   () {
@@ -44,25 +48,25 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
-
-      await employeeRepo
-          .getAllEmployee('Bearer $token', header)
-          .then((httpResponse) {
-        // debugPrint('status code emploee :  ${httpResponse.response.statusCode}');
-        if (httpResponse.response.statusCode == 200) {
-          // debugPrint('data emp : ${httpResponse.data}');
-          List<Employee> employees = (httpResponse.data as List)
-              .map((e) => Employee.fromJson(e))
-              .toList();
-          if (employees.isEmpty) {
-            state = EmployeeLoadedEmpty();
-          } else {
-            state = EmployeeLoaded(employees: employees);
-          }
+      final HttpResponse data =
+          await employeeRepo.getAllEmployee('Bearer $token', header);
+      if (data.response.statusCode == 200) {
+        // debugPrint('data emp : ${httpResponse.data}');
+        List<Employee> employees =
+            (data.data as List).map((e) => Employee.fromJson(e)).toList();
+        if (employees.isEmpty) {
+          state = EmployeeLoadedEmpty();
+        } else {
+          state = EmployeeLoaded(employees: employees);
         }
-      }).onError((error, stackTrace) {});
-    } catch (e) {
-      debugPrint(e.toString());
+      }
+    } on DioException catch (error) {
+      // debugPrint(error.response!.statusCode.toString());
+      if (error.response!.statusCode == 401) {
+        state = EmployeeErrorServer(
+            message: error.response!.statusMessage,
+            statusCode: error.response!.statusCode);
+      }
     }
   }
 
@@ -72,5 +76,11 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
     Map<String, dynamic> login = {'email': email, 'password': password};
     final HttpResponse httpResponse = await employeeRepo.login(login);
     state = EmployeeLoginHTTPResponse(httpResponse: httpResponse);
+  }
+
+  createEmployee(Employee employee) async {
+    state = EmployeeLoading();
+    final httpResponse = await employeeRepo.createEmployee(employee);
+    debugPrint(httpResponse.data.toString());
   }
 }

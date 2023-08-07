@@ -7,3 +7,7 @@
 > 04/08/2023
 > 1. Read all Employee
 > 2. Add config
+
+> 07/08/2023
+> 1. add error 401 (unnauthorized)
+> 2. create employee

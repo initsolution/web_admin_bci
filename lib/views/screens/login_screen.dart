@@ -57,7 +57,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } else {
       // debugPrint('masuk else');
       // tampilkan message error
-      onError.call('$message');
+      onError.call(message);
     }
   }
 

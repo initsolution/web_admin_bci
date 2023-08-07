@@ -14,8 +14,7 @@ class UserDataProvider extends ChangeNotifier {
     final sharedPref = await SharedPreferences.getInstance();
 
     _username = sharedPref.getString(StorageKeys.username) ?? '';
-    _token =
-        sharedPref.getString(StorageKeys.token) ?? '';
+    _token = sharedPref.getString(StorageKeys.token) ?? '';
 
     notifyListeners();
   }
@@ -27,12 +26,10 @@ class UserDataProvider extends ChangeNotifier {
     final sharedPref = await SharedPreferences.getInstance();
     var shouldNotify = false;
 
-    if (token != null &&
-        token != _token) {
+    if (token != null && token != _token) {
       _token = token;
 
-      await sharedPref.setString(
-          StorageKeys.token, _token);
+      await sharedPref.setString(StorageKeys.token, _token);
 
       shouldNotify = true;
     }

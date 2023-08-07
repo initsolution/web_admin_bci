@@ -22,17 +22,20 @@ class EmployeeLoaded extends EmployeeState {
 class EmployeeLoadedEmpty extends EmployeeState {}
 
 // ignore: must_be_immutable
-class EmployeeError extends EmployeeState {
+class EmployeeErrorServer extends EmployeeState {
   String? message;
-  EmployeeError({this.message});
+  int? statusCode;
+  EmployeeErrorServer({this.message, this.statusCode});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, statusCode];
 }
 
 class EmployeeLoginSuccess extends EmployeeState {}
 
 class EmployeeLoginLoading extends EmployeeState {}
+
+class EmployeeDataChangeSuccess extends EmployeeState {}
 
 // ignore: must_be_immutable
 class EmployeeLoginFailed extends EmployeeState {
