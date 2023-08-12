@@ -5,13 +5,11 @@ import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
-import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart' as prov;
 // import 'package:provider/provider.dart';
 
 // import '../../providers/user_data_provider.dart';
@@ -64,6 +62,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
   @override
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
+    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(employeeNotifierProvider, (previous, next) {
       if (next is EmployeeErrorServer) {
         if (next.statusCode == 401) {
@@ -80,10 +79,10 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          const Header(
-            title: 'Dashboard',
-            subMenu: 'submenu dashboard',
-            userName: 'none',
+          Header(
+            title: 'Employee',
+            subMenu: 'submenu employee',
+            userName: value,
           ),
           Column(
             children: [

@@ -107,7 +107,7 @@ class DialogAddEmployee extends ConsumerWidget {
               ),
               ElevatedButton(
                 onPressed: () => saveEmployee(ref),
-                child: Text('SAVE'),
+                child: const Text('SAVE'),
               ),
             ],
           ),

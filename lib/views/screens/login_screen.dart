@@ -6,15 +6,11 @@ import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
-import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
-import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
 import 'package:flutter_web_ptb/views/widgets/public_master_layout/public_master_layout.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -54,9 +50,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       //   token: message,
       // );
       await ref.read(userDataProvider.notifier).setUserDataAsync(
-        username: username,
-        token: message,
-      );
+            username: username,
+            token: message,
+          );
       onSuccess.call();
     } else {
       // debugPrint('masuk else');
@@ -66,10 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _onLoginSuccess(BuildContext context) {
-    debugPrint('loginsukses');
     GoRouter.of(context).go(RouteUri.home);
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
-    debugPrint('loginsukses1');
   }
 
   void _onLoginError(BuildContext context, String message) {

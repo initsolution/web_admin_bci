@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
 import 'package:flutter_web_ptb/views/screens/employee_screen.dart';
 import 'package:flutter_web_ptb/views/screens/error_screen.dart';
@@ -44,7 +42,6 @@ const List<String> publicRoutes = [
 ];
 
 GoRouter appRouter(bool isUserLoggedIn) {
-  debugPrint('is login= ${isUserLoggedIn}');
   return GoRouter(
     initialLocation: RouteUri.home,
     errorPageBuilder: (context, state) => NoTransitionPage<void>(

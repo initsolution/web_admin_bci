@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class LogoutScreen extends ConsumerStatefulWidget {
   const LogoutScreen({Key? key}) : super(key: key);

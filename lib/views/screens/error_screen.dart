@@ -14,9 +14,9 @@ class ErrorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final userDataProvider = context.read<UserDataProvider>();
-    var isUserLogin = ref.read(userDataProvider.notifier).isUserLoggedIn();
+    var isUserLoggedIn = ref.watch(userDataProvider.select((value) => value.username.isNotEmpty));
 
-    if (isUserLogin) {
+    if (isUserLoggedIn) {
       return PortalMasterLayout(
         body: _content(context),
       );

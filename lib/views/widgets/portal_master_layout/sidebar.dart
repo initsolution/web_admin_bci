@@ -3,11 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/master_layout_config.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
-import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_sidebar_theme.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class SidebarMenuConfig {
   final String uri;

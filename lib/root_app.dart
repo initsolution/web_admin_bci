@@ -5,7 +5,6 @@ import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme.dart';
 import 'package:flutter_web_ptb/utils/app_focus_helper.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class RootApp extends ConsumerStatefulWidget {
   const RootApp({Key? key}) : super(key: key);
@@ -28,16 +27,16 @@ class _RootAppState extends ConsumerState<RootApp> {
   //   return true;
   // }
 
-  Future<bool> _getDataAsync() async {
+  Future<void> _getDataAsync() async {
     await ref.read(userDataProvider.notifier).loadAsync();
-    return true;
   }
 
   @override
   Widget build(BuildContext context) {
     _getDataAsync();
-    var isUserLogin = ref.read(userDataProvider.notifier).isUserLoggedIn();
-    _appRouter = appRouter(isUserLogin);
+
+    var isUserLoggedIn = ref.watch(userDataProvider.select((value) => value.username.isNotEmpty));
+    _appRouter = appRouter(isUserLoggedIn);
     return GestureDetector(
         onTap: () {
           // Tap anywhere to dismiss soft keyboard.
