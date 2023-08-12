@@ -7,8 +7,9 @@ import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/user_data_provider.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
-import 'package:flutter_web_ptb/utils/app_focus_helper.dart';
+import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
 import 'package:flutter_web_ptb/views/widgets/public_master_layout/public_master_layout.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
@@ -39,7 +40,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _loginAsync({
-    required UserDataProvider userDataProvider,
     required response,
     required username,
     required VoidCallback onSuccess,
@@ -49,7 +49,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     int statusCode = response['statusCode'];
 
     if (statusCode == 202) {
-      await userDataProvider.setUserDataAsync(
+      // await userDataProvider.setUserDataAsync(
+      //   username: username,
+      //   token: message,
+      // );
+      await ref.read(userDataProvider.notifier).setUserDataAsync(
         username: username,
         token: message,
       );
@@ -62,7 +66,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _onLoginSuccess(BuildContext context) {
+    debugPrint('loginsukses');
     GoRouter.of(context).go(RouteUri.home);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardScreen()));
+    debugPrint('loginsukses1');
   }
 
   void _onLoginError(BuildContext context, String message) {
@@ -99,7 +106,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // token di var message
         // GoRouter.of(context).go(RouteUri.home);
         _loginAsync(
-          userDataProvider: context.read<UserDataProvider>(),
           onSuccess: () => _onLoginSuccess(context),
           onError: (message) => _onLoginError(context, message),
           response: next.httpResponse.data,

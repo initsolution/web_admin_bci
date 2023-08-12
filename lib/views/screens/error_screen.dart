@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
-import 'package:flutter_web_ptb/providers/user_data_provider.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_color_scheme.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:flutter_web_ptb/views/widgets/public_master_layout/public_master_layout.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
-class ErrorScreen extends StatelessWidget {
+class ErrorScreen extends ConsumerWidget {
   const ErrorScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final userDataProvider = context.read<UserDataProvider>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    // final userDataProvider = context.read<UserDataProvider>();
+    var isUserLogin = ref.read(userDataProvider.notifier).isUserLoggedIn();
 
-    if (userDataProvider.isUserLoggedIn()) {
+    if (isUserLogin) {
       return PortalMasterLayout(
         body: _content(context),
       );

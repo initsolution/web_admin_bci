@@ -1,65 +1,65 @@
-import 'package:flutter/widgets.dart';
-import 'package:flutter_web_ptb/constants/values.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:flutter/widgets.dart';
+// import 'package:flutter_web_ptb/constants/values.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
-class UserDataProvider extends ChangeNotifier {
-  var _token = '';
-  var _username = '';
+// class UserDataProvider extends ChangeNotifier {
+//   var _token = '';
+//   var _username = '';
 
-  String get token => _token;
+//   String get token => _token;
 
-  String get username => _username;
+//   String get username => _username;
 
-  Future<void> loadAsync() async {
-    final sharedPref = await SharedPreferences.getInstance();
+//   Future<void> loadAsync() async {
+//     final sharedPref = await SharedPreferences.getInstance();
 
-    _username = sharedPref.getString(StorageKeys.username) ?? '';
-    _token = sharedPref.getString(StorageKeys.token) ?? '';
+//     _username = sharedPref.getString(StorageKeys.username) ?? '';
+//     _token = sharedPref.getString(StorageKeys.token) ?? '';
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  Future<void> setUserDataAsync({
-    String? token,
-    String? username,
-  }) async {
-    final sharedPref = await SharedPreferences.getInstance();
-    var shouldNotify = false;
+//   Future<void> setUserDataAsync({
+//     String? token,
+//     String? username,
+//   }) async {
+//     final sharedPref = await SharedPreferences.getInstance();
+//     var shouldNotify = false;
 
-    if (token != null && token != _token) {
-      _token = token;
+//     if (token != null && token != _token) {
+//       _token = token;
 
-      await sharedPref.setString(StorageKeys.token, _token);
+//       await sharedPref.setString(StorageKeys.token, _token);
 
-      shouldNotify = true;
-    }
+//       shouldNotify = true;
+//     }
 
-    if (username != null && username != _username) {
-      _username = username;
+//     if (username != null && username != _username) {
+//       _username = username;
 
-      await sharedPref.setString(StorageKeys.username, _username);
+//       await sharedPref.setString(StorageKeys.username, _username);
 
-      shouldNotify = true;
-    }
+//       shouldNotify = true;
+//     }
 
-    if (shouldNotify) {
-      notifyListeners();
-    }
-  }
+//     if (shouldNotify) {
+//       notifyListeners();
+//     }
+//   }
 
-  Future<void> clearUserDataAsync() async {
-    final sharedPref = await SharedPreferences.getInstance();
+//   Future<void> clearUserDataAsync() async {
+//     final sharedPref = await SharedPreferences.getInstance();
 
-    await sharedPref.remove(StorageKeys.username);
-    await sharedPref.remove(StorageKeys.token);
+//     await sharedPref.remove(StorageKeys.username);
+//     await sharedPref.remove(StorageKeys.token);
 
-    _username = '';
-    _token = '';
+//     _username = '';
+//     _token = '';
 
-    notifyListeners();
-  }
+//     notifyListeners();
+//   }
 
-  bool isUserLoggedIn() {
-    return _username.isNotEmpty;
-  }
-}
+//   bool isUserLoggedIn() {
+//     return _username.isNotEmpty;
+//   }
+// }

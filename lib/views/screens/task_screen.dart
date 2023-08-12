@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:provider/provider.dart';
@@ -21,20 +22,16 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var value = ref.watch(userDataProvider.select((value) => value.username));
     final themeData = Theme.of(context);
     return PortalMasterLayout(
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Selector<UserDataProvider, String>(
-            selector: (context, provider) => provider.username,
-            builder: (context, value, child) {
-              return Header(
-                title: 'Task',
-                subMenu: 'submenu task',
-                userName: value,
-              );
-            },
+          Header(
+            title: 'Task',
+            subMenu: 'submenu task',
+            userName: value,
           ),
           Text(
             'Task Screen',

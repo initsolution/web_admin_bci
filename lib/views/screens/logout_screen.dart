@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
-import 'package:flutter_web_ptb/providers/user_data_provider.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class LogoutScreen extends StatefulWidget {
+class LogoutScreen extends ConsumerStatefulWidget {
   const LogoutScreen({Key? key}) : super(key: key);
 
   @override
-  State<LogoutScreen> createState() => _LogoutScreenState();
+  ConsumerState<LogoutScreen> createState() => _LogoutScreenState();
 }
 
-class _LogoutScreenState extends State<LogoutScreen> {
+class _LogoutScreenState extends ConsumerState<LogoutScreen> {
   Future<void> _doLogoutAsync({
-    required UserDataProvider userDataProvider,
     required VoidCallback onSuccess,
   }) async {
-    await userDataProvider.clearUserDataAsync();
+    await ref.read(userDataProvider.notifier).clearUserDataAsync();
 
     onSuccess.call();
   }
@@ -32,7 +32,6 @@ class _LogoutScreenState extends State<LogoutScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       // Clear local user data and redirect to login screen.
       await (_doLogoutAsync(
-        userDataProvider: context.read<UserDataProvider>(),
         onSuccess: () => _onLogoutSuccess(context),
       ));
     });

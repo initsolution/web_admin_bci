@@ -4,6 +4,7 @@ import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/master_layout_config.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/user_data_provider.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_sidebar_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -353,7 +354,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
   }
 }
 
-class SidebarHeader extends StatelessWidget {
+class SidebarHeader extends ConsumerWidget {
   final void Function() onAccountButtonPressed;
   final void Function() onLogoutButtonPressed;
 
@@ -364,10 +365,11 @@ class SidebarHeader extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // final lang = Lang.of(context);
     final themeData = Theme.of(context);
     final sidebarTheme = themeData.extension<AppSidebarTheme>()!;
+    var value = ref.watch(userDataProvider.select((value) => value.username));
 
     return Column(
       children: [
@@ -382,17 +384,12 @@ class SidebarHeader extends StatelessWidget {
               ),
             ),
             const SizedBox(width: kDefaultPadding * 0.5),
-            Selector<UserDataProvider, String>(
-              selector: (context, provider) => provider.username,
-              builder: (context, value, child) {
-                return Text(
-                  'Hi, $value',
-                  style: TextStyle(
-                    fontSize: sidebarTheme.headerUsernameFontSize,
-                    color: sidebarTheme.foregroundColor,
-                  ),
-                );
-              },
+            Text(
+              'Hi, $value',
+              style: TextStyle(
+                fontSize: sidebarTheme.headerUsernameFontSize,
+                color: sidebarTheme.foregroundColor,
+              ),
             ),
           ],
         ),

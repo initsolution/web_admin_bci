@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/providers/user_data_provider.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
 import 'package:flutter_web_ptb/views/screens/employee_screen.dart';
@@ -42,7 +43,8 @@ const List<String> publicRoutes = [
   // RouteUri.register, // Enable this line for actual authentication flow.
 ];
 
-GoRouter appRouter(UserDataProvider userDataProvider) {
+GoRouter appRouter(bool isUserLoggedIn) {
+  debugPrint('is login= ${isUserLoggedIn}');
   return GoRouter(
     initialLocation: RouteUri.home,
     errorPageBuilder: (context, state) => NoTransitionPage<void>(
@@ -102,13 +104,13 @@ GoRouter appRouter(UserDataProvider userDataProvider) {
         return null;
       } else if (publicRoutes.contains(state.matchedLocation)) {
         // Is public route.
-        if (userDataProvider.isUserLoggedIn()) {
+        if (isUserLoggedIn) {
           // User is logged in, redirect to home page.
           return RouteUri.home;
         }
       } else {
         // Not public route.
-        if (!userDataProvider.isUserLoggedIn()) {
+        if (!isUserLoggedIn) {
           // User is not logged in, redirect to login page.
           return RouteUri.login;
         }

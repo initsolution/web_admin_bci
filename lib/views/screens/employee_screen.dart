@@ -6,6 +6,7 @@ import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/user_data_provider.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
@@ -62,14 +63,15 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final themeData = Theme.of(context);
+    // final themeData = Theme.of(context);
     ref.listen(employeeNotifierProvider, (previous, next) {
       if (next is EmployeeErrorServer) {
         if (next.statusCode == 401) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Please login again')),
           );
-          context.read<UserDataProvider>().clearUserDataAsync();
+          // context.read<UserDataProvider>().clearUserDataAsync();
+          ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
       }
@@ -78,9 +80,10 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Text(
-            'Employee Screen',
-            style: themeData.textTheme.headlineMedium,
+          const Header(
+            title: 'Dashboard',
+            subMenu: 'submenu dashboard',
+            userName: 'none',
           ),
           Column(
             children: [

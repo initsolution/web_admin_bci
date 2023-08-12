@@ -151,7 +151,7 @@ class DialogAddEmployee extends ConsumerWidget {
 
   Widget getDropdownActive() {
     String? initialVal = "Vendor";
-    var func;
+    // var func;
 
     return DropdownButton(
       value: initialVal,
