@@ -11,3 +11,7 @@
 > 07/08/2023
 > 1. add error 401 (unnauthorized)
 > 2. create employee
+
+> 14/08/2023
+> 1. add jwt decoder
+> 2. remobe line

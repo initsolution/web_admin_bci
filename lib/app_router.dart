@@ -15,25 +15,25 @@ class RouteUri {
   static const String employee = '/employee';
   static const String task = '/task';
   static const String logout = '/logout';
-  static const String form = '/form';
-  static const String generalUi = '/general-ui';
-  static const String colors = '/colors';
-  static const String text = '/text';
-  static const String buttons = '/buttons';
-  static const String dialogs = '/dialogs';
   static const String error404 = '/404';
   static const String login = '/login';
-  static const String register = '/register';
-  static const String crud = '/crud';
-  static const String crudDetail = '/crud-detail';
-  static const String iframe = '/iframe';
+  // static const String form = '/form';
+  // static const String generalUi = '/general-ui';
+  // static const String colors = '/colors';
+  // static const String text = '/text';
+  // static const String buttons = '/buttons';
+  // static const String dialogs = '/dialogs';
+  // static const String register = '/register';
+  // static const String crud = '/crud';
+  // static const String crudDetail = '/crud-detail';
+  // static const String iframe = '/iframe';
 }
 
 const List<String> unrestrictedRoutes = [
   RouteUri.error404,
   RouteUri.logout,
   RouteUri.login, // Remove this line for actual authentication flow.
-  RouteUri.register, // Remove this line for actual authentication flow.
+  // RouteUri.register, // Remove this line for actual authentication flow.
 ];
 
 const List<String> publicRoutes = [

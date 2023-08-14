@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
+import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
@@ -11,6 +12,8 @@ import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/public_master_layout/public_master_layout.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -37,7 +40,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _loginAsync({
     required response,
-    required username,
     required VoidCallback onSuccess,
     required void Function(String message) onError,
   }) async {
@@ -45,18 +47,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     int statusCode = response['statusCode'];
 
     if (statusCode == 202) {
-      // await userDataProvider.setUserDataAsync(
-      //   username: username,
-      //   token: message,
-      // );
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(message)['employee'];
+      // bool isTokenExpired = JwtDecoder.isExpired(message);
+      if(DEBUG) {
+        debugPrint('decode token : ${decodedToken}');
+      }
+      var email = decodedToken['email'];
       await ref.read(userDataProvider.notifier).setUserDataAsync(
-            username: username,
+            username: email,
             token: message,
           );
       onSuccess.call();
     } else {
-      // debugPrint('masuk else');
-      // tampilkan message error
       onError.call(message);
     }
   }
@@ -102,7 +104,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           onSuccess: () => _onLoginSuccess(context),
           onError: (message) => _onLoginError(context, message),
           response: next.httpResponse.data,
-          username: _formData.username,
         );
         // } else {
         // debugPrint('masuk else');
@@ -156,9 +157,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: FormBuilderTextField(
                               name: 'username',
                               decoration: const InputDecoration(
-                                labelText: 'email',
+                                labelText: 'Email',
                                 hintText: 'Email',
-                                helperText: '* Demo username: admin',
+                                // helperText: '* Demo username: admin',
                                 border: OutlineInputBorder(),
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.always,
@@ -177,7 +178,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               decoration: const InputDecoration(
                                 labelText: 'Password',
                                 hintText: 'Password',
-                                helperText: '* Demo password: admin',
+                                // helperText: '* Demo password: admin',
                                 border: OutlineInputBorder(),
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.always,
