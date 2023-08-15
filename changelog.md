@@ -14,4 +14,7 @@
 
 > 14/08/2023
 > 1. add jwt decoder
-> 2. remobe line
+> 2. remove some settings
+
+> 15/08/2023
+> 1. experiment pdf

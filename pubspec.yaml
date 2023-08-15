@@ -47,6 +47,8 @@ dependencies:
   equatable: ^2.0.5
   flutter_riverpod: ^2.3.6
   jwt_decoder: ^2.0.1
+  pdf: ^3.10.4
+  path_provider: ^2.1.0
 
 dev_dependencies:
   flutter_test:
