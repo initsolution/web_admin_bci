@@ -84,13 +84,76 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
             subMenu: 'submenu employee',
             userName: value,
           ),
-          Column(
-            children: [
-              const SizedBox(
-                height: 10,
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: kDefaultPadding),
+            child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
               ),
-              Center(child: tableEmployee()),
-            ],
+              clipBehavior: Clip.antiAlias,
+              child: Container(
+                margin: const EdgeInsets.only(top: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () => {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return SizedBox(child: DialogAddEmployee());
+                              },
+                            ),
+                          },
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.filter_list),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.more_vert),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Center(child: tableEmployee())
+                  ],
+                ),
+              ),
+            ),
           ),
           // Table(
           //   border: TableBorder.all(),
@@ -148,16 +211,6 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
           //     ),
           //   ],
           // ),
-          ElevatedButton(
-              onPressed: () => {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SizedBox(child: DialogAddEmployee());
-                      },
-                    ),
-                  },
-              child: const Text('click me'))
         ],
       ),
     );

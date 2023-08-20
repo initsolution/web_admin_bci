@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_ptb/app_router.dart';
+import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/model/site.dart';
+import 'package:flutter_web_ptb/providers/site_provider.dart';
+import 'package:flutter_web_ptb/providers/site_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_add_site.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
+import 'package:flutter_web_ptb/views/widgets/card_elements.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
@@ -137,23 +145,173 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
   @override
   Widget build(BuildContext context) {
     var value = ref.watch(userDataProvider.select((value) => value.username));
-    final themeData = Theme.of(context);
+    ref.listen(siteNotifierProvider, (previous, next) {
+      if (next is SiteErrorServer) {
+        if (next.statusCode == 401) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please login again')),
+          );
+          // context.read<UserDataProvider>().clearUserDataAsync();
+          ref.read(userDataProvider.notifier).clearUserDataAsync();
+          GoRouter.of(context).go(RouteUri.login);
+        }
+      }
+    });
     return PortalMasterLayout(
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
           Header(
-            title: 'Site Screen',
-            subMenu: 'submenu site',
+            title: 'Data Site',
+            subMenu: 'All',
             userName: value,
           ),
-          ElevatedButton(
-              onPressed: () async {
-                anchor.click();
-              },
-              child: const Text('click me'))
+          const SizedBox(
+            height: 20,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: kDefaultPadding),
+            child: Card(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Container(
+                margin: const EdgeInsets.only(top: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () => {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return SizedBox(child: DialogAddSite());
+                              },
+                            ),
+                          },
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.filter_list),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.more_vert),
+                          onPressed: () {},
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Center(child: tableSite())
+                  ],
+                ),
+              ),
+            ),
+          ),
+          // ElevatedButton(
+          //   onPressed: () async {
+          //     anchor.click();
+          //   },
+          //   child: const Text('click me'),
+          // ),
         ],
       ),
     );
   }
+
+  Widget tableSite() {
+    return Center(child: Consumer(
+      builder: (context, ref, child) {
+        var state = ref.watch(siteNotifierProvider);
+        if(DEBUG) debugPrint('state : $state');
+        if (state is SiteLoaded) {
+          DataTableSource data = SiteData(sites: state.sites);
+          return PaginatedDataTable(
+            source: data,
+            header: const Text('Site'),
+            columns: const [
+              DataColumn(label: Text('ID')),
+              DataColumn(label: Text('Name')),
+              DataColumn(label: Text('Tower Type')),
+              DataColumn(label: Text('Tower Height')),
+              DataColumn(label: Text('Fabricator')),
+              DataColumn(label: Text('Tenants')),
+              DataColumn(label: Text('Address')),
+              DataColumn(label: Text('Regional')),
+              DataColumn(label: Text('Province')),
+              DataColumn(label: Text('Longitude')),
+              DataColumn(label: Text('Latitude')),
+            ],
+            columnSpacing: 100,
+            horizontalMargin: 10,
+            rowsPerPage: 10,
+            showCheckboxColumn: false,
+          );
+        } else if (state is SiteLoading) {
+          return const CircularProgressIndicator();
+        }
+        return Container();
+      },
+    ));
+  }
+}
+
+class SiteData extends DataTableSource {
+  final List<Site> sites;
+  SiteData({required this.sites});
+
+  @override
+  DataRow? getRow(int index) {
+    return DataRow(cells: [
+      DataCell(Text(sites[index].id!)),
+      DataCell(Text(sites[index].name!)),
+      DataCell(Text(sites[index].tower_type!)),
+      DataCell(Text(sites[index].tower_height!.toString())),
+      DataCell(Text(sites[index].fabricator!.toString())),
+      DataCell(Text(sites[index].tenants!.toString())),
+      DataCell(Text(sites[index].address!.toString())),
+      DataCell(Text(sites[index].kabupaten!.toString())),
+      DataCell(Text(sites[index].province!.toString())),
+      DataCell(Text(sites[index].longitude!.toString())),
+      DataCell(Text(sites[index].latitude!.toString())),
+    ]);
+  }
+
+  @override
+  bool get isRowCountApproximate => false;
+
+  @override
+  int get rowCount => sites.length;
+
+  @override
+  int get selectedRowCount => 0;
 }
