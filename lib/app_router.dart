@@ -3,8 +3,12 @@ import 'package:flutter_web_ptb/views/screens/employee_screen.dart';
 import 'package:flutter_web_ptb/views/screens/error_screen.dart';
 import 'package:flutter_web_ptb/views/screens/login_screen.dart';
 import 'package:flutter_web_ptb/views/screens/logout_screen.dart';
+import 'package:flutter_web_ptb/views/screens/masterasset_screen.dart';
+import 'package:flutter_web_ptb/views/screens/mastercategorychecklistpreventive_screen.dart';
+import 'package:flutter_web_ptb/views/screens/masterreportregulertorque_screen.dart';
 import 'package:flutter_web_ptb/views/screens/site_screen.dart';
 import 'package:flutter_web_ptb/views/screens/task_screen.dart';
+import 'package:flutter_web_ptb/views/screens/tenant_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class RouteUri {
@@ -13,6 +17,11 @@ class RouteUri {
   static const String myProfile = '/my-profile';
   static const String site = '/site';
   static const String employee = '/employee';
+  static const String tenant = '/tenant';
+  static const String masterAsset = '/masterasset';
+  static const String masterCategoryChecklistPreventive =
+      '/mastercategorychecklistpreventive';
+  static const String masterReportRegulerTorque = '/masterReportRegulerTorque';
   static const String task = '/task';
   static const String logout = '/logout';
   static const String error404 = '/404';
@@ -86,6 +95,34 @@ GoRouter appRouter(bool isUserLoggedIn) {
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
           child: const EmployeeScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteUri.tenant,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const TenantScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteUri.masterAsset,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const MasterAssetScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteUri.masterCategoryChecklistPreventive,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const MasterCategoryChecklistPreventiveScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteUri.masterReportRegulerTorque,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const MasterReportRegulerTorqueScreen(),
         ),
       ),
       GoRoute(

@@ -2,63 +2,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/values.dart';
-import 'package:flutter_web_ptb/model/site.dart';
-import 'package:flutter_web_ptb/providers/site_state.dart';
+import 'package:flutter_web_ptb/model/tenant.dart';
+import 'package:flutter_web_ptb/providers/tenant_state.dart';
+import 'package:flutter_web_ptb/repository/tenant_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-import '../repository/site_repo.dart';
 
-final siteNotifierProvider = NotifierProvider<SiteNotifier, SiteState>(
+bool isActive= false;
+
+final tenantIsActiveProvider = StateProvider<bool>((ref) => isActive);
+
+final tenantNotifierProvider = NotifierProvider<TenantNotifier, TenantState>(
   () {
-    return SiteNotifier(siteRepo: SiteRepo(Dio()));
+    return TenantNotifier(tenantRepo: TenantRepo(Dio()));
   },
 );
 
-class SiteNotifier extends Notifier<SiteState> {
-  final SiteRepo siteRepo;
+class TenantNotifier extends Notifier<TenantState> {
+  final TenantRepo tenantRepo;
 
-  SiteNotifier({required this.siteRepo});
+  TenantNotifier({required this.tenantRepo});
 
   @override
-  SiteState build() {
-    return SiteInitial();
+  TenantState build() {
+    return TenantInitial();
   }
 
-  getAllSite() async {
-    state = SiteLoading();
+  getAllTenant() async {
+    state = TenantLoading();
     Map<String, dynamic> header = {};
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
       final HttpResponse data =
-          await siteRepo.getAllSite('Bearer $token', header);
+          await tenantRepo.getAllTenant('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
-        List<Site> sites =
-            (data.data as List).map((e) => Site.fromJson(e)).toList();
-        if (sites.isEmpty) {
-          state = SiteLoadedEmpty();
+        List<Tenant> tenants =
+            (data.data as List).map((e) => Tenant.fromJson(e)).toList();
+        if (tenants.isEmpty) {
+          state = TenantLoadedEmpty();
         } else {
-          state = SiteLoaded(sites: sites);
+          state = TenantLoaded(tenants: tenants);
         }
       }
     } on DioException catch (error) {
       // debugPrint(error.response!.statusCode.toString());
       if (error.response!.statusCode == 401) {
-        state = SiteErrorServer(
+        state = TenantErrorServer(
             message: error.response!.statusMessage,
             statusCode: error.response!.statusCode);
       }
     }
   }
 
-  createSite(Site site) async {
-    state = SiteLoading();
+  createTenant(Tenant tenant) async {
+    state = TenantLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse = await siteRepo.createSite(site, 'Bearer $token');
+    final httpResponse = await tenantRepo.createTenant(tenant, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
   }
 }

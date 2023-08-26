@@ -5,6 +5,7 @@ import 'package:flutter_web_ptb/model/site.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/site_provider.dart';
 
+// ignore: must_be_immutable
 class DialogAddSite extends ConsumerWidget {
   DialogAddSite({super.key});
   TextEditingController siteIdController = TextEditingController();
@@ -161,6 +162,7 @@ class DialogAddSite extends ConsumerWidget {
                 child: ElevatedButton(
                   onPressed: () => {
                     saveSite(ref),
+                    Navigator.pop(context)
                   },
                   child: const Text('SAVE'),
                 ),

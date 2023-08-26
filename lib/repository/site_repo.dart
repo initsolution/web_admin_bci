@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/model/site.dart';
 import 'package:retrofit/retrofit.dart';

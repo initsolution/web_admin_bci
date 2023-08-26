@@ -19,6 +19,26 @@ final sidebarMenuConfigs = [
     title: (context) => 'Employee',
   ),
   SidebarMenuConfig(
+    uri: RouteUri.tenant,
+    icon: Icons.signal_cellular_alt,
+    title: (context) => 'Tenant',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterAsset,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Asset',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterCategoryChecklistPreventive,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Category Preventive',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterReportRegulerTorque,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Report Reguler Torque',
+  ),
+  SidebarMenuConfig(
     uri: RouteUri.task,
     icon: Icons.task,
     title: (context) => 'Task',

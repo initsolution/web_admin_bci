@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 
+// ignore: must_be_immutable
 class DialogAddEmployee extends ConsumerWidget {
   DialogAddEmployee({super.key});
   TextEditingController nikController = TextEditingController();
@@ -106,7 +107,10 @@ class DialogAddEmployee extends ConsumerWidget {
                 ],
               ),
               ElevatedButton(
-                onPressed: () => saveEmployee(ref),
+                onPressed: () => {
+                  saveEmployee(ref),
+                  Navigator.pop(context),
+                },
                 child: const Text('SAVE'),
               ),
             ],
