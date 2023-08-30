@@ -34,3 +34,4 @@
 > 30/08/2023
 > 1. Master Poin Checklist Preventive
 > 2. Add id (int) on master
+> 3. Add Checkbox tenant on DialogAdd Site

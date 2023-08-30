@@ -7,6 +7,10 @@ import 'package:flutter_web_ptb/model/province.dart';
 import 'package:flutter_web_ptb/model/site.dart';
 import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_web_ptb/providers/tenant_provider.dart';
+import 'package:multiselect/multiselect.dart';
+
+import '../../providers/tenant_state.dart';
 
 // ignore: must_be_immutable
 class DialogAddSite extends ConsumerWidget {
@@ -16,13 +20,14 @@ class DialogAddSite extends ConsumerWidget {
   TextEditingController towerTypeController = TextEditingController();
   TextEditingController towerHeightController = TextEditingController();
   TextEditingController fabricatorController = TextEditingController();
-  TextEditingController tenantsController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   String province = "";
   String kabupaten = "";
+  List<String> selectedTenants = [];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var stateTenant = ref.watch(tenantNotifierProvider);
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
@@ -116,15 +121,16 @@ class DialogAddSite extends ConsumerWidget {
                 height: 10,
               ),
               const Text('Tenants'),
-              TextField(
-                controller: tenantsController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Tenants',
-                ),
-              ),
+              if (stateTenant is TenantLoaded)
+                DropDownMultiSelect(
+                  selected_values_style: const TextStyle(color: Colors.black),
+                  options: stateTenant.tenants.map((e) => e.name).toList(),
+                  selectedValues: selectedTenants,
+                  whenEmpty: 'Select Tenants',
+                  onChanged: (List<String?> x) {},
+                )
+              else if(stateTenant is TenantLoading)
+                const CircularProgressIndicator(),
               const SizedBox(
                 height: 10,
               ),
@@ -243,7 +249,7 @@ class DialogAddSite extends ConsumerWidget {
       tower_type: towerTypeController.text,
       tower_height: int.parse(towerHeightController.text),
       fabricator: fabricatorController.text,
-      tenants: tenantsController.text,
+      tenants: selectedTenants.toString(),
       kabupaten: kabupaten,
       province: province,
       address: addressController.text,
@@ -253,7 +259,7 @@ class DialogAddSite extends ConsumerWidget {
     if (DEBUG) {
       debugPrint('site : $site.toString()');
     }
-    ref.read(siteNotifierProvider.notifier).createSite(site);
+    // ref.read(siteNotifierProvider.notifier).createSite(site);
   }
 
   Widget getDropdownProvince() {

@@ -1,12 +1,9 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/model/mastercategorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/model/masterpointchecklistpreventive.dart';
 import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_provider.dart';
-import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_state.dart';
 import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_provider.dart';
 
 // ignore: must_be_immutable

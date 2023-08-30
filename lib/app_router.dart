@@ -1,4 +1,3 @@
-import 'package:flutter_web_ptb/model/masterpointchecklistpreventive.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
 import 'package:flutter_web_ptb/views/screens/employee_screen.dart';
 import 'package:flutter_web_ptb/views/screens/error_screen.dart';
