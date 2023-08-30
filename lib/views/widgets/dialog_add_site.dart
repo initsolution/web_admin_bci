@@ -18,7 +18,8 @@ class DialogAddSite extends ConsumerWidget {
   TextEditingController fabricatorController = TextEditingController();
   TextEditingController tenantsController = TextEditingController();
   TextEditingController addressController = TextEditingController();
-  List<Province> list = [];
+  String province = "";
+  String kabupaten = "";
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -141,28 +142,84 @@ class DialogAddSite extends ConsumerWidget {
               const SizedBox(
                 height: 10,
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Province'),
-                        getDropdownProvince(),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Regional'),
-                        getDropdownKabupaten(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              FutureBuilder(
+                  future: getProvinceData(),
+                  builder: (context, snapshot) {
+                    List<Province> data = snapshot.data!;
+                    final int selectedProvince =
+                        ref.watch(provinceNotifierProvider);
+                    final String selectedKabupaten =
+                        ref.watch(kabupatenNotifierProvider);
+                    if (snapshot.hasData) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Province'),
+                                DropdownButton(
+                                  value: data[selectedProvince],
+                                  hint: const Text('Select a Province'),
+                                  items: data.map((value) {
+                                    return DropdownMenuItem<Province>(
+                                      value: value,
+                                      child: Text(value.province.toString()),
+                                    );
+                                  }).toList(),
+                                  onChanged: (Province? value) {
+                                    // debugPrint('value : ${data.indexOf(value!)}');
+                                    province = value!.province.toString();
+                                    int idx = data.indexOf(value);
+                                    ref
+                                        .read(provinceNotifierProvider.notifier)
+                                        .state = idx;
+                                    ref
+                                        .read(
+                                            kabupatenNotifierProvider.notifier)
+                                        .state = "";
+                                  },
+                                ),
+                                // getDropdownProvince(),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Regional'),
+                                DropdownButton(
+                                  value: selectedKabupaten.isNotEmpty
+                                      ? selectedKabupaten
+                                      : null,
+                                  hint: const Text('Select a City/Region'),
+                                  items: data[selectedProvince]
+                                      .kabupaten!
+                                      .map((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                  onChanged: (String? value) {
+                                    debugPrint('${value!}');
+                                    ref
+                                        .read(
+                                            kabupatenNotifierProvider.notifier)
+                                        .state = value;
+                                  },
+                                )
+                                // getDropdownKabupaten(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  }),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 2.5,
                 child: ElevatedButton(
@@ -179,6 +236,7 @@ class DialogAddSite extends ConsumerWidget {
   }
 
   void saveSite(WidgetRef ref) {
+    var kabupaten = ref.read(kabupatenNotifierProvider.notifier).state;
     Site site = Site(
       id: siteIdController.text,
       name: siteNameController.text,
@@ -186,8 +244,8 @@ class DialogAddSite extends ConsumerWidget {
       tower_height: int.parse(towerHeightController.text),
       fabricator: fabricatorController.text,
       tenants: tenantsController.text,
-      kabupaten: "kab semarang",
-      province: "jawa tengah",
+      kabupaten: kabupaten,
+      province: province,
       address: addressController.text,
       latitude: '100',
       longitude: '200',
@@ -207,7 +265,7 @@ class DialogAddSite extends ConsumerWidget {
           if (snapshot.hasData) {
             List<Province> data = snapshot.data!;
             return DropdownButton(
-              value: list[selectedProvince],
+              value: data[selectedProvince],
               hint: const Text('Select a Province'),
               items: data.map((value) {
                 return DropdownMenuItem<Province>(
@@ -230,34 +288,39 @@ class DialogAddSite extends ConsumerWidget {
   }
 
   Widget getDropdownKabupaten() {
-    // var func;
-
     return Consumer(builder: (_, WidgetRef ref, __) {
       final int selectedProvince = ref.watch(provinceNotifierProvider);
       final String selectedKabupaten = ref.watch(kabupatenNotifierProvider);
-      if (list.length > 0) {
-        return DropdownButton(
-          value: selectedKabupaten.isNotEmpty ? selectedKabupaten : null,
-          hint: const Text('Select a City/Region'),
-          items: list[selectedProvince].kabupaten!.map((value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (String? value) {
-            debugPrint('${value!}');
-            ref.read(kabupatenNotifierProvider.notifier).state = value;
-          },
-        );
-      } else {
-        return const CircularProgressIndicator();
-      }
+      return FutureBuilder(
+          future: getProvinceData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<Province>? data = snapshot.data;
+              debugPrint('dataKab : $data');
+              return DropdownButton(
+                value: selectedKabupaten.isNotEmpty ? selectedKabupaten : null,
+                hint: const Text('Select a City/Region'),
+                items: data![selectedProvince].kabupaten!.map((value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? value) {
+                  debugPrint('${value!}');
+                  ref.read(kabupatenNotifierProvider.notifier).state = value;
+                },
+              );
+            } else {
+              return const CircularProgressIndicator();
+            }
+          });
     });
   }
 
   Future<List<Province>> getProvinceData() async {
     var data = await rootBundle.loadString("assets/province/province.json");
+    List<Province> list = [];
     List<dynamic> valueMap = json.decode(data);
     for (int i = 0; i < valueMap.length; i++) {
       Province p = Province.fromJson(valueMap[i]);
