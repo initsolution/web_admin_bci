@@ -10,6 +10,11 @@ import 'package:dio/dio.dart';
 
 import '../repository/site_repo.dart';
 
+int province = 0;
+String kabupaten = "";
+final provinceNotifierProvider = StateProvider<int>((ref) => province);
+final kabupatenNotifierProvider = StateProvider<String>((ref) => kabupaten);
+
 final siteNotifierProvider = NotifierProvider<SiteNotifier, SiteState>(
   () {
     return SiteNotifier(siteRepo: SiteRepo(Dio()));

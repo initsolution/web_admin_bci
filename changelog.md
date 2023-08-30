@@ -22,6 +22,15 @@
 > 20/08/2023
 > 1. add site, getall site
 
+> 26/08/2023
+> 1. master report reguler torque
+> 2. master asset
+> 3. master tenant
+> 4. master category checklist preventive
+
+> 29/08/2023
+> 1. province and kabupaten on progress
+
 > 30/08/2023
 > 1. Master Poin Checklist Preventive
 > 2. Add id (int) on master
