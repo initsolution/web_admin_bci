@@ -21,3 +21,7 @@
 
 > 20/08/2023
 > 1. add site, getall site
+
+> 30/08/2023
+> 1. Master Poin Checklist Preventive
+> 2. Add id (int) on master

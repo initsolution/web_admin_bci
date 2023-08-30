@@ -9,17 +9,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-
-final masterCategoryChecklistPreventivNotifierProvider = NotifierProvider<MasterCategoryChecklistPreventiveNotifier, MasterCategoryChecklistPreventiveState>(
+final selectedCategoryChecklistPreventive =
+    StateProvider<MasterCategoryChecklistPreventive>(
+        (ref) => MasterCategoryChecklistPreventive(name: '-'));
+final masterCategoryChecklistPreventivNotifierProvider = NotifierProvider<
+    MasterCategoryChecklistPreventiveNotifier,
+    MasterCategoryChecklistPreventiveState>(
   () {
-    return MasterCategoryChecklistPreventiveNotifier(masterCategoryPrevRepo: MasterCategoryChecklistPreventiveRepo(Dio()));
+    return MasterCategoryChecklistPreventiveNotifier(
+        masterCategoryPrevRepo: MasterCategoryChecklistPreventiveRepo(Dio()));
   },
 );
 
-class MasterCategoryChecklistPreventiveNotifier extends Notifier<MasterCategoryChecklistPreventiveState> {
+class MasterCategoryChecklistPreventiveNotifier
+    extends Notifier<MasterCategoryChecklistPreventiveState> {
   final MasterCategoryChecklistPreventiveRepo masterCategoryPrevRepo;
 
-  MasterCategoryChecklistPreventiveNotifier({required this.masterCategoryPrevRepo});
+  MasterCategoryChecklistPreventiveNotifier(
+      {required this.masterCategoryPrevRepo});
 
   @override
   MasterCategoryChecklistPreventiveState build() {
@@ -32,16 +39,19 @@ class MasterCategoryChecklistPreventiveNotifier extends Notifier<MasterCategoryC
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
-      final HttpResponse data =
-          await masterCategoryPrevRepo.getAllMasterCategoryChecklistPreventive('Bearer $token', header);
+      final HttpResponse data = await masterCategoryPrevRepo
+          .getAllMasterCategoryChecklistPreventive('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
         List<MasterCategoryChecklistPreventive> masterCategoryPrev =
-            (data.data as List).map((e) => MasterCategoryChecklistPreventive.fromJson(e)).toList();
+            (data.data as List)
+                .map((e) => MasterCategoryChecklistPreventive.fromJson(e))
+                .toList();
         if (masterCategoryPrev.isEmpty) {
           state = MasterCategoryChecklistPreventiveLoadedEmpty();
         } else {
-          state = MasterCategoryChecklistPreventiveLoaded(masterCategoryPrev: masterCategoryPrev);
+          state = MasterCategoryChecklistPreventiveLoaded(
+              masterCategoryPrev: masterCategoryPrev);
         }
       }
     } on DioException catch (error) {
@@ -54,11 +64,14 @@ class MasterCategoryChecklistPreventiveNotifier extends Notifier<MasterCategoryC
     }
   }
 
-  createMasterCategoryChecklistPreventive(MasterCategoryChecklistPreventive masterCategoryPrev) async {
+  createMasterCategoryChecklistPreventive(
+      MasterCategoryChecklistPreventive masterCategoryPrev) async {
     state = MasterCategoryChecklistPreventiveLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse = await masterCategoryPrevRepo.createMasterCategoryChecklistPreventive(masterCategoryPrev, 'Bearer $token');
+    final httpResponse =
+        await masterCategoryPrevRepo.createMasterCategoryChecklistPreventive(
+            masterCategoryPrev, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
   }
 }

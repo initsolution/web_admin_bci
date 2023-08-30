@@ -7,16 +7,20 @@ part 'masterpointchecklistpreventive.g.dart';
 
 @JsonSerializable()
 class MasterPointChecklistPreventive {
+  int? id;
   String? uraian;
   String? kriteria;
-  MasterCategoryChecklistPreventive? mCategory;
-  MasterPointChecklistPreventive({
-    this.uraian,
-    this.kriteria,
-    this.mCategory
-  });
+  MasterCategoryChecklistPreventive? mcategorychecklistpreventive;
+  MasterPointChecklistPreventive(
+      {this.uraian, this.kriteria, this.mcategorychecklistpreventive});
 
-  factory MasterPointChecklistPreventive.fromJson(Map<String, dynamic> json) => _$MasterPointChecklistPreventiveFromJson(json);
+  @override
+  String toString() {
+    return 'MasterPointChecklistPreventive(id: $id, uraian: $uraian, kriteria: $kriteria, mcategorychecklistpreventive: $mcategorychecklistpreventive)';
+  }
+
+  factory MasterPointChecklistPreventive.fromJson(Map<String, dynamic> json) =>
+      _$MasterPointChecklistPreventiveFromJson(json);
 
   Map<String, dynamic> toJson() => _$MasterPointChecklistPreventiveToJson(this);
 }

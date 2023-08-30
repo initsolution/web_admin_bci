@@ -16,11 +16,12 @@ MasterReportRegulerTorque _$MasterReportRegulerTorqueFromJson(
       bolt_size: json['bolt_size'] as String?,
       minimum_torque: json['minimum_torque'] as int?,
       qty_bolt: json['qty_bolt'] as int?,
-    );
+    )..id = json['id'] as int?;
 
 Map<String, dynamic> _$MasterReportRegulerTorqueToJson(
         MasterReportRegulerTorque instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'fabricator': instance.fabricator,
       'tower_height': instance.tower_height,
       'tower_segment': instance.tower_segment,

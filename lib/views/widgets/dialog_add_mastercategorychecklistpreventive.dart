@@ -22,7 +22,7 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
-                    'New Master Asset',
+                    'New Master Category Checklist Preventive',
                     style: TextStyle(fontSize: 30),
                   ),
                   IconButton(
@@ -68,13 +68,14 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
   }
 
   void saveMasterCategoryChecklistPreventive(WidgetRef ref) {
-    MasterCategoryChecklistPreventive masterAsset = MasterCategoryChecklistPreventive(
-      name: nameCategoryController.text
-    );
+    MasterCategoryChecklistPreventive masterAsset =
+        MasterCategoryChecklistPreventive(name: nameCategoryController.text);
     if (DEBUG) {
       debugPrint('site : $masterAsset.toString()');
     }
-    ref.read(masterCategoryChecklistPreventivNotifierProvider.notifier).createMasterCategoryChecklistPreventive(masterAsset);
+    ref
+        .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
+        .createMasterCategoryChecklistPreventive(masterAsset);
   }
 
   // Widget getDropdownRole() {
