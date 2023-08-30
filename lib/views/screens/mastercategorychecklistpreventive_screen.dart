@@ -21,16 +21,19 @@ class MasterCategoryChecklistPreventiveScreen extends ConsumerStatefulWidget {
   const MasterCategoryChecklistPreventiveScreen({super.key});
 
   @override
-  ConsumerState<MasterCategoryChecklistPreventiveScreen> createState() => _MasterCategoryChecklistPreventiveScreenState();
+  ConsumerState<MasterCategoryChecklistPreventiveScreen> createState() =>
+      _MasterCategoryChecklistPreventiveScreenState();
 }
 
-class _MasterCategoryChecklistPreventiveScreenState extends ConsumerState<MasterCategoryChecklistPreventiveScreen> {
+class _MasterCategoryChecklistPreventiveScreenState
+    extends ConsumerState<MasterCategoryChecklistPreventiveScreen> {
   Widget tableMasterAsset() {
     return Center(child: Consumer(
       builder: (context, ref, child) {
         var state = ref.watch(masterCategoryChecklistPreventivNotifierProvider);
         if (state is MasterCategoryChecklistPreventiveLoaded) {
-          DataTableSource data = MasterCategoryChecklistPreventivetData(masterCategoryPrev: state.masterCategoryPrev);
+          DataTableSource data = MasterCategoryChecklistPreventivetData(
+              masterCategoryPrev: state.masterCategoryPrev);
           return PaginatedDataTable(
             source: data,
             header: const Text('Master Category Checklist Preventive'),
@@ -76,8 +79,8 @@ class _MasterCategoryChecklistPreventiveScreenState extends ConsumerState<Master
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
           Header(
-            title: 'Master Asset',
-            subMenu: 'submenu master asset',
+            title: 'Master Category Checklist Preventive',
+            subMenu: 'submenu master category checklist preventive',
             userName: value,
           ),
           const SizedBox(
@@ -104,7 +107,9 @@ class _MasterCategoryChecklistPreventiveScreenState extends ConsumerState<Master
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return SizedBox(child: DialogAddMasterCategoryChecklistPreventive());
+                                return SizedBox(
+                                    child:
+                                        DialogAddMasterCategoryChecklistPreventive());
                               },
                             ),
                           },

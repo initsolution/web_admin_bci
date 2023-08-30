@@ -11,16 +11,17 @@ MasterPointChecklistPreventive _$MasterPointChecklistPreventiveFromJson(
     MasterPointChecklistPreventive(
       uraian: json['uraian'] as String?,
       kriteria: json['kriteria'] as String?,
-      mCategory: json['mCategory'] == null
+      mcategorychecklistpreventive: json['mcategorychecklistpreventive'] == null
           ? null
           : MasterCategoryChecklistPreventive.fromJson(
-              json['mCategory'] as Map<String, dynamic>),
-    );
+              json['mcategorychecklistpreventive'] as Map<String, dynamic>),
+    )..id = json['id'] as int?;
 
 Map<String, dynamic> _$MasterPointChecklistPreventiveToJson(
         MasterPointChecklistPreventive instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'uraian': instance.uraian,
       'kriteria': instance.kriteria,
-      'mCategory': instance.mCategory,
+      'mcategorychecklistpreventive': instance.mcategorychecklistpreventive,
     };

@@ -24,14 +24,14 @@ final sidebarMenuConfigs = [
     title: (context) => 'Tenant',
   ),
   SidebarMenuConfig(
+    uri: RouteUri.task,
+    icon: Icons.task,
+    title: (context) => 'Task',
+  ),
+  SidebarMenuConfig(
     uri: RouteUri.masterAsset,
     icon: Icons.storage_outlined,
     title: (context) => 'Master Asset',
-  ),
-  SidebarMenuConfig(
-    uri: RouteUri.masterCategoryChecklistPreventive,
-    icon: Icons.storage_outlined,
-    title: (context) => 'Master Category Preventive',
   ),
   SidebarMenuConfig(
     uri: RouteUri.masterReportRegulerTorque,
@@ -39,9 +39,14 @@ final sidebarMenuConfigs = [
     title: (context) => 'Master Report Reguler Torque',
   ),
   SidebarMenuConfig(
-    uri: RouteUri.task,
-    icon: Icons.task,
-    title: (context) => 'Task',
+    uri: RouteUri.masterCategoryChecklistPreventive,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Category Check Preventive',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterPointChecklistPreventive,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Point Check Preventive',
   ),
 ];
 

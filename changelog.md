@@ -30,3 +30,7 @@
 
 > 29/08/2023
 > 1. province and kabupaten on progress
+
+> 30/08/2023
+> 1. Master Poin Checklist Preventive
+> 2. Add id (int) on master

@@ -5,6 +5,7 @@ import 'package:flutter_web_ptb/master_layout_config.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/masterasset_provider.dart';
 import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_provider.dart';
+import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_provider.dart';
 import 'package:flutter_web_ptb/providers/masterreportregulertorque_provider.dart';
 import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter_web_ptb/providers/tenant_provider.dart';
@@ -263,8 +264,15 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ref.read(siteNotifierProvider.notifier).getAllSite();
             ref.read(tenantNotifierProvider.notifier).getAllTenant();
             ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();
-            ref.read(masterCategoryChecklistPreventivNotifierProvider.notifier).getAllMasterCategoryChecklistPreventive();
-            ref.read(masterReportRegulerTorqueNotifierProvider.notifier).getAllMasterReportRegulerTorqueRepo();
+            ref
+                .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
+                .getAllMasterCategoryChecklistPreventive();
+            ref
+                .read(masterReportRegulerTorqueNotifierProvider.notifier)
+                .getAllMasterReportRegulerTorqueRepo();
+            ref
+                .read(masterPointChecklistPreventiveNotifierProvider.notifier)
+                .getAllMasterPointChecklistPreventive();
             GoRouter.of(context).go(uri);
           },
           selected: isSelected,
