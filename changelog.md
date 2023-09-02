@@ -35,3 +35,7 @@
 > 1. Master Poin Checklist Preventive
 > 2. Add id (int) on master
 > 3. Add Checkbox tenant on DialogAdd Site
+
+> 02/09/2023
+> 1. Add refresh after add
+> 2. add @Queries in repo

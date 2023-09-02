@@ -19,10 +19,12 @@ class MasterReportRegulerTorqueScreen extends ConsumerStatefulWidget {
   const MasterReportRegulerTorqueScreen({super.key});
 
   @override
-  ConsumerState<MasterReportRegulerTorqueScreen> createState() => _MasterReportRegulerTorqueScreenState();
+  ConsumerState<MasterReportRegulerTorqueScreen> createState() =>
+      _MasterReportRegulerTorqueScreenState();
 }
 
-class _MasterReportRegulerTorqueScreenState extends ConsumerState<MasterReportRegulerTorqueScreen> {
+class _MasterReportRegulerTorqueScreenState
+    extends ConsumerState<MasterReportRegulerTorqueScreen> {
   Widget tableMasterReportRegulerTorque() {
     return Center(child: Consumer(
       builder: (context, ref, child) {
@@ -74,6 +76,10 @@ class _MasterReportRegulerTorqueScreenState extends ConsumerState<MasterReportRe
           ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
+      } else if (next is MasterReportRegulerTorqueDataChangeSuccess) {
+        ref
+            .read(masterReportRegulerTorqueNotifierProvider.notifier)
+            .getAllMasterReportRegulerTorqueRepo();
       }
     });
     return PortalMasterLayout(
@@ -109,7 +115,9 @@ class _MasterReportRegulerTorqueScreenState extends ConsumerState<MasterReportRe
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return SizedBox(child: DialogAddMasterReportRegulerTorque());
+                                return SizedBox(
+                                    child:
+                                        DialogAddMasterReportRegulerTorque());
                               },
                             ),
                           },
@@ -119,7 +127,12 @@ class _MasterReportRegulerTorqueScreenState extends ConsumerState<MasterReportRe
                         ),
                         IconButton(
                           icon: const Icon(Icons.refresh),
-                          onPressed: () {},
+                          onPressed: () {
+                            ref
+                                .read(masterReportRegulerTorqueNotifierProvider
+                                    .notifier)
+                                .getAllMasterReportRegulerTorqueRepo();
+                          },
                         ),
                         const SizedBox(
                           width: 30,

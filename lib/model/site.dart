@@ -1,12 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
 
 part 'site.g.dart';
+
 @JsonSerializable()
 class Site {
   String? id;
   String? name;
-  String? tower_type;
-  int? tower_height;
+  String? towerType;
+  int? towerHeight;
   String? fabricator;
   String? tenants;
   String? kabupaten;
@@ -18,8 +19,8 @@ class Site {
   Site({
     this.id,
     this.name,
-    this.tower_type,
-    this.tower_height,
+    this.towerType,
+    this.towerHeight,
     this.fabricator,
     this.tenants,
     this.kabupaten,

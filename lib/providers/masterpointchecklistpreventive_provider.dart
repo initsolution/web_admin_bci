@@ -68,5 +68,8 @@ class MasterPointChecklistPreventiveNotifier
         .createMasterPointChecklistPreventive(
             masterPointChecklistPreventive, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (httpResponse.response.statusCode == 201) {
+      state = MasterPointChecklistPreventiveDataChangeSuccess();
+    }
   }
 }

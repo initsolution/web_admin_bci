@@ -9,8 +9,9 @@ part of 'mastercategorychecklistpreventive.dart';
 MasterCategoryChecklistPreventive _$MasterCategoryChecklistPreventiveFromJson(
         Map<String, dynamic> json) =>
     MasterCategoryChecklistPreventive(
+      id: json['id'] as int?,
       name: json['name'] as String?,
-    )..id = json['id'] as int?;
+    );
 
 Map<String, dynamic> _$MasterCategoryChecklistPreventiveToJson(
         MasterCategoryChecklistPreventive instance) =>

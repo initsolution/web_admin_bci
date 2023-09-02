@@ -9,17 +9,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-
-final masterReportRegulerTorqueNotifierProvider = NotifierProvider<MasterReportRegulerTorqueNotifier, MasterReportRegulerTorqueState>(
+final masterReportRegulerTorqueNotifierProvider = NotifierProvider<
+    MasterReportRegulerTorqueNotifier, MasterReportRegulerTorqueState>(
   () {
-    return MasterReportRegulerTorqueNotifier(masterReportRegulerTorqueRepo: MasterReportRegulerTorqueRepo(Dio()));
+    return MasterReportRegulerTorqueNotifier(
+        masterReportRegulerTorqueRepo: MasterReportRegulerTorqueRepo(Dio()));
   },
 );
 
-class MasterReportRegulerTorqueNotifier extends Notifier<MasterReportRegulerTorqueState> {
+class MasterReportRegulerTorqueNotifier
+    extends Notifier<MasterReportRegulerTorqueState> {
   final MasterReportRegulerTorqueRepo masterReportRegulerTorqueRepo;
 
-  MasterReportRegulerTorqueNotifier({required this.masterReportRegulerTorqueRepo});
+  MasterReportRegulerTorqueNotifier(
+      {required this.masterReportRegulerTorqueRepo});
 
   @override
   MasterReportRegulerTorqueState build() {
@@ -32,16 +35,19 @@ class MasterReportRegulerTorqueNotifier extends Notifier<MasterReportRegulerTorq
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
-      final HttpResponse data =
-          await masterReportRegulerTorqueRepo.getAllMasterReportRegulerTorqueRepo('Bearer $token', header);
+      final HttpResponse data = await masterReportRegulerTorqueRepo
+          .getAllMasterReportRegulerTorqueRepo('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
         List<MasterReportRegulerTorque> masterReportRegulerTorque =
-            (data.data as List).map((e) => MasterReportRegulerTorque.fromJson(e)).toList();
+            (data.data as List)
+                .map((e) => MasterReportRegulerTorque.fromJson(e))
+                .toList();
         if (masterReportRegulerTorque.isEmpty) {
           state = MasterReportRegulerTorqueLoadedEmpty();
         } else {
-          state = MasterReportRegulerTorqueStateLoaded(masterReportRegulerTorque: masterReportRegulerTorque);
+          state = MasterReportRegulerTorqueStateLoaded(
+              masterReportRegulerTorque: masterReportRegulerTorque);
         }
       }
     } on DioException catch (error) {
@@ -54,11 +60,17 @@ class MasterReportRegulerTorqueNotifier extends Notifier<MasterReportRegulerTorq
     }
   }
 
-  createMasterReportRegulerTorqueRepo(MasterReportRegulerTorque masterReportRegulerTorque) async {
+  createMasterReportRegulerTorqueRepo(
+      MasterReportRegulerTorque masterReportRegulerTorque) async {
     state = MasterReportRegulerTorqueStateLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse = await masterReportRegulerTorqueRepo.createMasterReportRegulerTorqueRepo(masterReportRegulerTorque, 'Bearer $token');
+    final httpResponse =
+        await masterReportRegulerTorqueRepo.createMasterReportRegulerTorqueRepo(
+            masterReportRegulerTorque, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (httpResponse.response.statusCode == 201) {
+      state = MasterReportRegulerTorqueDataChangeSuccess();
+    }
   }
 }

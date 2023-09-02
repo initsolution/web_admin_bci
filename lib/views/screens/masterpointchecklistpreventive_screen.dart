@@ -89,6 +89,10 @@ class _MasterPointChecklistPreventiveScreenState
           ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
+      } else if (next is MasterPointChecklistPreventiveDataChangeSuccess) {
+        ref
+            .read(masterPointChecklistPreventiveNotifierProvider.notifier)
+            .getAllMasterPointChecklistPreventive();
       }
     });
 
@@ -154,7 +158,13 @@ class _MasterPointChecklistPreventiveScreenState
                       ),
                       IconButton(
                         icon: const Icon(Icons.refresh),
-                        onPressed: () {},
+                        onPressed: () {
+                          ref
+                              .read(
+                                  masterPointChecklistPreventiveNotifierProvider
+                                      .notifier)
+                              .getAllMasterPointChecklistPreventive();
+                        },
                       ),
                       const SizedBox(
                         width: 30,

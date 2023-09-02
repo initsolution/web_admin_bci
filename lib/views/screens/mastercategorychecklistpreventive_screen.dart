@@ -72,6 +72,10 @@ class _MasterCategoryChecklistPreventiveScreenState
           ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
+      } else if (next is MasterCategoryChecklistPreventiveDataChangeSuccess) {
+        ref
+            .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
+            .getAllMasterCategoryChecklistPreventive();
       }
     });
     return PortalMasterLayout(
@@ -119,7 +123,13 @@ class _MasterCategoryChecklistPreventiveScreenState
                         ),
                         IconButton(
                           icon: const Icon(Icons.refresh),
-                          onPressed: () {},
+                          onPressed: () {
+                            ref
+                                .read(
+                                    masterCategoryChecklistPreventivNotifierProvider
+                                        .notifier)
+                                .getAllMasterCategoryChecklistPreventive();
+                          },
                         ),
                         const SizedBox(
                           width: 30,

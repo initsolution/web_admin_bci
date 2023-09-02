@@ -21,6 +21,8 @@ class DialogAddSite extends ConsumerWidget {
   TextEditingController towerHeightController = TextEditingController();
   TextEditingController fabricatorController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+  TextEditingController longitudeController = TextEditingController();
+  TextEditingController latitudeController = TextEditingController();
   String province = "";
   String kabupaten = "";
   List<String> selectedTenants = [];
@@ -129,7 +131,7 @@ class DialogAddSite extends ConsumerWidget {
                   whenEmpty: 'Select Tenants',
                   onChanged: (List<String?> x) {},
                 )
-              else if(stateTenant is TenantLoading)
+              else if (stateTenant is TenantLoading)
                 const CircularProgressIndicator(),
               const SizedBox(
                 height: 10,
@@ -226,6 +228,35 @@ class DialogAddSite extends ConsumerWidget {
                       return const CircularProgressIndicator();
                     }
                   }),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text('Longitude'),
+              TextField(
+                controller: longitudeController,
+                keyboardType: TextInputType.text,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Please type your longitude',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text('Latitude'),
+              TextField(
+                controller: longitudeController,
+                keyboardType: TextInputType.text,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Please type your latitude',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width / 2.5,
                 child: ElevatedButton(
@@ -246,20 +277,20 @@ class DialogAddSite extends ConsumerWidget {
     Site site = Site(
       id: siteIdController.text,
       name: siteNameController.text,
-      tower_type: towerTypeController.text,
-      tower_height: int.parse(towerHeightController.text),
+      towerType: towerTypeController.text,
+      towerHeight: int.parse(towerHeightController.text),
       fabricator: fabricatorController.text,
       tenants: selectedTenants.toString(),
       kabupaten: kabupaten,
       province: province,
       address: addressController.text,
-      latitude: '100',
-      longitude: '200',
+      latitude: latitudeController.text,
+      longitude: longitudeController.text,
     );
     if (DEBUG) {
       debugPrint('site : $site.toString()');
     }
-    // ref.read(siteNotifierProvider.notifier).createSite(site);
+    ref.read(siteNotifierProvider.notifier).createSite(site);
   }
 
   Widget getDropdownProvince() {

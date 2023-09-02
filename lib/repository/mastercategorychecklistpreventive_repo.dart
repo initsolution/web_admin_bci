@@ -7,16 +7,20 @@ part 'mastercategorychecklistpreventive_repo.g.dart';
 
 @RestApi(baseUrl: urlRepo)
 abstract class MasterCategoryChecklistPreventiveRepo {
-  factory MasterCategoryChecklistPreventiveRepo(Dio dio, {String baseUrl}) = _MasterCategoryChecklistPreventiveRepo;
+  factory MasterCategoryChecklistPreventiveRepo(Dio dio, {String baseUrl}) =
+      _MasterCategoryChecklistPreventiveRepo;
 
   @GET('/mastercategorychecklistpreventive')
   Future<HttpResponse<dynamic>> getAllMasterCategoryChecklistPreventive(
-      @Header('Authorization') String token, Map<String, dynamic>? header);
+      @Header('Authorization') String token,
+      @Queries() Map<String, dynamic>? header);
 
   @POST('/mastercategorychecklistpreventive')
   Future<HttpResponse> createMasterCategoryChecklistPreventive(
-      @Body() MasterCategoryChecklistPreventive masterCategoryPrev, @Header('Authorization') String token);
+      @Body() MasterCategoryChecklistPreventive masterCategoryPrev,
+      @Header('Authorization') String token);
 
   @PATCH('/mastercategorychecklistpreventive/{id}')
-  Future<HttpResponse> updateMasterCategoryChecklistPreventive(@Path() int id, @Body() MasterCategoryChecklistPreventive masterCategoryPrev);
+  Future<HttpResponse> updateMasterCategoryChecklistPreventive(@Path() int id,
+      @Body() MasterCategoryChecklistPreventive masterCategoryPrev);
 }

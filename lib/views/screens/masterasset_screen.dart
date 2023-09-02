@@ -27,7 +27,8 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
       builder: (context, ref, child) {
         var state = ref.watch(masterAssetNotifierProvider);
         if (state is MasterAssetLoaded) {
-          DataTableSource data = MasterAssetData(masterAssets: state.masterAssets);
+          DataTableSource data =
+              MasterAssetData(masterAssets: state.masterAssets);
           return PaginatedDataTable(
             source: data,
             header: const Text('Master Asset'),
@@ -68,6 +69,8 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
           ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
+      } else if (next is MasterAssetDataChangeSuccess) {
+        ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();
       }
     });
     return PortalMasterLayout(
@@ -113,7 +116,11 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.refresh),
-                          onPressed: () {},
+                          onPressed: () {
+                            ref
+                                .read(masterAssetNotifierProvider.notifier)
+                                .getAllMasterAsset();
+                          },
                         ),
                         const SizedBox(
                           width: 30,
