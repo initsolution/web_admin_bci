@@ -11,6 +11,7 @@ class DialogAddEmployee extends ConsumerWidget {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+  TextEditingController instansiController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
@@ -99,12 +100,35 @@ class DialogAddEmployee extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const Text('Vendor'),
+                        getDropdownActive(),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         const Text('Active'),
                         getDropdownActive(),
                       ],
                     ),
                   ),
                 ],
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextField(
+                controller: instansiController,
+                keyboardType: TextInputType.text,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  hintText: 'Instansi',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
               ),
               ElevatedButton(
                 onPressed: () => {
@@ -130,8 +154,9 @@ class DialogAddEmployee extends ConsumerWidget {
         hp: phoneController.text,
         password: passwordController.text,
         role: employeeRole,
-        is_active: 1,
-        is_vendor: 0);
+        isActive: true,
+        isVendor: false,
+        instansi: instansiController.text);
     ref.read(employeeNotifierProvider.notifier).createEmployee(employee);
   }
 

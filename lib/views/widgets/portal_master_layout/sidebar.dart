@@ -260,9 +260,10 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ],
           ),
           onTap: () {
+            Map<String, dynamic> params = {};
             ref.read(employeeNotifierProvider.notifier).getAllEmployee();
             ref.read(siteNotifierProvider.notifier).getAllSite();
-            ref.read(tenantNotifierProvider.notifier).getAllTenant();
+            ref.read(tenantNotifierProvider.notifier).getAllTenant(params);
             ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();
             ref
                 .read(masterCategoryChecklistPreventivNotifierProvider.notifier)

@@ -11,7 +11,8 @@ abstract class TenantRepo {
 
   @GET('/tenant')
   Future<HttpResponse<dynamic>> getAllTenant(
-      @Header('Authorization') String token, Map<String, dynamic>? header);
+      @Header('Authorization') String token,
+      @Queries() Map<String, dynamic>? header);
 
   @POST('/tenant')
   Future<HttpResponse> createTenant(

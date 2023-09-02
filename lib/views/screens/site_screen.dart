@@ -16,6 +16,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
 
+import '../../providers/tenant_provider.dart';
+
 class SiteScreen extends ConsumerStatefulWidget {
   const SiteScreen({super.key});
 
@@ -185,13 +187,19 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                       children: [
                         IconButton(
                           icon: const Icon(Icons.add),
-                          onPressed: () => {
+                          onPressed: () {
+                            Map<String, dynamic> header = {
+                              "filter": "is_active||eq||true"
+                            };
+                            ref
+                                .read(tenantNotifierProvider.notifier)
+                                .getAllTenant(header);
                             showDialog(
                               context: context,
                               builder: (context) {
                                 return SizedBox(child: DialogAddSite());
                               },
-                            ),
+                            );
                           },
                         ),
                         const SizedBox(
@@ -251,7 +259,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
     return Center(child: Consumer(
       builder: (context, ref, child) {
         var state = ref.watch(siteNotifierProvider);
-        if(DEBUG) debugPrint('state : $state');
+        if (DEBUG) debugPrint('state : $state');
         if (state is SiteLoaded) {
           DataTableSource data = SiteData(sites: state.sites);
           return PaginatedDataTable(

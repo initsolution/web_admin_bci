@@ -9,8 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-
-bool isActive= false;
+bool isActive = false;
 
 final tenantIsActiveProvider = StateProvider<bool>((ref) => isActive);
 
@@ -30,9 +29,9 @@ class TenantNotifier extends Notifier<TenantState> {
     return TenantInitial();
   }
 
-  getAllTenant() async {
+  getAllTenant(Map<String, dynamic> params) async {
     state = TenantLoading();
-    Map<String, dynamic> header = {};
+    Map<String, dynamic> header = params;
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';

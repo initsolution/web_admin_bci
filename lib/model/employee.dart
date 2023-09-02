@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'employee.g.dart';
@@ -11,8 +13,10 @@ class Employee {
   String? hp;
   String? role;
   String? password;
-  int? is_active;
-  int? is_vendor;
+  bool? isActive;
+  bool? isVendor;
+  String? urlEsign;
+  String? instansi;
   Employee({
     this.nik,
     this.name,
@@ -20,8 +24,10 @@ class Employee {
     this.hp,
     this.role,
     this.password,
-    this.is_active,
-    this.is_vendor,
+    this.isActive,
+    this.isVendor,
+    this.urlEsign,
+    this.instansi,
   });
 
   Employee copyWith({
@@ -31,8 +37,10 @@ class Employee {
     String? hp,
     String? role,
     String? password,
-    int? is_active,
-    int? is_vendor,
+    bool? isActive,
+    bool? isVendor,
+    String? urlEsign,
+    String? instansi,
   }) {
     return Employee(
       nik: nik ?? this.nik,
@@ -41,8 +49,10 @@ class Employee {
       hp: hp ?? this.hp,
       role: role ?? this.role,
       password: password ?? this.password,
-      is_active: is_active ?? this.is_active,
-      is_vendor: is_vendor ?? this.is_vendor,
+      isActive: isActive ?? this.isActive,
+      isVendor: isVendor ?? this.isVendor,
+      urlEsign: urlEsign ?? this.urlEsign,
+      instansi: instansi ?? this.instansi,
     );
   }
 
@@ -54,8 +64,10 @@ class Employee {
       'hp': hp,
       'role': role,
       'password': password,
-      'is_active': is_active,
-      'is_vendor': is_vendor,
+      'isActive': isActive,
+      'isVendor': isVendor,
+      'urlEsign': urlEsign,
+      'instansi': instansi,
     };
   }
 
@@ -67,23 +79,25 @@ class Employee {
       hp: map['hp'] != null ? map['hp'] as String : null,
       role: map['role'] != null ? map['role'] as String : null,
       password: map['password'] != null ? map['password'] as String : null,
-      is_active: map['is_active'] != null ? map['is_active'] as int : null,
-      is_vendor: map['is_vendor'] != null ? map['is_vendor'] as int : null,
+      isActive: map['isActive'] != null ? map['isActive'] as bool : null,
+      isVendor: map['isVendor'] != null ? map['isVendor'] as bool : null,
+      urlEsign: map['urlEsign'] != null ? map['urlEsign'] as String : null,
+      instansi: map['instansi'] != null ? map['instansi'] as String : null,
     );
   }
 
   // String toJson() => json.encode(toMap());
 
-  // factory Employee.fromJson(String source) =>
-  //     Employee.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory Employee.fromJson(String source) => Employee.fromMap(json.decode(source) as Map<String, dynamic>);
 
   factory Employee.fromJson(Map<String, dynamic> json) =>
       _$EmployeeFromJson(json);
+
   Map<String, dynamic> toJson() => _$EmployeeToJson(this);
 
   @override
   String toString() {
-    return 'Employee(nik: $nik, name: $name, email: $email, hp: $hp, role: $role, password: $password, is_active: $is_active, is_vendor: $is_vendor)';
+    return 'Employee(nik: $nik, name: $name, email: $email, hp: $hp, role: $role, password: $password, isActive: $isActive, isVendor: $isVendor, urlEsign: $urlEsign, instansi: $instansi)';
   }
 
   @override
@@ -96,8 +110,10 @@ class Employee {
         other.hp == hp &&
         other.role == role &&
         other.password == password &&
-        other.is_active == is_active &&
-        other.is_vendor == is_vendor;
+        other.isActive == isActive &&
+        other.isVendor == isVendor &&
+        other.urlEsign == urlEsign &&
+        other.instansi == instansi;
   }
 
   @override
@@ -108,7 +124,9 @@ class Employee {
         hp.hashCode ^
         role.hashCode ^
         password.hashCode ^
-        is_active.hashCode ^
-        is_vendor.hashCode;
+        isActive.hashCode ^
+        isVendor.hashCode ^
+        urlEsign.hashCode ^
+        instansi.hashCode;
   }
 }

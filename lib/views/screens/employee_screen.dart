@@ -228,8 +228,8 @@ class EmployeeData extends DataTableSource {
       DataCell(Text(employees[index].name!)),
       DataCell(Text(employees[index].email!)),
       DataCell(Text(employees[index].hp!)),
-      DataCell(Text(employees[index].is_active == 1 ? 'Active' : 'Deactive')),
-      DataCell(Text(employees[index].is_vendor == 1 ? 'Vendor' : 'Internal')),
+      DataCell(Text(employees[index].isActive == true ? 'Active' : 'Deactive')),
+      DataCell(Text(employees[index].isVendor == true ? 'Vendor' : 'Internal')),
     ]);
   }
 
