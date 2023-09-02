@@ -73,6 +73,8 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
           ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
+      } else if (next is EmployeeDataChangeSuccess) {
+        ref.read(employeeNotifierProvider.notifier).getAllEmployee();
       }
     });
     return PortalMasterLayout(
@@ -118,7 +120,11 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.refresh),
-                          onPressed: () {},
+                          onPressed: () {
+                            ref
+                                .read(employeeNotifierProvider.notifier)
+                                .getAllEmployee();
+                          },
                         ),
                         const SizedBox(
                           width: 30,

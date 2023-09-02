@@ -65,5 +65,8 @@ class SiteNotifier extends Notifier<SiteState> {
     var token = sharedPref.getString(StorageKeys.token) ?? '';
     final httpResponse = await siteRepo.createSite(site, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (httpResponse.response.statusCode == 201) {
+      state = SiteDataChangeSuccess();
+    }
   }
 }

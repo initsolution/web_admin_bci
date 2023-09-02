@@ -80,6 +80,9 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
   createEmployee(Employee employee) async {
     state = EmployeeLoading();
     final httpResponse = await employeeRepo.createEmployee(employee);
-    debugPrint(httpResponse.data.toString());
+    debugPrint('${httpResponse.response.statusCode}');
+    if (httpResponse.response.statusCode == 201) {
+      state = EmployeeDataChangeSuccess();
+    }
   }
 }

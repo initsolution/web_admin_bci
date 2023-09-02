@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-
-final masterAssetNotifierProvider = NotifierProvider<MasterAssetNotifier, MasterAssetState>(
+final masterAssetNotifierProvider =
+    NotifierProvider<MasterAssetNotifier, MasterAssetState>(
   () {
     return MasterAssetNotifier(masterAssetRepo: MasterAssetRepo(Dio()));
   },
@@ -58,7 +58,11 @@ class MasterAssetNotifier extends Notifier<MasterAssetState> {
     state = MasterAssetLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse = await masterAssetRepo.createMasterAsset(masterAsset, 'Bearer $token');
+    final httpResponse =
+        await masterAssetRepo.createMasterAsset(masterAsset, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (httpResponse.response.statusCode == 201) {
+      state = MasterAssetDataChangeSuccess();
+    }
   }
 }

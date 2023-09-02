@@ -73,5 +73,8 @@ class MasterCategoryChecklistPreventiveNotifier
         await masterCategoryPrevRepo.createMasterCategoryChecklistPreventive(
             masterCategoryPrev, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (httpResponse.response.statusCode == 201) {
+      state = MasterCategoryChecklistPreventiveDataChangeSuccess();
+    }
   }
 }

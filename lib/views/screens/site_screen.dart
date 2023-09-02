@@ -156,6 +156,8 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
           ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
+      } else if (next is SiteDataChangeSuccess) {
+        ref.read(siteNotifierProvider.notifier).getAllSite();
       }
     });
     return PortalMasterLayout(
@@ -207,7 +209,11 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.refresh),
-                          onPressed: () {},
+                          onPressed: () {
+                            ref
+                                .read(siteNotifierProvider.notifier)
+                                .getAllSite();
+                          },
                         ),
                         const SizedBox(
                           width: 30,
@@ -301,8 +307,8 @@ class SiteData extends DataTableSource {
     return DataRow(cells: [
       DataCell(Text(sites[index].id!)),
       DataCell(Text(sites[index].name!)),
-      DataCell(Text(sites[index].tower_type!)),
-      DataCell(Text(sites[index].tower_height!.toString())),
+      DataCell(Text(sites[index].towerType!)),
+      DataCell(Text(sites[index].towerHeight!.toString())),
       DataCell(Text(sites[index].fabricator!.toString())),
       DataCell(Text(sites[index].tenants!.toString())),
       DataCell(Text(sites[index].address!.toString())),

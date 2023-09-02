@@ -11,7 +11,8 @@ abstract class SiteRepo {
 
   @GET('/site')
   Future<HttpResponse<dynamic>> getAllSite(
-      @Header('Authorization') String token, Map<String, dynamic>? header);
+      @Header('Authorization') String token,
+      @Queries() Map<String, dynamic>? header);
 
   @POST('/site')
   Future<HttpResponse> createSite(

@@ -11,12 +11,14 @@ abstract class MasterAssetRepo {
 
   @GET('/masterasset')
   Future<HttpResponse<dynamic>> getAllMasterAsset(
-      @Header('Authorization') String token, Map<String, dynamic>? header);
+      @Header('Authorization') String token,
+      @Queries() Map<String, dynamic>? header);
 
   @POST('/masterasset')
   Future<HttpResponse> createMasterAsset(
       @Body() MasterAsset asset, @Header('Authorization') String token);
 
   @PATCH('/masterasset/{id}')
-  Future<HttpResponse> updateMasterAsset(@Path() int id, @Body() MasterAsset asset);
+  Future<HttpResponse> updateMasterAsset(
+      @Path() int id, @Body() MasterAsset asset);
 }
