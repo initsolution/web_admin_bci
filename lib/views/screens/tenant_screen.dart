@@ -163,9 +163,9 @@ class TenantData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(tenants[index].kode!)),
+      DataCell(Text(tenants[index].kodeTenant!)),
       DataCell(Text(tenants[index].name!)),
-      DataCell(Text(tenants[index].is_active!.toString())),
+      DataCell(Text(tenants[index].isActive == true ? 'Active' : 'Deactive')),
     ]);
   }
 

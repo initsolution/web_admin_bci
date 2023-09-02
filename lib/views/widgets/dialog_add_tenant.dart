@@ -89,9 +89,9 @@ class DialogAddTenant extends ConsumerWidget {
   void saveTenant(WidgetRef ref) {
     final bool isActive = ref.watch(tenantIsActiveProvider);
     Tenant tenant = Tenant(
-      kode: tenantKodeController.text,
+      kodeTenant: tenantKodeController.text,
       name: tenantNameController.text,
-      is_active: isActive,
+      isActive: isActive,
     );
     if (DEBUG) {
       debugPrint('site : $tenant.toString()');

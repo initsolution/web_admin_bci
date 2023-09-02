@@ -7,13 +7,15 @@ part of 'tenant.dart';
 // **************************************************************************
 
 Tenant _$TenantFromJson(Map<String, dynamic> json) => Tenant(
-      kode: json['kode'] as String?,
+      id: json['id'] as int?,
+      kodeTenant: json['kodeTenant'] as String?,
       name: json['name'] as String?,
-      is_active: json['is_active'] as bool?,
+      isActive: json['isActive'] as bool?,
     );
 
 Map<String, dynamic> _$TenantToJson(Tenant instance) => <String, dynamic>{
-      'kode': instance.kode,
+      'id': instance.id,
+      'kodeTenant': instance.kodeTenant,
       'name': instance.name,
-      'is_active': instance.is_active,
+      'isActive': instance.isActive,
     };
