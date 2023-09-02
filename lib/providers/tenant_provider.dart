@@ -63,5 +63,8 @@ class TenantNotifier extends Notifier<TenantState> {
     var token = sharedPref.getString(StorageKeys.token) ?? '';
     final httpResponse = await tenantRepo.createTenant(tenant, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (httpResponse.response.statusCode == 201) {
+      state = TenantDataChangeSuccess();
+    }
   }
 }

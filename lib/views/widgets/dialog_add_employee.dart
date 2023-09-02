@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 
@@ -15,13 +16,27 @@ class DialogAddEmployee extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
-      title: const Text('New Employee'),
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'New Employee',
+                    style: TextStyle(fontSize: 30),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
               const SizedBox(
                 height: 10,
               ),
@@ -101,16 +116,7 @@ class DialogAddEmployee extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('Vendor'),
-                        getDropdownActive(),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Active'),
-                        getDropdownActive(),
+                        getDropdownVendor(),
                       ],
                     ),
                   ),
@@ -147,6 +153,7 @@ class DialogAddEmployee extends ConsumerWidget {
 
   void saveEmployee(WidgetRef ref) {
     final String employeeRole = ref.watch(employeeRoleProvider);
+    final String employeeVendor = ref.watch(employeeVendorProvider);
     Employee employee = Employee(
         nik: nikController.text,
         name: nameController.text,
@@ -155,7 +162,7 @@ class DialogAddEmployee extends ConsumerWidget {
         password: passwordController.text,
         role: employeeRole,
         isActive: true,
-        isVendor: false,
+        isVendor: employeeVendor == 'Vendor' ? true : false,
         instansi: instansiController.text);
     ref.read(employeeNotifierProvider.notifier).createEmployee(employee);
   }
@@ -178,22 +185,22 @@ class DialogAddEmployee extends ConsumerWidget {
     });
   }
 
-  Widget getDropdownActive() {
-    String? initialVal = "Vendor";
-    // var func;
-
-    return DropdownButton(
-      value: initialVal,
-      onChanged: (value) {
-        debugPrint(value);
-      }, // =========== Here the error occurs ==========================
-      items: <String>['Vendor', 'Internal']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
+  Widget getDropdownVendor() {
+    List<String> dataVendor = ['Internal', 'Vendor'];
+    return Consumer(builder: (_, WidgetRef ref, __) {
+      final String employeeVendor = ref.watch(employeeVendorProvider);
+      return DropdownButton(
+        value: employeeVendor.isNotEmpty ? employeeVendor : null,
+        onChanged: (value) {
+          ref.read(employeeVendorProvider.notifier).state = value!;
+        }, // =========== Here the error occurs ==========================
+        items: dataVendor.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      );
+    });
   }
 }

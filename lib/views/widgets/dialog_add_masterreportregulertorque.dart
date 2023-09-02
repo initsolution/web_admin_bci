@@ -154,12 +154,12 @@ class DialogAddMasterReportRegulerTorque extends ConsumerWidget {
   void saveMasterAsset(WidgetRef ref) {
     MasterReportRegulerTorque masterTorque = MasterReportRegulerTorque(
         fabricator: fabricatorController.text,
-        tower_height: int.parse(towerHeightController.text),
-        tower_segment: towerSegmentController.text,
+        towerHeight: int.parse(towerHeightController.text),
+        towerSegment: towerSegmentController.text,
         elevasi: int.parse(elevasiController.text),
-        bolt_size: boltSizeController.text,
-        minimum_torque: int.parse(minimumTorqueController.text),
-        qty_bolt: int.parse(qtyBoltController.text));
+        boltSize: boltSizeController.text,
+        minimumTorque: int.parse(minimumTorqueController.text),
+        qtyBolt: int.parse(qtyBoltController.text));
     if (DEBUG) {
       debugPrint('site : $masterTorque.toString()');
     }

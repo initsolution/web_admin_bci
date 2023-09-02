@@ -7,7 +7,10 @@ import 'package:flutter_web_ptb/providers/masterasset_provider.dart';
 // ignore: must_be_immutable
 class DialogAddMasterAsset extends ConsumerWidget {
   DialogAddMasterAsset({super.key});
-  TextEditingController towerCategoryController = TextEditingController();
+  TextEditingController taskTypeController = TextEditingController();
+  TextEditingController sectionController = TextEditingController();
+  TextEditingController fabricatorController = TextEditingController();
+  TextEditingController towerHeightController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
 
@@ -38,14 +41,53 @@ class DialogAddMasterAsset extends ConsumerWidget {
               const SizedBox(
                 height: 15,
               ),
-              const Text('Tower Category'),
+              const Text('Task Type'),
               TextField(
-                controller: towerCategoryController,
+                controller: taskTypeController,
                 keyboardType: TextInputType.text,
                 obscureText: false,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  hintText: 'Please type your Tower Category',
+                  hintText: 'Please type your Task Type',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text('Section'),
+              TextField(
+                controller: sectionController,
+                keyboardType: TextInputType.text,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Please type your Section',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text('Fabricator'),
+              TextField(
+                controller: fabricatorController,
+                keyboardType: TextInputType.text,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Please type your Fabricator',
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text('Tower Height'),
+              TextField(
+                controller: towerHeightController,
+                keyboardType: TextInputType.number,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Please type your Tower Height',
                 ),
               ),
               const SizedBox(
@@ -97,14 +139,19 @@ class DialogAddMasterAsset extends ConsumerWidget {
 
   void saveMasterAsset(WidgetRef ref) {
     MasterAsset masterAsset = MasterAsset(
-      tower_category: towerCategoryController.text,
+      taskType: taskTypeController.text,
+      section: sectionController.text,
+      fabricator: fabricatorController.text,
       category: categoryController.text,
+      towerHeight: int.parse(towerHeightController.text),
       description: descriptionController.text,
     );
     if (DEBUG) {
       debugPrint('site : $masterAsset.toString()');
     }
-    ref.read(masterAssetNotifierProvider.notifier).createMasterAsset(masterAsset);
+    ref
+        .read(masterAssetNotifierProvider.notifier)
+        .createMasterAsset(masterAsset);
   }
 
   // Widget getDropdownRole() {

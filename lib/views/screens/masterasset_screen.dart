@@ -33,7 +33,10 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
             source: data,
             header: const Text('Master Asset'),
             columns: const [
-              DataColumn(label: Text('Tower Category')),
+              DataColumn(label: Text('Task Type')),
+              DataColumn(label: Text('Section')),
+              DataColumn(label: Text('Fabricator')),
+              DataColumn(label: Text('Tower Height')),
               DataColumn(label: Text('Category')),
               DataColumn(label: Text('Description')),
             ],
@@ -170,7 +173,10 @@ class MasterAssetData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(masterAssets[index].tower_category!)),
+      DataCell(Text(masterAssets[index].taskType!)),
+      DataCell(Text(masterAssets[index].section!)),
+      DataCell(Text(masterAssets[index].fabricator!)),
+      DataCell(Text(masterAssets[index].towerHeight!.toString())),
       DataCell(Text(masterAssets[index].category!)),
       DataCell(Text(masterAssets[index].description!)),
     ]);

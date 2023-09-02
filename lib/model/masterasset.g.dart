@@ -7,15 +7,22 @@ part of 'masterasset.dart';
 // **************************************************************************
 
 MasterAsset _$MasterAssetFromJson(Map<String, dynamic> json) => MasterAsset(
-      tower_category: json['tower_category'] as String?,
+      id: json['id'] as int?,
+      taskType: json['taskType'] as String?,
+      section: json['section'] as String?,
+      fabricator: json['fabricator'] as String?,
+      towerHeight: json['towerHeight'] as int?,
       category: json['category'] as String?,
       description: json['description'] as String?,
-    )..id = json['id'] as int?;
+    );
 
 Map<String, dynamic> _$MasterAssetToJson(MasterAsset instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'tower_category': instance.tower_category,
+      'taskType': instance.taskType,
+      'section': instance.section,
+      'fabricator': instance.fabricator,
+      'towerHeight': instance.towerHeight,
       'category': instance.category,
       'description': instance.description,
     };

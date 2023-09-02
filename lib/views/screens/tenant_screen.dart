@@ -68,6 +68,9 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
           ref.read(userDataProvider.notifier).clearUserDataAsync();
           GoRouter.of(context).go(RouteUri.login);
         }
+      } else if (next is TenantDataChangeSuccess) {
+        Map<String, dynamic> params = {};
+        ref.read(tenantNotifierProvider.notifier).getAllTenant(params);
       }
     });
     return PortalMasterLayout(
@@ -113,7 +116,12 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.refresh),
-                          onPressed: () {},
+                          onPressed: () {
+                            Map<String, dynamic> params = {};
+                            ref
+                                .read(tenantNotifierProvider.notifier)
+                                .getAllTenant(params);
+                          },
                         ),
                         const SizedBox(
                           width: 30,

@@ -183,12 +183,12 @@ class MasterReportRegulerTorqueData extends DataTableSource {
   DataRow? getRow(int index) {
     return DataRow(cells: [
       DataCell(Text(masterTorque[index].fabricator!)),
-      DataCell(Text(masterTorque[index].tower_height!.toString())),
-      DataCell(Text(masterTorque[index].tower_segment!)),
+      DataCell(Text(masterTorque[index].towerHeight!.toString())),
+      DataCell(Text(masterTorque[index].towerSegment!)),
       DataCell(Text(masterTorque[index].elevasi!.toString())),
-      DataCell(Text(masterTorque[index].bolt_size!)),
-      DataCell(Text(masterTorque[index].minimum_torque!.toString())),
-      DataCell(Text(masterTorque[index].qty_bolt!.toString())),
+      DataCell(Text(masterTorque[index].boltSize!)),
+      DataCell(Text(masterTorque[index].minimumTorque!.toString())),
+      DataCell(Text(masterTorque[index].qtyBolt!.toString())),
     ]);
   }
 

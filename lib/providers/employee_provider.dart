@@ -10,8 +10,10 @@ import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 String role = 'Maker';
+String isVendor = 'Internal';
 
 final employeeRoleProvider = StateProvider<String>((ref) => role);
+final employeeVendorProvider = StateProvider<String>((ref) => isVendor);
 
 final employeeNotifierProvider =
     NotifierProvider<EmployeeNotifier, EmployeeState>(
