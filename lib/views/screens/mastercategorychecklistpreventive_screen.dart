@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
+import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/model/mastercategorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/providers/masterasset_provider.dart';
@@ -62,8 +63,8 @@ class _MasterCategoryChecklistPreventiveScreenState
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
     var value = ref.watch(userDataProvider.select((value) => value.username));
-    ref.listen(masterAssetNotifierProvider, (previous, next) {
-      if (next is MasterAssetErrorServer) {
+    ref.listen(masterCategoryChecklistPreventivNotifierProvider, (previous, next) {
+      if (next is MasterCategoryChecklistPreventiveErrorServer) {
         if (next.statusCode == 401) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Please login again')),
@@ -73,6 +74,7 @@ class _MasterCategoryChecklistPreventiveScreenState
           GoRouter.of(context).go(RouteUri.login);
         }
       } else if (next is MasterCategoryChecklistPreventiveDataChangeSuccess) {
+        if(DEBUG) debugPrint('masuk MasterCategoryChecklistPreventiveDataChangeSuccess');
         ref
             .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
             .getAllMasterCategoryChecklistPreventive();
@@ -179,7 +181,7 @@ class MasterCategoryChecklistPreventivetData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(masterCategoryPrev[index].name!)),
+      DataCell(Text(masterCategoryPrev[index].categoryName!)),
     ]);
   }
 

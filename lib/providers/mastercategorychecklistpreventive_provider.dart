@@ -11,7 +11,7 @@ import 'package:dio/dio.dart';
 
 final selectedCategoryChecklistPreventive =
     StateProvider<MasterCategoryChecklistPreventive>(
-        (ref) => MasterCategoryChecklistPreventive(name: '-'));
+        (ref) => MasterCategoryChecklistPreventive(categoryName: '-'));
 final masterCategoryChecklistPreventivNotifierProvider = NotifierProvider<
     MasterCategoryChecklistPreventiveNotifier,
     MasterCategoryChecklistPreventiveState>(
@@ -73,6 +73,7 @@ class MasterCategoryChecklistPreventiveNotifier
         await masterCategoryPrevRepo.createMasterCategoryChecklistPreventive(
             masterCategoryPrev, 'Bearer $token');
     if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (DEBUG) debugPrint(httpResponse.response.statusCode.toString());
     if (httpResponse.response.statusCode == 201) {
       state = MasterCategoryChecklistPreventiveDataChangeSuccess();
     }

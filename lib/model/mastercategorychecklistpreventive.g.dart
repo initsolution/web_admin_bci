@@ -10,12 +10,12 @@ MasterCategoryChecklistPreventive _$MasterCategoryChecklistPreventiveFromJson(
         Map<String, dynamic> json) =>
     MasterCategoryChecklistPreventive(
       id: json['id'] as int?,
-      name: json['name'] as String?,
+      categoryName: json['categoryName'] as String?,
     );
 
 Map<String, dynamic> _$MasterCategoryChecklistPreventiveToJson(
         MasterCategoryChecklistPreventive instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'categoryName': instance.categoryName,
     };

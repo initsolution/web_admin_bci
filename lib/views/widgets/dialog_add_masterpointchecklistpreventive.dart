@@ -19,7 +19,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
     // TODO: implement build
     return AlertDialog(
       content: SizedBox(
-        width: MediaQuery.of(context).size.width / 2.5,
+        width: MediaQuery.of(context).size.width / 2,
         child: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +77,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
               height: 10,
             ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 2.5,
+              width: MediaQuery.of(context).size.width / 2,
               child: ElevatedButton(
                 onPressed: () => {
                   saveMasterPointChecklistPreventive(ref),
@@ -127,7 +127,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
               .map<DropdownMenuItem<MasterCategoryChecklistPreventive>>((e) {
             return DropdownMenuItem<MasterCategoryChecklistPreventive>(
               value: e,
-              child: Text(e.name!),
+              child: Text(e.categoryName!),
             );
           }).toList(),
           onChanged: (value) => ref

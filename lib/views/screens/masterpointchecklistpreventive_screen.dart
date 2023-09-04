@@ -21,7 +21,7 @@ class MasterPointChecklistPreventivetData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(masterData[index].mcategorychecklistpreventive!.name!)),
+      DataCell(Text(masterData[index].mcategorychecklistpreventive!.categoryName!)),
       DataCell(Text(masterData[index].uraian!)),
       DataCell(Text(masterData[index].kriteria!)),
     ]);

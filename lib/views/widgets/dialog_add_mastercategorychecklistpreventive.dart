@@ -13,7 +13,7 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       content: SizedBox(
-        width: MediaQuery.of(context).size.width / 2.5,
+        width: MediaQuery.of(context).size.width / 2,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +50,7 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
                 height: 10,
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width / 2.5,
+                width: MediaQuery.of(context).size.width / 2,
                 child: ElevatedButton(
                   onPressed: () => {
                     saveMasterCategoryChecklistPreventive(ref),
@@ -68,14 +68,14 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
   }
 
   void saveMasterCategoryChecklistPreventive(WidgetRef ref) {
-    MasterCategoryChecklistPreventive masterAsset =
-        MasterCategoryChecklistPreventive(name: nameCategoryController.text);
+    MasterCategoryChecklistPreventive masterCategoryChecklistPreventive =
+        MasterCategoryChecklistPreventive(categoryName: nameCategoryController.text);
     if (DEBUG) {
-      debugPrint('site : $masterAsset.toString()');
+      debugPrint('site : $masterCategoryChecklistPreventive.toString()');
     }
     ref
         .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
-        .createMasterCategoryChecklistPreventive(masterAsset);
+        .createMasterCategoryChecklistPreventive(masterCategoryChecklistPreventive);
   }
 
   // Widget getDropdownRole() {
