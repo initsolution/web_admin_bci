@@ -25,33 +25,41 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
   Widget tableEmployee() {
     // var state = ref.watch(employeeNotifierProvider);
 
-    return Center(child: Consumer(
-      builder: (context, ref, child) {
-        var state = ref.watch(employeeNotifierProvider);
-        if (state is EmployeeLoaded) {
-          DataTableSource data = EmployeeData(employees: state.employees);
-          return PaginatedDataTable(
-            source: data,
-            header: const Text('Employee'),
-            columns: const [
-              DataColumn(label: Text('Nik')),
-              DataColumn(label: Text('Name')),
-              DataColumn(label: Text('Email')),
-              DataColumn(label: Text('Hp')),
-              DataColumn(label: Text('Status Aktif')),
-              DataColumn(label: Text('Status Karyawan')),
-            ],
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
-          );
-        } else if (state is EmployeeLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      },
-    ));
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            var state = ref.watch(employeeNotifierProvider);
+            if (state is EmployeeLoaded) {
+              DataTableSource data = EmployeeData(employees: state.employees);
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  source: data,
+                  header: const Text('Employee'),
+                  columns: const [
+                    DataColumn(label: Text('Nik')),
+                    DataColumn(label: Text('Name')),
+                    DataColumn(label: Text('Email')),
+                    DataColumn(label: Text('Hp')),
+                    DataColumn(label: Text('Status Aktif')),
+                    DataColumn(label: Text('Status Karyawan')),
+                  ],
+                  columnSpacing: 100,
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
+              );
+            } else if (state is EmployeeLoading) {
+              return const CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 
   @override
