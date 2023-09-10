@@ -191,7 +191,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                           icon: const Icon(Icons.add),
                           onPressed: () {
                             Map<String, dynamic> header = {
-                              "filter": "is_active||eq||true"
+                              "filter": "isActive||eq||true"
                             };
                             ref
                                 .read(tenantNotifierProvider.notifier)
@@ -281,7 +281,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
               DataColumn(label: Text('Address')),
               DataColumn(label: Text('Regional')),
               DataColumn(label: Text('Province')),
-              DataColumn(label: Text('Longitude')),
+              DataColumn(label: Text('Longtitude')),
               DataColumn(label: Text('Latitude')),
             ],
             columnSpacing: 100,
@@ -312,7 +312,7 @@ class SiteData extends DataTableSource {
       DataCell(Text(sites[index].fabricator!.toString())),
       DataCell(Text(sites[index].tenants!.toString())),
       DataCell(Text(sites[index].address!.toString())),
-      DataCell(Text(sites[index].kabupaten!.toString())),
+      DataCell(Text(sites[index].region!.toString())),
       DataCell(Text(sites[index].province!.toString())),
       DataCell(Text(sites[index].longitude!.toString())),
       DataCell(Text(sites[index].latitude!.toString())),

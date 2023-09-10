@@ -126,11 +126,20 @@ class DialogAddSite extends ConsumerWidget {
               if (stateTenant is TenantLoaded)
                 DropDownMultiSelect(
                   selected_values_style: const TextStyle(color: Colors.black),
-                  options: stateTenant.tenants.map((e) => e.name).toList(),
+                  options: stateTenant.tenants
+                      .map((e) =>
+                          e.kodeTenant.toString() + "-" + e.name.toString())
+                      .toList(),
                   selectedValues: selectedTenants,
                   whenEmpty: 'Select Tenants',
                   onChanged: (List<String?> x) {},
                 )
+              // MultiSelectDialog(
+              //     items: stateTenant.tenants
+              //         .map((e) => MultiSelectItem(e, e.name.toString()))
+              //         .toList(),
+              //     listType: MultiSelectListType.CHIP,
+              //     initialValue: stateTenant.tenants)
               else if (stateTenant is TenantLoading)
                 const CircularProgressIndicator(),
               const SizedBox(
@@ -150,15 +159,15 @@ class DialogAddSite extends ConsumerWidget {
               const SizedBox(
                 height: 10,
               ),
-              FutureBuilder(
+              FutureBuilder<List<Province>>(
                   future: getProvinceData(),
                   builder: (context, snapshot) {
-                    List<Province> data = snapshot.data!;
-                    final int selectedProvince =
-                        ref.watch(provinceNotifierProvider);
-                    final String selectedKabupaten =
-                        ref.watch(kabupatenNotifierProvider);
                     if (snapshot.hasData) {
+                      List<Province> data = snapshot.data!;
+                      final int selectedProvince =
+                          ref.watch(provinceNotifierProvider);
+                      final String selectedKabupaten =
+                          ref.watch(kabupatenNotifierProvider);
                       return Row(
                         children: [
                           Expanded(
@@ -246,7 +255,7 @@ class DialogAddSite extends ConsumerWidget {
               ),
               const Text('Latitude'),
               TextField(
-                controller: longitudeController,
+                controller: latitudeController,
                 keyboardType: TextInputType.text,
                 obscureText: false,
                 decoration: const InputDecoration(
@@ -274,21 +283,30 @@ class DialogAddSite extends ConsumerWidget {
 
   void saveSite(WidgetRef ref) {
     var kabupaten = ref.read(kabupatenNotifierProvider.notifier).state;
+    var listTenant = "";
+    for (var kodeTenant in selectedTenants) {
+      var temp = kodeTenant.split("-");
+      if (listTenant.length > 0) {
+        listTenant += ";";
+      }
+      listTenant += temp[0];
+    }
+    debugPrint('listTenant : $listTenant');
     Site site = Site(
       id: siteIdController.text,
       name: siteNameController.text,
       towerType: towerTypeController.text,
       towerHeight: int.parse(towerHeightController.text),
       fabricator: fabricatorController.text,
-      tenants: selectedTenants.toString(),
-      kabupaten: kabupaten,
+      tenants: listTenant,
+      region: kabupaten,
       province: province,
       address: addressController.text,
       latitude: latitudeController.text,
       longitude: longitudeController.text,
     );
     if (DEBUG) {
-      debugPrint('site : $site.toString()');
+      debugPrint('site : ${site.toString()}');
     }
     ref.read(siteNotifierProvider.notifier).createSite(site);
   }

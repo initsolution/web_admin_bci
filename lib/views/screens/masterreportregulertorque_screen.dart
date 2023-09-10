@@ -26,35 +26,43 @@ class MasterReportRegulerTorqueScreen extends ConsumerStatefulWidget {
 class _MasterReportRegulerTorqueScreenState
     extends ConsumerState<MasterReportRegulerTorqueScreen> {
   Widget tableMasterReportRegulerTorque() {
-    return Center(child: Consumer(
-      builder: (context, ref, child) {
-        var state = ref.watch(masterReportRegulerTorqueNotifierProvider);
-        if (state is MasterReportRegulerTorqueStateLoaded) {
-          DataTableSource data = MasterReportRegulerTorqueData(
-              masterTorque: state.masterReportRegulerTorque);
-          return PaginatedDataTable(
-            source: data,
-            header: const Text('Master Report Reguler Torque'),
-            columns: const [
-              DataColumn(label: Text('Fabricator')),
-              DataColumn(label: Text('Tower Height')),
-              DataColumn(label: Text('Tower Segment')),
-              DataColumn(label: Text('Elevasi')),
-              DataColumn(label: Text('Bolt Size')),
-              DataColumn(label: Text('Minimum Torque')),
-              DataColumn(label: Text('Qty Bolt')),
-            ],
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
-          );
-        } else if (state is MasterReportRegulerTorqueStateLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      },
-    ));
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            var state = ref.watch(masterReportRegulerTorqueNotifierProvider);
+            if (state is MasterReportRegulerTorqueStateLoaded) {
+              DataTableSource data = MasterReportRegulerTorqueData(
+                  masterTorque: state.masterReportRegulerTorque);
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  source: data,
+                  header: const Text('Master Report Reguler Torque'),
+                  columns: const [
+                    DataColumn(label: Text('Fabricator')),
+                    DataColumn(label: Text('Tower Height')),
+                    DataColumn(label: Text('Tower Segment')),
+                    DataColumn(label: Text('Elevasi')),
+                    DataColumn(label: Text('Bolt Size')),
+                    DataColumn(label: Text('Minimum Torque')),
+                    DataColumn(label: Text('Qty Bolt')),
+                  ],
+                  columnSpacing: 100,
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
+              );
+            } else if (state is MasterReportRegulerTorqueStateLoading) {
+              return const CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 
   @override

@@ -23,34 +23,42 @@ class MasterAssetScreen extends ConsumerStatefulWidget {
 
 class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
   Widget tableMasterAsset() {
-    return Center(child: Consumer(
-      builder: (context, ref, child) {
-        var state = ref.watch(masterAssetNotifierProvider);
-        if (state is MasterAssetLoaded) {
-          DataTableSource data =
-              MasterAssetData(masterAssets: state.masterAssets);
-          return PaginatedDataTable(
-            source: data,
-            header: const Text('Master Asset'),
-            columns: const [
-              DataColumn(label: Text('Task Type')),
-              DataColumn(label: Text('Section')),
-              DataColumn(label: Text('Fabricator')),
-              DataColumn(label: Text('Tower Height')),
-              DataColumn(label: Text('Category')),
-              DataColumn(label: Text('Description')),
-            ],
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
-          );
-        } else if (state is MasterAssetLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      },
-    ));
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            var state = ref.watch(masterAssetNotifierProvider);
+            if (state is MasterAssetLoaded) {
+              DataTableSource data =
+                  MasterAssetData(masterAssets: state.masterAssets);
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  source: data,
+                  header: const Text('Master Asset'),
+                  columns: const [
+                    DataColumn(label: Text('Task Type')),
+                    DataColumn(label: Text('Section')),
+                    DataColumn(label: Text('Fabricator')),
+                    DataColumn(label: Text('Tower Height')),
+                    DataColumn(label: Text('Category')),
+                    DataColumn(label: Text('Description')),
+                  ],
+                  columnSpacing: 100,
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
+              );
+            } else if (state is MasterAssetLoading) {
+              return const CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 
   @override

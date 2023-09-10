@@ -27,29 +27,38 @@ class MasterCategoryChecklistPreventiveScreen extends ConsumerStatefulWidget {
 class _MasterCategoryChecklistPreventiveScreenState
     extends ConsumerState<MasterCategoryChecklistPreventiveScreen> {
   Widget tableMasterAsset() {
-    return Center(child: Consumer(
-      builder: (context, ref, child) {
-        var state = ref.watch(masterCategoryChecklistPreventivNotifierProvider);
-        if (state is MasterCategoryChecklistPreventiveLoaded) {
-          DataTableSource data = MasterCategoryChecklistPreventivetData(
-              masterCategoryPrev: state.masterCategoryPrev);
-          return PaginatedDataTable(
-            source: data,
-            header: const Text('Master Category Checklist Preventive'),
-            columns: const [
-              DataColumn(label: Text('Name')),
-            ],
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
-          );
-        } else if (state is MasterCategoryChecklistPreventiveLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      },
-    ));
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            var state =
+                ref.watch(masterCategoryChecklistPreventivNotifierProvider);
+            if (state is MasterCategoryChecklistPreventiveLoaded) {
+              DataTableSource data = MasterCategoryChecklistPreventivetData(
+                  masterCategoryPrev: state.masterCategoryPrev);
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  source: data,
+                  header: const Text('Master Category Checklist Preventive'),
+                  columns: const [
+                    DataColumn(label: Text('Name')),
+                  ],
+                  columnSpacing: 100,
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
+              );
+            } else if (state is MasterCategoryChecklistPreventiveLoading) {
+              return const CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 
   @override
@@ -61,7 +70,8 @@ class _MasterCategoryChecklistPreventiveScreenState
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
     var value = ref.watch(userDataProvider.select((value) => value.username));
-    ref.listen(masterCategoryChecklistPreventivNotifierProvider, (previous, next) {
+    ref.listen(masterCategoryChecklistPreventivNotifierProvider,
+        (previous, next) {
       if (next is MasterCategoryChecklistPreventiveErrorServer) {
         if (next.statusCode == 401) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -72,7 +82,9 @@ class _MasterCategoryChecklistPreventiveScreenState
           GoRouter.of(context).go(RouteUri.login);
         }
       } else if (next is MasterCategoryChecklistPreventiveDataChangeSuccess) {
-        if(DEBUG) debugPrint('masuk MasterCategoryChecklistPreventiveDataChangeSuccess');
+        if (DEBUG)
+          debugPrint(
+              'masuk MasterCategoryChecklistPreventiveDataChangeSuccess');
         ref
             .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
             .getAllMasterCategoryChecklistPreventive();

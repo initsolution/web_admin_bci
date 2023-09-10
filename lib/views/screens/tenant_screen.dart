@@ -23,30 +23,38 @@ class TenantScreen extends ConsumerStatefulWidget {
 
 class _TenantScreenState extends ConsumerState<TenantScreen> {
   Widget tableTenant() {
-    return Center(child: Consumer(
-      builder: (context, ref, child) {
-        var state = ref.watch(tenantNotifierProvider);
-        if (state is TenantLoaded) {
-          DataTableSource data = TenantData(tenants: state.tenants);
-          return PaginatedDataTable(
-            source: data,
-            header: const Text('Tenant'),
-            columns: const [
-              DataColumn(label: Text('Kode')),
-              DataColumn(label: Text('Name')),
-              DataColumn(label: Text('Is Active')),
-            ],
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
-          );
-        } else if (state is TenantLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      },
-    ));
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            var state = ref.watch(tenantNotifierProvider);
+            if (state is TenantLoaded) {
+              DataTableSource data = TenantData(tenants: state.tenants);
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  source: data,
+                  header: const Text('Tenant'),
+                  columns: const [
+                    DataColumn(label: Text('Kode')),
+                    DataColumn(label: Text('Name')),
+                    DataColumn(label: Text('Is Active')),
+                  ],
+                  columnSpacing: 100,
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
+              );
+            } else if (state is TenantLoading) {
+              return const CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 
   @override

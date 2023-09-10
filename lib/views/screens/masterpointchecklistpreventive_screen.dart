@@ -21,7 +21,8 @@ class MasterPointChecklistPreventivetData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(masterData[index].mcategorychecklistpreventive!.categoryName!)),
+      DataCell(
+          Text(masterData[index].mcategorychecklistpreventive!.categoryName!)),
       DataCell(Text(masterData[index].uraian!)),
       DataCell(Text(masterData[index].kriteria!)),
     ]);
@@ -48,24 +49,31 @@ class MasterPointChecklistPreventiveScreen extends ConsumerStatefulWidget {
 class _MasterPointChecklistPreventiveScreenState
     extends ConsumerState<MasterPointChecklistPreventiveScreen> {
   Widget tableMaster() {
-    return Center(
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       child: Consumer(builder: (context, ref, child) {
         var state = ref.watch(masterPointChecklistPreventiveNotifierProvider);
         if (state is MasterPointChecklistPreventiveLoaded) {
           DataTableSource data = MasterPointChecklistPreventivetData(
               masterData: state.masterPointChecklistPreventive);
-          return PaginatedDataTable(
-            columns: const [
-              DataColumn(label: Text('Name Category')),
-              DataColumn(label: Text('Uraian')),
-              DataColumn(label: Text('Kriteria')),
-            ],
-            source: data,
-            header: const Text('Master Point Checklist Preventive'),
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
+          return Theme(
+            data: ThemeData(
+                cardColor: Theme.of(context).cardColor,
+                textTheme:
+                    const TextTheme(titleLarge: TextStyle(color: Colors.blue))),
+            child: PaginatedDataTable(
+              columns: const [
+                DataColumn(label: Text('Name Category')),
+                DataColumn(label: Text('Uraian')),
+                DataColumn(label: Text('Kriteria')),
+              ],
+              source: data,
+              header: const Text('Master Point Checklist Preventive'),
+              columnSpacing: 100,
+              horizontalMargin: 10,
+              rowsPerPage: 10,
+              showCheckboxColumn: false,
+            ),
           );
         } else if (state is MasterPointChecklistPreventiveLoading) {
           return const CircularProgressIndicator();
