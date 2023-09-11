@@ -1,3 +1,4 @@
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -22,6 +23,7 @@ class EmployeeScreen extends ConsumerStatefulWidget {
 }
 
 class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
+  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
   Widget tableEmployee() {
     // var state = ref.watch(employeeNotifierProvider);
 
@@ -32,27 +34,52 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
             var state = ref.watch(employeeNotifierProvider);
             if (state is EmployeeLoaded) {
               DataTableSource data = EmployeeData(employees: state.employees);
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
-                  source: data,
-                  header: const Text('Employee'),
-                  columns: const [
-                    DataColumn(label: Text('Nik')),
-                    DataColumn(label: Text('Name')),
-                    DataColumn(label: Text('Email')),
-                    DataColumn(label: Text('Hp')),
-                    DataColumn(label: Text('Status Aktif')),
-                    DataColumn(label: Text('Status Karyawan')),
-                  ],
-                  columnSpacing: 100,
-                  horizontalMargin: 10,
-                  rowsPerPage: 10,
-                  showCheckboxColumn: false,
-                ),
+              return SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: PaginatedDataTable2(
+                    columnSpacing: 30,
+                    wrapInCard: false,
+                    renderEmptyRowsInTheEnd: false,
+                    
+                    headingRowColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.grey[300]!),
+                    rowsPerPage: 10,
+                    fit: FlexFit.tight,
+                    border: const TableBorder(
+                        top: BorderSide(color: Colors.black),
+                        bottom: BorderSide(color: Colors.black),
+                        left: BorderSide(color: Colors.black),
+                        right: BorderSide(color: Colors.black),
+                        verticalInside: BorderSide(color: Colors.grey),
+                        horizontalInside: BorderSide(color: Colors.grey)),
+                    onRowsPerPageChanged: (value) {
+                      // No need to wrap into setState, it will be called inside the widget
+                      // and trigger rebuild
+                      //setState(() {
+                      _rowsPerPage = value!;
+                      print(_rowsPerPage);
+                      //});
+                    },
+                    // initialFirstRowIndex: 0,
+                    onPageChanged: (rowIndex) {
+                      print(rowIndex / _rowsPerPage);
+                    },
+                    sortArrowIcon: Icons.keyboard_arrow_up, // custom arrow
+                    sortArrowAnimationDuration: const Duration(milliseconds: 0),
+                    columns: const [
+                      DataColumn(label: Text('Nik')),
+                      DataColumn(label: Text('Name')),
+                      DataColumn(label: Text('Email')),
+                      DataColumn(label: Text('Hp')),
+                      DataColumn(label: Text('Status Aktif')),
+                      DataColumn(label: Text('Status Karyawan')),
+                    ],
+                    empty: Center(
+                        child: Container(
+                            padding: const EdgeInsets.all(20),
+                            color: Colors.grey[200],
+                            child: const Text('No data'))),
+                    source: data),
               );
             } else if (state is EmployeeLoading) {
               return const CircularProgressIndicator();

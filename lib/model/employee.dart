@@ -15,6 +15,7 @@ class Employee {
   bool? isVendor;
   String? urlEsign;
   String? instansi;
+  bool selected = false;
   Employee({
     this.nik,
     this.name,
