@@ -7,6 +7,7 @@ import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_add_task.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -19,7 +20,6 @@ class TaskScreen extends ConsumerStatefulWidget {
 }
 
 class _TaskScreenState extends ConsumerState<TaskScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -72,7 +72,12 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                         IconButton(
                           icon: const Icon(Icons.add),
                           onPressed: () {
-                            
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return SizedBox(child: DialogAddTask());
+                              },
+                            );
                           },
                         ),
                         const SizedBox(
@@ -133,30 +138,38 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
   }
 
   Widget tableTask() {
-    return Center(child: Consumer(
-      builder: (context, ref, child) {
-        var state = ref.watch(taskNotifierProvider);
-        if (DEBUG) debugPrint('state : $state');
-        if (state is TaskLoaded) {
-          DataTableSource data = TaskData(tasks: state.tasks);
-          return PaginatedDataTable(
-            source: data,
-            header: const Text('Task'),
-            columns: const [
-              DataColumn(label: Text('Created Date')),
-              DataColumn(label: Text('Submited Date')),
-            ],
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
-          );
-        } else if (state is TaskLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      },
-    ));
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            var state = ref.watch(taskNotifierProvider);
+            if (DEBUG) debugPrint('state : $state');
+            if (state is TaskLoaded) {
+              DataTableSource data = TaskData(tasks: state.tasks);
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  source: data,
+                  header: const Text('Task'),
+                  columns: const [
+                    DataColumn(label: Text('Created Date')),
+                    DataColumn(label: Text('Submited Date')),
+                  ],
+                  columnSpacing: 100,
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
+              );
+            } else if (state is TaskLoading) {
+              return const CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 }
 

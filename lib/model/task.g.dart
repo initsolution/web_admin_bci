@@ -9,6 +9,7 @@ part of 'task.dart';
 Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       createdDate: json['createdDate'] as String?,
       submitedDate: json['submitedDate'] as String?,
+      verifiedDate: json['verifiedDate'] as String?,
       status: json['status'] as String?,
       type: json['type'] as String?,
       towerCategory: json['towerCategory'] as String?,
@@ -26,6 +27,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
 Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'createdDate': instance.createdDate,
       'submitedDate': instance.submitedDate,
+      'verifiedDate': instance.verifiedDate,
       'status': instance.status,
       'type': instance.type,
       'towerCategory': instance.towerCategory,

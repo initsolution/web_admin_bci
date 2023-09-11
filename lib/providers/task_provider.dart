@@ -9,6 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
+String typeTask = 'Regular';
+final typeTaskProvider = StateProvider<String>((ref) => typeTask);
+
 final taskNotifierProvider = NotifierProvider<TaskNotifier, TaskState>(
   () {
     return TaskNotifier(taskRepo: TaskRepo(Dio()));

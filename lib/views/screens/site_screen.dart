@@ -262,39 +262,47 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
   }
 
   Widget tableSite() {
-    return Center(child: Consumer(
-      builder: (context, ref, child) {
-        var state = ref.watch(siteNotifierProvider);
-        if (DEBUG) debugPrint('state : $state');
-        if (state is SiteLoaded) {
-          DataTableSource data = SiteData(sites: state.sites);
-          return PaginatedDataTable(
-            source: data,
-            header: const Text('Site'),
-            columns: const [
-              DataColumn(label: Text('ID')),
-              DataColumn(label: Text('Name')),
-              DataColumn(label: Text('Tower Type')),
-              DataColumn(label: Text('Tower Height')),
-              DataColumn(label: Text('Fabricator')),
-              DataColumn(label: Text('Tenants')),
-              DataColumn(label: Text('Address')),
-              DataColumn(label: Text('Regional')),
-              DataColumn(label: Text('Province')),
-              DataColumn(label: Text('Longtitude')),
-              DataColumn(label: Text('Latitude')),
-            ],
-            columnSpacing: 100,
-            horizontalMargin: 10,
-            rowsPerPage: 10,
-            showCheckboxColumn: false,
-          );
-        } else if (state is SiteLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      },
-    ));
+    return Container(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Consumer(
+          builder: (context, ref, child) {
+            var state = ref.watch(siteNotifierProvider);
+            if (DEBUG) debugPrint('state : $state');
+            if (state is SiteLoaded) {
+              DataTableSource data = SiteData(sites: state.sites);
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  source: data,
+                  header: const Text('Site'),
+                  columns: const [
+                    DataColumn(label: Text('ID')),
+                    DataColumn(label: Text('Name')),
+                    DataColumn(label: Text('Tower Type')),
+                    DataColumn(label: Text('Tower Height')),
+                    DataColumn(label: Text('Fabricator')),
+                    DataColumn(label: Text('Tenants')),
+                    DataColumn(label: Text('Address')),
+                    DataColumn(label: Text('Regional')),
+                    DataColumn(label: Text('Province')),
+                    DataColumn(label: Text('Longtitude')),
+                    DataColumn(label: Text('Latitude')),
+                  ],
+                  columnSpacing: 100,
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
+              );
+            } else if (state is SiteLoading) {
+              return const CircularProgressIndicator();
+            }
+            return Container();
+          },
+        ));
   }
 }
 
