@@ -13,6 +13,8 @@ import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_sidebar_theme.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../providers/task_provider.dart';
+
 class SidebarMenuConfig {
   final String uri;
   final IconData icon;
@@ -264,6 +266,10 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ref.read(employeeNotifierProvider.notifier).getAllEmployee();
             ref.read(siteNotifierProvider.notifier).getAllSite();
             ref.read(tenantNotifierProvider.notifier).getAllTenant(params);
+            params = {
+              "join" : ['site', 'makerEmployee', 'verifierEmployee']
+            };
+            ref.read(taskNotifierProvider.notifier).getAllTask(params);
             ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();
             ref
                 .read(masterCategoryChecklistPreventivNotifierProvider.notifier)

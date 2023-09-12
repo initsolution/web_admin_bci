@@ -7,6 +7,7 @@ import 'package:flutter_web_ptb/model/mastercategorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_provider.dart';
 import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/theme/theme.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,24 @@ class MasterCategoryChecklistPreventiveScreen extends ConsumerStatefulWidget {
 
 class _MasterCategoryChecklistPreventiveScreenState
     extends ConsumerState<MasterCategoryChecklistPreventiveScreen> {
+  late List<MasterCategoryChecklistPreventive> filterData;
+  bool _sortCategoryNameAsc = true;
+
+  void sort(columnIndex) {
+    setState(() {
+      if (columnIndex == 0) {
+        //categoryName
+        if (_sortCategoryNameAsc == true) {
+          _sortCategoryNameAsc = false;
+          filterData.sort((a, b) => b.categoryName!.compareTo(a.categoryName!));
+        } else {
+          _sortCategoryNameAsc = true;
+          filterData.sort((a, b) => a.categoryName!.compareTo(b.categoryName!));
+        }
+      }
+    });
+  }
+
   Widget tableMasterAsset() {
     return Container(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -36,6 +55,7 @@ class _MasterCategoryChecklistPreventiveScreenState
             if (state is MasterCategoryChecklistPreventiveLoaded) {
               DataTableSource data = MasterCategoryChecklistPreventivetData(
                   masterCategoryPrev: state.masterCategoryPrev);
+              filterData = state.masterCategoryPrev;
               return Theme(
                 data: ThemeData(
                     cardColor: Theme.of(context).cardColor,
@@ -44,10 +64,14 @@ class _MasterCategoryChecklistPreventiveScreenState
                 child: PaginatedDataTable(
                   source: data,
                   header: const Text('Master Category Checklist Preventive'),
-                  columns: const [
-                    DataColumn(label: Text('Name')),
+                  columns: [
+                    DataColumn(
+                      label: const Text('Name', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
                   ],
-                  columnSpacing: 100,
                   horizontalMargin: 10,
                   rowsPerPage: 10,
                   showCheckboxColumn: false,

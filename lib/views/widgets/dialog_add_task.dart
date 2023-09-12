@@ -143,7 +143,12 @@ class DialogAddTask extends ConsumerWidget {
 
   Widget LoadMakerEmployee(var stateMaker) {
     if (stateMaker is EmployeeLoaded) {
-      List<Employee> listMaker = stateMaker.employees;
+      List<Employee> listMaker = [];
+      for (var maker in stateMaker.employees) {
+        if (maker.role == 'Maker') {
+          listMaker.add(maker);
+        }
+      }
       return DropdownSearch<Employee>(
         items: listMaker,
         itemAsString: (item) => item.name!,
@@ -162,9 +167,14 @@ class DialogAddTask extends ConsumerWidget {
     }
   }
 
-  Widget LoadVerifikatorEmployee(var stateMaker) {
-    if (stateMaker is EmployeeLoaded) {
-      List<Employee> listMaker = stateMaker.employees;
+  Widget LoadVerifikatorEmployee(var stateVerifikator) {
+    if (stateVerifikator is EmployeeLoaded) {
+      List<Employee> listMaker = [];
+      for (var maker in stateVerifikator.employees) {
+        if (maker.role == 'Verify') {
+          listMaker.add(maker);
+        }
+      }
       return DropdownSearch<Employee>(
         items: listMaker,
         itemAsString: (item) => item.name!,
@@ -176,7 +186,7 @@ class DialogAddTask extends ConsumerWidget {
 
         // dropdownBuilder: _customPopupItemBuilderExample,
       );
-    } else if (stateMaker is EmployeeLoading) {
+    } else if (stateVerifikator is EmployeeLoading) {
       return const CircularProgressIndicator();
     } else {
       return const CircularProgressIndicator();
@@ -253,7 +263,7 @@ class DialogAddTask extends ConsumerWidget {
   // }
 
   Widget getDropDownTypeTask() {
-    List<String> listTypeTask = ['Regular', 'Preventive'];
+    List<String> listTypeTask = ['Reguler', 'Preventive'];
     return Consumer(builder: (_, WidgetRef ref, __) {
       final String typeTask = ref.watch(typeTaskProvider);
       return DropdownButton(

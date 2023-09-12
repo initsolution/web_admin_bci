@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
-String typeTask = 'Regular';
+String typeTask = 'Reguler';
 final typeTaskProvider = StateProvider<String>((ref) => typeTask);
 
 final taskNotifierProvider = NotifierProvider<TaskNotifier, TaskState>(
@@ -28,9 +28,9 @@ class TaskNotifier extends Notifier<TaskState> {
     return TaskInitial();
   }
 
-  getAllTask() async {
+  getAllTask(Map<String, dynamic> params) async {
     state = TaskLoading();
-    Map<String, dynamic> header = {};
+    Map<String, dynamic> header = params;
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';

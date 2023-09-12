@@ -1,4 +1,3 @@
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -11,6 +10,8 @@ import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../theme/theme.dart';
 // import 'package:provider/provider.dart';
 
 // import '../../providers/user_data_provider.dart';
@@ -23,7 +24,54 @@ class EmployeeScreen extends ConsumerStatefulWidget {
 }
 
 class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
-  int _rowsPerPage = PaginatedDataTable.defaultRowsPerPage;
+  late List<Employee> filterData;
+  bool _sortNik = true;
+  bool _sortNameAsc = true;
+  bool _sortEmailAsc = true;
+  bool _sortHpAsc = true;
+
+  void sort(columnIndex) {
+    setState(() {
+      if (columnIndex == 0) {
+        //nik
+        if (_sortNik == true) {
+          _sortNik = false;
+          filterData.sort((a, b) => b.nik!.compareTo(a.nik!));
+        } else {
+          _sortNik = true;
+          filterData.sort((a, b) => a.nik!.compareTo(b.nik!));
+        }
+      } else if (columnIndex == 1) {
+        //nama
+        if (_sortNameAsc == true) {
+          _sortNameAsc = false;
+          filterData.sort((a, b) => b.name!.compareTo(a.name!));
+        } else {
+          _sortNameAsc = true;
+          filterData.sort((a, b) => a.name!.compareTo(b.name!));
+        }
+      } else if (columnIndex == 2) {
+        //email
+        if (_sortEmailAsc == true) {
+          _sortEmailAsc = false;
+          filterData.sort((a, b) => b.email!.compareTo(a.email!));
+        } else {
+          _sortEmailAsc = true;
+          filterData.sort((a, b) => a.email!.compareTo(b.email!));
+        }
+      } else if (columnIndex == 3) {
+        //hp
+        if (_sortHpAsc == true) {
+          _sortHpAsc = false;
+          filterData.sort((a, b) => b.hp!.compareTo(a.hp!));
+        } else {
+          _sortHpAsc = true;
+          filterData.sort((a, b) => a.hp!.compareTo(b.hp!));
+        }
+      }
+    });
+  }
+
   Widget tableEmployee() {
     // var state = ref.watch(employeeNotifierProvider);
 
@@ -34,52 +82,55 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
             var state = ref.watch(employeeNotifierProvider);
             if (state is EmployeeLoaded) {
               DataTableSource data = EmployeeData(employees: state.employees);
-              return SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: PaginatedDataTable2(
-                    columnSpacing: 30,
-                    wrapInCard: false,
-                    renderEmptyRowsInTheEnd: false,
-                    
-                    headingRowColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.grey[300]!),
-                    rowsPerPage: 10,
-                    fit: FlexFit.tight,
-                    border: const TableBorder(
-                        top: BorderSide(color: Colors.black),
-                        bottom: BorderSide(color: Colors.black),
-                        left: BorderSide(color: Colors.black),
-                        right: BorderSide(color: Colors.black),
-                        verticalInside: BorderSide(color: Colors.grey),
-                        horizontalInside: BorderSide(color: Colors.grey)),
-                    onRowsPerPageChanged: (value) {
-                      // No need to wrap into setState, it will be called inside the widget
-                      // and trigger rebuild
-                      //setState(() {
-                      _rowsPerPage = value!;
-                      print(_rowsPerPage);
-                      //});
-                    },
-                    // initialFirstRowIndex: 0,
-                    onPageChanged: (rowIndex) {
-                      print(rowIndex / _rowsPerPage);
-                    },
-                    sortArrowIcon: Icons.keyboard_arrow_up, // custom arrow
-                    sortArrowAnimationDuration: const Duration(milliseconds: 0),
-                    columns: const [
-                      DataColumn(label: Text('Nik')),
-                      DataColumn(label: Text('Name')),
-                      DataColumn(label: Text('Email')),
-                      DataColumn(label: Text('Hp')),
-                      DataColumn(label: Text('Status Aktif')),
-                      DataColumn(label: Text('Status Karyawan')),
-                    ],
-                    empty: Center(
-                        child: Container(
-                            padding: const EdgeInsets.all(20),
-                            color: Colors.grey[200],
-                            child: const Text('No data'))),
-                    source: data),
+              filterData = state.employees;
+              return Theme(
+                data: ThemeData(
+                    cardColor: Theme.of(context).cardColor,
+                    textTheme: const TextTheme(
+                        titleLarge: TextStyle(color: Colors.blue))),
+                child: PaginatedDataTable(
+                  // sortColumnIndex: 0,
+                  source: data,
+                  header: const Text('Employee'),
+                  columns: [
+                    DataColumn(
+                      label: const Text('Nik', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Name', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Email', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Hp', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    const DataColumn(
+                      label: Text('Status Aktif', style: tableHeader),
+                    ),
+                    const DataColumn(
+                      label: Text('Status Karyawan', style: tableHeader),
+                    ),
+                    const DataColumn(
+                      label: Text('Role', style: tableHeader),
+                    ),
+                  ],
+                  horizontalMargin: 10,
+                  rowsPerPage: 10,
+                  showCheckboxColumn: false,
+                ),
               );
             } else if (state is EmployeeLoading) {
               return const CircularProgressIndicator();
@@ -271,6 +322,7 @@ class EmployeeData extends DataTableSource {
       DataCell(Text(employees[index].hp!)),
       DataCell(Text(employees[index].isActive == true ? 'Active' : 'Deactive')),
       DataCell(Text(employees[index].isVendor == true ? 'Vendor' : 'Internal')),
+      DataCell(Text(employees[index].role!)),
     ]);
   }
 

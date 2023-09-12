@@ -6,6 +6,7 @@ import 'package:flutter_web_ptb/model/masterreportregulertorque.dart';
 import 'package:flutter_web_ptb/providers/masterreportregulertorque_provider.dart';
 import 'package:flutter_web_ptb/providers/masterreportregulertorque_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/theme/theme.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +26,95 @@ class MasterReportRegulerTorqueScreen extends ConsumerStatefulWidget {
 
 class _MasterReportRegulerTorqueScreenState
     extends ConsumerState<MasterReportRegulerTorqueScreen> {
+  late List<MasterReportRegulerTorque> filterData;
+  bool _sortFabricatorAsc = true;
+  bool _sortTowerHeightAsc = true;
+  bool _sortTowerSegmentAsc = true;
+  bool _sortElevasiAsc = true;
+  bool _sortBoltSizeAsc = true;
+  bool _sortMinumumTorqueAsc = true;
+  bool _sortQtyBoltAsc = true;
+
+  void sort(columnIndex) {
+    setState(() {
+      if (columnIndex == 0) {
+        //fabricator
+        if (_sortFabricatorAsc == true) {
+          _sortFabricatorAsc = false;
+          filterData.sort((a, b) => b.fabricator!.compareTo(a.fabricator!));
+        } else {
+          _sortFabricatorAsc = true;
+          filterData.sort((a, b) => a.fabricator!.compareTo(b.fabricator!));
+        }
+      } else if (columnIndex == 1) {
+        //towerheight
+        if (_sortTowerHeightAsc == true) {
+          _sortTowerHeightAsc = false;
+          filterData.sort((a, b) => b.towerHeight!.compareTo(a.towerHeight!));
+        } else {
+          _sortTowerHeightAsc = true;
+          filterData.sort((a, b) => a.towerHeight!.compareTo(b.towerHeight!));
+        }
+      } else if (columnIndex == 2) {
+        //towersegment
+        if (_sortTowerSegmentAsc == true) {
+          _sortTowerSegmentAsc = false;
+          filterData.sort((a, b) => b.towerSegment!.compareTo(a.towerSegment!));
+        } else {
+          _sortTowerSegmentAsc = true;
+          filterData.sort((a, b) => a.towerSegment!.compareTo(b.towerSegment!));
+        }
+      } else if (columnIndex == 3) {
+        //elevasi
+        if (_sortElevasiAsc == true) {
+          _sortElevasiAsc = false;
+          filterData.sort((a, b) => b.elevasi!.compareTo(a.elevasi!));
+        } else {
+          _sortElevasiAsc = true;
+          filterData.sort((a, b) => a.elevasi!.compareTo(b.elevasi!));
+        }
+      } else if (columnIndex == 2) {
+        //towersegment
+        if (_sortTowerSegmentAsc == true) {
+          _sortTowerSegmentAsc = false;
+          filterData.sort((a, b) => b.towerSegment!.compareTo(a.towerSegment!));
+        } else {
+          _sortTowerSegmentAsc = true;
+          filterData.sort((a, b) => a.towerSegment!.compareTo(b.towerSegment!));
+        }
+      } else if (columnIndex == 4) {
+        //boltsize
+        if (_sortBoltSizeAsc == true) {
+          _sortBoltSizeAsc = false;
+          filterData.sort((a, b) => b.boltSize!.compareTo(a.boltSize!));
+        } else {
+          _sortBoltSizeAsc = true;
+          filterData.sort((a, b) => a.boltSize!.compareTo(b.boltSize!));
+        }
+      } else if (columnIndex == 5) {
+        //minimumtorque
+        if (_sortMinumumTorqueAsc == true) {
+          _sortMinumumTorqueAsc = false;
+          filterData
+              .sort((a, b) => b.minimumTorque!.compareTo(a.minimumTorque!));
+        } else {
+          _sortMinumumTorqueAsc = true;
+          filterData
+              .sort((a, b) => a.minimumTorque!.compareTo(b.minimumTorque!));
+        }
+      } else if (columnIndex == 6) {
+        //qtybolt
+        if (_sortQtyBoltAsc == true) {
+          _sortQtyBoltAsc = false;
+          filterData.sort((a, b) => b.qtyBolt!.compareTo(a.qtyBolt!));
+        } else {
+          _sortQtyBoltAsc = true;
+          filterData.sort((a, b) => a.qtyBolt!.compareTo(b.qtyBolt!));
+        }
+      }
+    });
+  }
+
   Widget tableMasterReportRegulerTorque() {
     return Container(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -34,6 +124,7 @@ class _MasterReportRegulerTorqueScreenState
             if (state is MasterReportRegulerTorqueStateLoaded) {
               DataTableSource data = MasterReportRegulerTorqueData(
                   masterTorque: state.masterReportRegulerTorque);
+              filterData = state.masterReportRegulerTorque;
               return Theme(
                 data: ThemeData(
                     cardColor: Theme.of(context).cardColor,
@@ -42,16 +133,50 @@ class _MasterReportRegulerTorqueScreenState
                 child: PaginatedDataTable(
                   source: data,
                   header: const Text('Master Report Reguler Torque'),
-                  columns: const [
-                    DataColumn(label: Text('Fabricator')),
-                    DataColumn(label: Text('Tower Height')),
-                    DataColumn(label: Text('Tower Segment')),
-                    DataColumn(label: Text('Elevasi')),
-                    DataColumn(label: Text('Bolt Size')),
-                    DataColumn(label: Text('Minimum Torque')),
-                    DataColumn(label: Text('Qty Bolt')),
+                  columns: [
+                    DataColumn(
+                      label: const Text('Fabricator', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Tower Height', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Tower Segment', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Elevasi', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Bolt Size', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Minimum Torque', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Qty Bolt', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
                   ],
-                  columnSpacing: 100,
                   horizontalMargin: 10,
                   rowsPerPage: 10,
                   showCheckboxColumn: false,

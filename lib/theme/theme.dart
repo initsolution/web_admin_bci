@@ -16,6 +16,9 @@ const Color kTextColor = Color(0xFF2A2B2D);
 
 const Color kScreenBackgroundColor = Color(0xFFF4F6F9);
 
+const TextStyle tableHeader =
+    TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
+
 class AppThemeData {
   AppThemeData._();
 

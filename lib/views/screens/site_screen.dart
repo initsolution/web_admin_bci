@@ -12,6 +12,7 @@ import 'package:flutter_web_ptb/views/widgets/dialog_add_site.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_web_ptb/theme/theme.dart';
 
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
@@ -28,6 +29,16 @@ class SiteScreen extends ConsumerStatefulWidget {
 class _SiteScreenState extends ConsumerState<SiteScreen> {
   final pdf = pw.Document();
   var anchor;
+
+  late List<Site> filterData;
+  bool _sortIDAsc = true;
+  bool _sortNameAsc = true;
+  bool _sortTowerTypeAsc = true;
+  bool _sortTowerHeightAsc = true;
+  bool _sortFabricatorAsc = true;
+  bool _sortAddressAsc = true;
+  bool _sortRegionalAsc = true;
+  bool _sortProvinceAsc = true;
 
   @override
   void initState() {
@@ -261,6 +272,84 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
     );
   }
 
+  void sort(columnIndex) {
+    setState(() {
+      if (columnIndex == 0) {
+        //nik
+        if (_sortIDAsc == true) {
+          _sortIDAsc = false;
+          filterData.sort((a, b) => b.id!.compareTo(a.id!));
+        } else {
+          _sortIDAsc = true;
+          filterData.sort((a, b) => a.id!.compareTo(b.id!));
+        }
+      } else if (columnIndex == 1) {
+        //nama
+        if (_sortNameAsc == true) {
+          _sortNameAsc = false;
+          filterData.sort((a, b) => b.name!.compareTo(a.name!));
+        } else {
+          _sortNameAsc = true;
+          filterData.sort((a, b) => a.name!.compareTo(b.name!));
+        }
+      } else if (columnIndex == 2) {
+        //tower type
+        if (_sortTowerTypeAsc == true) {
+          _sortTowerTypeAsc = false;
+          filterData.sort((a, b) => b.towerType!.compareTo(a.towerType!));
+        } else {
+          _sortTowerTypeAsc = true;
+          filterData.sort((a, b) => a.towerType!.compareTo(b.towerType!));
+        }
+      } else if (columnIndex == 3) {
+        //tower height
+        if (_sortTowerHeightAsc == true) {
+          _sortTowerHeightAsc = false;
+          filterData.sort((a, b) => b.towerHeight!.compareTo(a.towerHeight!));
+        } else {
+          _sortTowerHeightAsc = true;
+          filterData.sort((a, b) => a.towerHeight!.compareTo(b.towerHeight!));
+        }
+      } else if (columnIndex == 4) {
+        //tower height
+        if (_sortFabricatorAsc == true) {
+          _sortFabricatorAsc = false;
+          filterData.sort((a, b) => b.fabricator!.compareTo(a.fabricator!));
+        } else {
+          _sortFabricatorAsc = true;
+          filterData.sort((a, b) => a.fabricator!.compareTo(b.fabricator!));
+        }
+      } else if (columnIndex == 6) {
+        //address
+        if (_sortAddressAsc == true) {
+          _sortAddressAsc = false;
+          filterData.sort((a, b) => b.address!.compareTo(a.address!));
+        } else {
+          _sortAddressAsc = true;
+          filterData.sort((a, b) => a.address!.compareTo(b.address!));
+        }
+      } else if (columnIndex == 7) {
+        //region
+        if (_sortRegionalAsc == true) {
+          _sortRegionalAsc = false;
+          filterData.sort((a, b) => b.region!.compareTo(a.region!));
+        } else {
+          _sortRegionalAsc = true;
+          filterData.sort((a, b) => a.region!.compareTo(b.region!));
+        }
+      } else if (columnIndex == 8) {
+        //province
+        if (_sortProvinceAsc == true) {
+          _sortProvinceAsc = false;
+          filterData.sort((a, b) => b.province!.compareTo(a.province!));
+        } else {
+          _sortProvinceAsc = true;
+          filterData.sort((a, b) => a.province!.compareTo(b.province!));
+        }
+      }
+    });
+  }
+
   Widget tableSite() {
     return Container(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -270,6 +359,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
             if (DEBUG) debugPrint('state : $state');
             if (state is SiteLoaded) {
               DataTableSource data = SiteData(sites: state.sites);
+              filterData = state.sites;
               return Theme(
                 data: ThemeData(
                     cardColor: Theme.of(context).cardColor,
@@ -278,20 +368,62 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                 child: PaginatedDataTable(
                   source: data,
                   header: const Text('Site'),
-                  columns: const [
-                    DataColumn(label: Text('ID')),
-                    DataColumn(label: Text('Name')),
-                    DataColumn(label: Text('Tower Type')),
-                    DataColumn(label: Text('Tower Height')),
-                    DataColumn(label: Text('Fabricator')),
-                    DataColumn(label: Text('Tenants')),
-                    DataColumn(label: Text('Address')),
-                    DataColumn(label: Text('Regional')),
-                    DataColumn(label: Text('Province')),
-                    DataColumn(label: Text('Longtitude')),
-                    DataColumn(label: Text('Latitude')),
+                  columns: [
+                    DataColumn(
+                      label: const Text('ID', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Name', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Tower Type', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Tower Height', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Fabricator', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    const DataColumn(
+                        label: Text('Tenants', style: tableHeader)),
+                    DataColumn(
+                      label: const Text('Address', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Regional', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    DataColumn(
+                      label: const Text('Province', style: tableHeader),
+                      onSort: (columnIndex, _) {
+                        sort(columnIndex);
+                      },
+                    ),
+                    const DataColumn(
+                        label: Text('Longtitude', style: tableHeader)),
+                    const DataColumn(
+                        label: Text('Latitude', style: tableHeader)),
                   ],
-                  columnSpacing: 100,
                   horizontalMargin: 10,
                   rowsPerPage: 10,
                   showCheckboxColumn: false,

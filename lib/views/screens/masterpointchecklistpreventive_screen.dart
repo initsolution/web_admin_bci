@@ -9,6 +9,7 @@ import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_stat
 import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_provider.dart';
 import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/theme/theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_masterpointchecklistpreventive.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
@@ -48,6 +49,48 @@ class MasterPointChecklistPreventiveScreen extends ConsumerStatefulWidget {
 
 class _MasterPointChecklistPreventiveScreenState
     extends ConsumerState<MasterPointChecklistPreventiveScreen> {
+  late List<MasterPointChecklistPreventive> filterData;
+  bool _sortCategoryNameAsc = true;
+  bool _sortUraianeAsc = true;
+  bool _sortKriteriaNameAsc = true;
+
+  void sort(columnIndex) {
+    setState(() {
+      if (columnIndex == 0) {
+        //categoryName
+        if (_sortCategoryNameAsc == true) {
+          _sortCategoryNameAsc = false;
+          filterData.sort((a, b) => b
+              .mcategorychecklistpreventive!.categoryName!
+              .compareTo(a.mcategorychecklistpreventive!.categoryName!));
+        } else {
+          _sortCategoryNameAsc = true;
+          filterData.sort((a, b) => a
+              .mcategorychecklistpreventive!.categoryName!
+              .compareTo(b.mcategorychecklistpreventive!.categoryName!));
+        }
+      } else if (columnIndex == 1) {
+        //uraian
+        if (_sortUraianeAsc == true) {
+          _sortUraianeAsc = false;
+          filterData.sort((a, b) => b.uraian!.compareTo(a.uraian!));
+        } else {
+          _sortUraianeAsc = true;
+          filterData.sort((a, b) => a.uraian!.compareTo(b.uraian!));
+        }
+      } else if (columnIndex == 2) {
+        //kriteria
+        if (_sortKriteriaNameAsc == true) {
+          _sortKriteriaNameAsc = false;
+          filterData.sort((a, b) => b.kriteria!.compareTo(a.kriteria!));
+        } else {
+          _sortKriteriaNameAsc = true;
+          filterData.sort((a, b) => a.kriteria!.compareTo(b.kriteria!));
+        }
+      }
+    });
+  }
+
   Widget tableMaster() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -56,20 +99,35 @@ class _MasterPointChecklistPreventiveScreenState
         if (state is MasterPointChecklistPreventiveLoaded) {
           DataTableSource data = MasterPointChecklistPreventivetData(
               masterData: state.masterPointChecklistPreventive);
+          filterData = state.masterPointChecklistPreventive;
           return Theme(
             data: ThemeData(
                 cardColor: Theme.of(context).cardColor,
                 textTheme:
                     const TextTheme(titleLarge: TextStyle(color: Colors.blue))),
             child: PaginatedDataTable(
-              columns: const [
-                DataColumn(label: Text('Name Category')),
-                DataColumn(label: Text('Uraian')),
-                DataColumn(label: Text('Kriteria')),
+              columns: [
+                DataColumn(
+                  label: const Text('Name Category', style: tableHeader),
+                  onSort: (columnIndex, _) {
+                    sort(columnIndex);
+                  },
+                ),
+                DataColumn(
+                  label: const Text('Uraian', style: tableHeader),
+                  onSort: (columnIndex, _) {
+                    sort(columnIndex);
+                  },
+                ),
+                DataColumn(
+                  label: const Text('Kriteria', style: tableHeader),
+                  onSort: (columnIndex, _) {
+                    sort(columnIndex);
+                  },
+                ),
               ],
               source: data,
               header: const Text('Master Point Checklist Preventive'),
-              columnSpacing: 100,
               horizontalMargin: 10,
               rowsPerPage: 10,
               showCheckboxColumn: false,

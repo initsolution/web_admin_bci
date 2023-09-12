@@ -20,6 +20,9 @@ class TaskScreen extends ConsumerStatefulWidget {
 }
 
 class _TaskScreenState extends ConsumerState<TaskScreen> {
+  Map<String, dynamic> params = {
+    "join": ['site', 'makerEmployee', 'verifierEmployee']
+  };
   @override
   void initState() {
     super.initState();
@@ -39,7 +42,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
           GoRouter.of(context).go(RouteUri.login);
         }
       } else if (next is TaskDataChangeSuccess) {
-        ref.read(taskNotifierProvider.notifier).getAllTask();
+        ref.read(taskNotifierProvider.notifier).getAllTask(params);
       }
     });
     return PortalMasterLayout(
@@ -88,7 +91,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                           onPressed: () {
                             ref
                                 .read(taskNotifierProvider.notifier)
-                                .getAllTask();
+                                .getAllTask(params);
                           },
                         ),
                         const SizedBox(
@@ -155,8 +158,12 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                   source: data,
                   header: const Text('Task'),
                   columns: const [
+                    DataColumn(label: Text('Site')),
+                    DataColumn(label: Text('Maker')),
+                    DataColumn(label: Text('Verifier')),
+                    DataColumn(label: Text('Status')),
+                    DataColumn(label: Text('Type')),
                     DataColumn(label: Text('Created Date')),
-                    DataColumn(label: Text('Submited Date')),
                   ],
                   columnSpacing: 100,
                   horizontalMargin: 10,
@@ -180,8 +187,12 @@ class TaskData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
+      DataCell(Text(tasks[index].site!.name!)),
+      DataCell(Text(tasks[index].makerEmployee!.name!)),
+      DataCell(Text(tasks[index].verifierEmployee!.name!)),
+      DataCell(Text(tasks[index].status!)),
+      DataCell(Text(tasks[index].type!)),
       DataCell(Text(tasks[index].createdDate!)),
-      DataCell(Text(tasks[index].submitedDate!))
     ]);
   }
 
