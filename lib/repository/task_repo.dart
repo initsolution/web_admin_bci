@@ -14,6 +14,11 @@ abstract class TaskRepo {
       @Header('Authorization') String token,
       @Queries() Map<String, dynamic>? header);
 
+  @GET('/task/customGetAll')
+  Future<HttpResponse<dynamic>> getCustomAllTask(
+      @Header('Authorization') String token,
+      @Queries() Map<String, dynamic>? header);
+
   @POST('/task')
   Future<HttpResponse> createTask(
       @Body() Task task, @Header('Authorization') String token);

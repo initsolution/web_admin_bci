@@ -48,6 +48,11 @@ final sidebarMenuConfigs = [
     icon: Icons.storage_outlined,
     title: (context) => 'Master Point Check Preventive',
   ),
+  SidebarMenuConfig(
+    uri: RouteUri.asset,
+    icon: Icons.verified_user_rounded,
+    title: (context) => 'Verifikasi',
+  ),
 ];
 
 final sideBarMenuConfigs_Verifikator = [

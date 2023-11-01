@@ -106,9 +106,10 @@ class _MasterCategoryChecklistPreventiveScreenState
           GoRouter.of(context).go(RouteUri.login);
         }
       } else if (next is MasterCategoryChecklistPreventiveDataChangeSuccess) {
-        if (DEBUG)
+        if (DEBUG) {
           debugPrint(
               'masuk MasterCategoryChecklistPreventiveDataChangeSuccess');
+        }
         ref
             .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
             .getAllMasterCategoryChecklistPreventive();

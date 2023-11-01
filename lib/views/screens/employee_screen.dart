@@ -81,8 +81,8 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
           builder: (context, ref, child) {
             var state = ref.watch(employeeNotifierProvider);
             if (state is EmployeeLoaded) {
-              DataTableSource data = EmployeeData(employees: state.employees);
               filterData = state.employees;
+              DataTableSource data = EmployeeData(employees: filterData);
               return Theme(
                 data: ThemeData(
                     cardColor: Theme.of(context).cardColor,

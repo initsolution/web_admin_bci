@@ -37,7 +37,35 @@ class TaskNotifier extends Notifier<TaskState> {
       final HttpResponse data =
           await taskRepo.getAllTask('Bearer $token', header);
       if (data.response.statusCode == 200) {
-        // debugPrint('data emp : ${httpResponse.data}');
+        // debugPrint('data emp : ${data.data}');
+        List<Task> tasks =
+            (data.data as List).map((e) => Task.fromJson(e)).toList();
+        if (tasks.isEmpty) {
+          state = TaskLoadedEmpty();
+        } else {
+          state = TaskLoaded(tasks: tasks);
+        }
+      }
+    } on DioException catch (error) {
+      // debugPrint(error.response!.statusCode.toString());
+      if (error.response!.statusCode == 401) {
+        state = TaskErrorServer(
+            message: error.response!.statusMessage,
+            statusCode: error.response!.statusCode);
+      }
+    }
+  }
+
+  getCustomAllTask(Map<String, dynamic> params) async {
+    state = TaskLoading();
+    Map<String, dynamic> header = params;
+    final sharedPref = await SharedPreferences.getInstance();
+    try {
+      var token = sharedPref.getString(StorageKeys.token) ?? '';
+      final HttpResponse data =
+          await taskRepo.getCustomAllTask('Bearer $token', header);
+      if (data.response.statusCode == 200) {
+        debugPrint('data emp : ${data.data}');
         List<Task> tasks =
             (data.data as List).map((e) => Task.fromJson(e)).toList();
         if (tasks.isEmpty) {

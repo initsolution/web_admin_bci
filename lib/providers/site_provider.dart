@@ -59,11 +59,16 @@ class SiteNotifier extends Notifier<SiteState> {
     }
   }
 
-  createSite(Site site) async {
+  createOrEditSite(Site site, bool isEdit) async {
     state = SiteLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse = await siteRepo.createSite(site, 'Bearer $token');
+    HttpResponse httpResponse;
+    if (isEdit) {
+      httpResponse = await siteRepo.updateSite(site.id!, site, 'Bearer $token');
+    } else {
+      httpResponse = await siteRepo.createSite(site, 'Bearer $token');
+    }
     if (DEBUG) debugPrint(httpResponse.data.toString());
     if (httpResponse.response.statusCode == 201) {
       state = SiteDataChangeSuccess();

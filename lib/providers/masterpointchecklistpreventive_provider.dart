@@ -9,6 +9,11 @@ import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dio/dio.dart';
 
+bool isChecklist = true;
+
+final isChecklistMasterPointChecklist =
+    StateProvider<bool>((ref) => isChecklist);
+
 final masterPointChecklistPreventiveNotifierProvider = NotifierProvider<
     MasterPointChecklistPreventiveNotifier,
     MasterPointChecklistPreventiveState>(

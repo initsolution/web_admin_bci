@@ -126,11 +126,21 @@ class DialogAddTask extends ConsumerWidget {
       return DropdownSearch<Site>(
         items: listSite,
         itemAsString: (item) => item.name!,
+        compareFn: (item1, item2) => item1.isEqual(item2),
         onChanged: (value) {
           selectedSite = value!;
         },
-        popupProps: const PopupPropsMultiSelection.bottomSheet(
-            bottomSheetProps: BottomSheetProps(elevation: 5)),
+        // dropdownDecoratorProps: const DropDownDecoratorProps(
+        //   dropdownSearchDecoration: InputDecoration(
+        //     labelText: "Pilih Site",
+        //     hintText: "Ketik nama site",
+        //     filled: true,
+        //   ),
+        // ),
+        popupProps: PopupPropsMultiSelection.bottomSheet(
+            showSearchBox: true,
+            itemBuilder: _customPopupItemBuilderSite,
+            bottomSheetProps: const BottomSheetProps(elevation: 5)),
 
         // dropdownBuilder: _customPopupItemBuilderExample,
       );
@@ -139,6 +149,34 @@ class DialogAddTask extends ConsumerWidget {
     } else {
       return const CircularProgressIndicator();
     }
+  }
+
+  Widget _customPopupItemBuilderSite(
+      BuildContext context, Site item, bool isSelected) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: ListTile(
+        selected: isSelected,
+        title: Text(
+          item.name!,
+          style: const TextStyle(fontSize: 14),
+        ),
+        subtitle: Text(
+          item.address!,
+          style: const TextStyle(fontSize: 12),
+        ),
+        // leading: CircleAvatar(
+        //   backgroundImage: NetworkImage(item.avatar),
+        // ),
+      ),
+    );
   }
 
   Widget LoadMakerEmployee(var stateMaker) {

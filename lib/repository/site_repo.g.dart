@@ -89,12 +89,14 @@ class _SiteRepo implements SiteRepo {
 
   @override
   Future<HttpResponse<dynamic>> updateSite(
-    int id,
+    String id,
     Site site,
+    String token,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(site.toJson());
     final _result =

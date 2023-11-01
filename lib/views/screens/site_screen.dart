@@ -1,14 +1,17 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/model/province.dart';
 import 'package:flutter_web_ptb/model/site.dart';
 import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter_web_ptb/providers/site_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
-import 'package:flutter_web_ptb/views/widgets/dialog_add_site.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_add_edit_site.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -43,7 +46,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
   @override
   void initState() {
     super.initState();
-    createPDF();
+    // createPDF();
   }
 
   savePDF() async {
@@ -210,7 +213,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return SizedBox(child: DialogAddSite());
+                                return SizedBox(child: DialogAddEditSite());
                               },
                             );
                           },
@@ -243,13 +246,13 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                         const SizedBox(
                           width: 30,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.more_vert),
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(
+                        //   width: 30,
+                        // ),
                       ],
                     ),
                     const SizedBox(
@@ -358,7 +361,8 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
             var state = ref.watch(siteNotifierProvider);
             if (DEBUG) debugPrint('state : $state');
             if (state is SiteLoaded) {
-              DataTableSource data = SiteData(sites: state.sites);
+              DataTableSource data =
+                  SiteData(sites: state.sites, ref: ref, context: context);
               filterData = state.sites;
               return Theme(
                 data: ThemeData(
@@ -423,6 +427,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                         label: Text('Longtitude', style: tableHeader)),
                     const DataColumn(
                         label: Text('Latitude', style: tableHeader)),
+                    const DataColumn(label: Text('Action', style: tableHeader)),
                   ],
                   horizontalMargin: 10,
                   rowsPerPage: 10,
@@ -440,7 +445,9 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
 
 class SiteData extends DataTableSource {
   final List<Site> sites;
-  SiteData({required this.sites});
+  final WidgetRef ref;
+  final BuildContext context;
+  SiteData({required this.sites, required this.ref, required this.context});
 
   @override
   DataRow? getRow(int index) {
@@ -456,6 +463,30 @@ class SiteData extends DataTableSource {
       DataCell(Text(sites[index].province!.toString())),
       DataCell(Text(sites[index].longitude!.toString())),
       DataCell(Text(sites[index].latitude!.toString())),
+      DataCell(IconButton(
+        icon: const Icon(Icons.settings),
+        onPressed: () {
+          Map<String, dynamic> header = {"filter": "isActive||eq||true"};
+          ref.read(tenantNotifierProvider.notifier).getAllTenant(header);
+          getProvinceData().then((value) {
+            int idxEditProvince = value.indexWhere(
+                (element) => element.province == sites[index].province);
+            ref.read(provinceNotifierProvider.notifier).state = idxEditProvince;
+            ref.read(kabupatenNotifierProvider.notifier).state =
+                sites[index].region!;
+          });
+          showDialog(
+            context: context,
+            builder: (context) {
+              return SizedBox(
+                  child: DialogAddEditSite(
+                isEdit: true,
+                site: sites[index],
+              ));
+            },
+          );
+        },
+      ))
     ]);
   }
 
@@ -467,4 +498,17 @@ class SiteData extends DataTableSource {
 
   @override
   int get selectedRowCount => 0;
+
+  Future<List<Province>> getProvinceData() async {
+    var data = await rootBundle.loadString("assets/province/province.json");
+    List<Province> list = [];
+    List<dynamic> valueMap = json.decode(data);
+    for (int i = 0; i < valueMap.length; i++) {
+      Province p = Province.fromJson(valueMap[i]);
+      // debugPrint('province ${p.province}');
+      // debugPrint('kabupaten ${p.kabupaten}');
+      list.add(p);
+    }
+    return list; //latest Dart
+  }
 }

@@ -1,0 +1,421 @@
+[
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 21,
+        "towerSegment": "Pedestal/Anchor",
+        "elevasi": 0,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 21,
+        "towerSegment": "Joint 1",
+        "elevasi": 6000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 21,
+        "towerSegment": "Joint 2",
+        "elevasi": 12000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 21,
+        "towerSegment": "Joint 3",
+        "elevasi": 18000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 21,
+        "towerSegment": "Pedestal/Anchor",
+        "elevasi": 0,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 21,
+        "towerSegment": "Joint 1",
+        "elevasi": 6000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 21,
+        "towerSegment": "Joint 2",
+        "elevasi": 12000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 21,
+        "towerSegment": "Joint 3",
+        "elevasi": 18000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 21,
+        "towerSegment": "Pedestal/Anchor",
+        "elevasi": 0,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 21,
+        "towerSegment": "Joint 1",
+        "elevasi": 6000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 21,
+        "towerSegment": "Joint 2",
+        "elevasi": 12000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 21,
+        "towerSegment": "Joint 3",
+        "elevasi": 18000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 10
+    },
+
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Pedestal/Anchor",
+        "elevasi": 0,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 1",
+        "elevasi": 3000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 2",
+        "elevasi": 6000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 3",
+        "elevasi": 9000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 4",
+        "elevasi": 12000,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 5",
+        "elevasi": 15000,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 6
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 6",
+        "elevasi": 18000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 6
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 7",
+        "elevasi": 21000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 25,
+        "towerSegment": "Joint 8",
+        "elevasi": 23000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 6
+    },
+
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Pedestal/Anchor",
+        "elevasi": 0,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 1",
+        "elevasi": 3000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 2",
+        "elevasi": 6000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 3",
+        "elevasi": 9000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 4",
+        "elevasi": 12000,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 5",
+        "elevasi": 15000,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 6
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 6",
+        "elevasi": 18000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 6
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 7",
+        "elevasi": 21000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "JET",
+        "towerHeight": 25,
+        "towerSegment": "Joint 8",
+        "elevasi": 23000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 6
+    },
+
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Pedestal/Anchor",
+        "elevasi": 0,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 10
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 1",
+        "elevasi": 3000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 2",
+        "elevasi": 6000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 3",
+        "elevasi": 9000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 4",
+        "elevasi": 12000,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 5",
+        "elevasi": 15000,
+        "boltSize": "M20",
+        "minimumTorque": 200,
+        "qtyBolt": 6
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 6",
+        "elevasi": 18000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 6
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 7",
+        "elevasi": 21000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 8
+    },
+    {
+        "fabricator": "MULCINDO",
+        "towerHeight": 25,
+        "towerSegment": "Joint 8",
+        "elevasi": 23000,
+        "boltSize": "M16",
+        "minimumTorque": 100,
+        "qtyBolt": 6
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 30,
+        "towerSegment": "Pedestal/Anchor",
+        "elevasi": 0,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 16
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 30,
+        "towerSegment": "Joint 1",
+        "elevasi": 3000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 16
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 30,
+        "towerSegment": "Joint 2",
+        "elevasi": 6000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 16
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 30,
+        "towerSegment": "Joint 3",
+        "elevasi": 9000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 16
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 30,
+        "towerSegment": "Joint 4",
+        "elevasi": 12000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 16
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 30,
+        "towerSegment": "Joint 5",
+        "elevasi": 15000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 16
+    },
+    {
+        "fabricator": "DHJ",
+        "towerHeight": 30,
+        "towerSegment": "Joint 6",
+        "elevasi": 18000,
+        "boltSize": "M24",
+        "minimumTorque": 325,
+        "qtyBolt": 16
+    }
+
+]
+

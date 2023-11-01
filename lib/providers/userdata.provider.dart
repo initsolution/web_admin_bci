@@ -9,9 +9,9 @@ class UserDataNotifier extends StateNotifier<UserData> {
   Future<void> loadAsync() async {
     final sharedPref = await SharedPreferences.getInstance();
 
-    var _username = sharedPref.getString(StorageKeys.username) ?? '';
-    var _token = sharedPref.getString(StorageKeys.token) ?? '';
-    state = UserData(_username, _token);
+    var username = sharedPref.getString(StorageKeys.username) ?? '';
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    state = UserData(username, token);
   }
 
   Future<void> setUserDataAsync({
@@ -30,10 +30,10 @@ class UserDataNotifier extends StateNotifier<UserData> {
     await sharedPref.remove(StorageKeys.username);
     await sharedPref.remove(StorageKeys.token);
 
-    var _username = '';
-    var _token = '';
+    var username = '';
+    var token = '';
 
-    state = UserData(_username, _token);
+    state = UserData(username, token);
   }
 
   // bool isUserLoggedIn() {

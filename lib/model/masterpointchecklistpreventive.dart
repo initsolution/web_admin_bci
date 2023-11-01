@@ -9,9 +9,13 @@ class MasterPointChecklistPreventive {
   int? id;
   String? uraian;
   String? kriteria;
+  bool? isChecklist;
   MasterCategoryChecklistPreventive? mcategorychecklistpreventive;
   MasterPointChecklistPreventive(
-      {this.uraian, this.kriteria, this.mcategorychecklistpreventive});
+      {this.uraian,
+      this.kriteria,
+      this.mcategorychecklistpreventive,
+      this.isChecklist});
 
   @override
   String toString() {

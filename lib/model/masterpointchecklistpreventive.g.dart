@@ -15,6 +15,7 @@ MasterPointChecklistPreventive _$MasterPointChecklistPreventiveFromJson(
           ? null
           : MasterCategoryChecklistPreventive.fromJson(
               json['mcategorychecklistpreventive'] as Map<String, dynamic>),
+      isChecklist: json['isChecklist'] as bool?,
     )..id = json['id'] as int?;
 
 Map<String, dynamic> _$MasterPointChecklistPreventiveToJson(
@@ -23,5 +24,6 @@ Map<String, dynamic> _$MasterPointChecklistPreventiveToJson(
       'id': instance.id,
       'uraian': instance.uraian,
       'kriteria': instance.kriteria,
+      'isChecklist': instance.isChecklist,
       'mcategorychecklistpreventive': instance.mcategorychecklistpreventive,
     };

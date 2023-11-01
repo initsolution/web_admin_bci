@@ -19,5 +19,6 @@ abstract class SiteRepo {
       @Body() Site site, @Header('Authorization') String token);
 
   @PATCH('/site/{id}')
-  Future<HttpResponse> updateSite(@Path() int id, @Body() Site site);
+  Future<HttpResponse> updateSite(@Path() String id, @Body() Site site,
+      @Header('Authorization') String token);
 }

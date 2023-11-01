@@ -25,7 +25,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final _formData = FormData();
 
-  var _isFormLoading = false;
+  final _isFormLoading = false;
 
   _doLogin() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -47,10 +47,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     int statusCode = response['statusCode'];
 
     if (statusCode == 202) {
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(message)['employee'];
+      Map<String, dynamic> decodedToken =
+          JwtDecoder.decode(message)['employee'];
       // bool isTokenExpired = JwtDecoder.isExpired(message);
-      if(DEBUG) {
-        debugPrint('decode token : ${decodedToken}');
+      if (DEBUG) {
+        debugPrint('decode token : $decodedToken');
       }
       var email = decodedToken['email'];
       await ref.read(userDataProvider.notifier).setUserDataAsync(
@@ -90,11 +91,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         //status code 404 -> user tidak ditemukan
         //status code 401 -> password salah
         //status code 202 -> betul
-        String message = next.httpResponse.data['message'];
-        int statusCode = next.httpResponse.data['statusCode'];
+        // String message = next.httpResponse.data['message'];
+        // int statusCode = next.httpResponse.data['statusCode'];
 
         // debugPrint(next.httpResponse.data.toString());
-        debugPrint('message : $message status code : $statusCode');
+        // debugPrint('message : $message status code : $statusCode');
 
         // if (statusCode == 202) {
         // debugPrint('masuk if');
@@ -188,6 +189,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               validator: FormBuilderValidators.required(),
                               onSaved: (value) =>
                                   (_formData.password = value ?? ''),
+                              onSubmitted: (value) {
+                                // debugPrint('on submit');
+                                _doLogin();
+                              },
                             ),
                           ),
                           Padding(

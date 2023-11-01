@@ -39,3 +39,6 @@
 > 02/09/2023
 > 1. Add refresh after add
 > 2. add @Queries in repo
+
+> 01/11/2023
+> 1. Verifikator change image and accept

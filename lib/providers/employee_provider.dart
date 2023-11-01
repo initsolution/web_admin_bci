@@ -87,4 +87,31 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
       state = EmployeeDataChangeSuccess();
     }
   }
+
+  updateEmployee(Employee employee, List<int>? file) async {
+    if (file != null) {
+      if (file.isNotEmpty) {
+        state = EmployeeLoading();
+        final httpResponse = await employeeRepo.updateEmployeeWithFile(
+            employee.nik!,
+            employee.name,
+            employee.email,
+            employee.hp,
+            employee.password,
+            file);
+        debugPrint('${httpResponse.response.statusCode}');
+        if (httpResponse.response.statusCode == 200) {
+          state = EmployeeDataChangeSuccess();
+        }
+      }
+    } else {
+      state = EmployeeLoading();
+      final httpResponse =
+          await employeeRepo.updateEmployee(employee.nik!, employee);
+      debugPrint('${httpResponse.response.statusCode}');
+      if (httpResponse.response.statusCode == 200) {
+        state = EmployeeDataChangeSuccess();
+      }
+    }
+  }
 }

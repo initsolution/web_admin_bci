@@ -74,8 +74,10 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
               ),
             ),
             const SizedBox(
-              height: 10,
+              height: 25,
             ),
+            const Text('Apakah Bentuk Checklist'),
+            getChecklist(),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2,
               child: ElevatedButton(
@@ -96,14 +98,27 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
     );
   }
 
+  Widget getChecklist() {
+    return Consumer(builder: (_, WidgetRef ref, __) {
+      final isChecklist = ref.watch(isChecklistMasterPointChecklist);
+      return Checkbox(
+        value: isChecklist,
+        onChanged: (val) =>
+            ref.read(isChecklistMasterPointChecklist.notifier).state = val!,
+      );
+    });
+  }
+
   void saveMasterPointChecklistPreventive(WidgetRef ref) {
     final MasterCategoryChecklistPreventive
         selectedMasterCategoryChecklistPreventive =
         ref.watch(selectedCategoryChecklistPreventive);
+    final isChecklist = ref.watch(isChecklistMasterPointChecklist);
     MasterPointChecklistPreventive masterPointChecklistPreventive =
         MasterPointChecklistPreventive(
             uraian: uraianController.text,
             kriteria: kriteriaController.text,
+            isChecklist: isChecklist,
             mcategorychecklistpreventive: MasterCategoryChecklistPreventive(
                 id: selectedMasterCategoryChecklistPreventive.id));
     if (DEBUG) {

@@ -31,7 +31,7 @@ class _EmployeeRepo implements EmployeeRepo {
     queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(Options(
       method: 'GET',
@@ -85,7 +85,7 @@ class _EmployeeRepo implements EmployeeRepo {
 
   @override
   Future<HttpResponse<dynamic>> updateEmployee(
-    int nik,
+    String nik,
     Employee employee,
   ) async {
     const _extra = <String, dynamic>{};
@@ -131,6 +131,74 @@ class _EmployeeRepo implements EmployeeRepo {
             .compose(
               _dio.options,
               '/employee/login',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
+    final value = _result.data;
+    final httpResponse = HttpResponse(value, _result);
+    return httpResponse;
+  }
+
+  @override
+  Future<HttpResponse<dynamic>> updateEmployeeWithFile(
+    String nik,
+    String? name,
+    String? email,
+    String? hp,
+    String? password,
+    List<int> file,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = FormData();
+    if (name != null) {
+      _data.fields.add(MapEntry(
+        'name',
+        name,
+      ));
+    }
+    if (email != null) {
+      _data.fields.add(MapEntry(
+        'email',
+        email,
+      ));
+    }
+    if (hp != null) {
+      _data.fields.add(MapEntry(
+        'hp',
+        hp,
+      ));
+    }
+    if (password != null) {
+      _data.fields.add(MapEntry(
+        'password',
+        password,
+      ));
+    }
+    _data.files.add(MapEntry(
+        'file',
+        MultipartFile.fromBytes(
+          file,
+          filename: 'esign',
+          contentType: MediaType.parse('image/png'),
+        )));
+    final _result =
+        await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+      contentType: 'multipart/form-data',
+    )
+            .compose(
+              _dio.options,
+              '/employee/updateWithFile/${nik}',
               queryParameters: queryParameters,
               data: _data,
             )

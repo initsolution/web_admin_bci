@@ -267,7 +267,16 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ref.read(siteNotifierProvider.notifier).getAllSite();
             ref.read(tenantNotifierProvider.notifier).getAllTenant(params);
             params = {
-              "join" : ['site', 'makerEmployee', 'verifierEmployee']
+              "join": [
+                "site",
+                "makerEmployee",
+                "verifierEmployee",
+                "categorychecklistprev",
+                "categorychecklistprev.pointChecklistPreventive",
+                "reportRegulerTorque",
+                "reportRegulerVerticality",
+                "reportRegulerVerticality.valueVerticality"
+              ]
             };
             ref.read(taskNotifierProvider.notifier).getAllTask(params);
             ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();

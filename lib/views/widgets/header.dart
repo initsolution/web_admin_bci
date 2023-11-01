@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/theme/theme.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_profile_employee.dart';
 
 class Header extends StatelessWidget {
   final String title;
   final String subMenu;
   final String userName;
-  const Header({super.key, required this.title, required this.subMenu, required this.userName});
+  const Header(
+      {super.key,
+      required this.title,
+      required this.subMenu,
+      required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -33,44 +38,54 @@ class Header extends StatelessWidget {
               ],
             ),
             const Spacer(),
-            ProfileCard(userName),
+            ProfileCard(userName, context),
           ],
         ),
       ),
     );
   }
 
-  Widget ProfileCard(String userName){
-    return Container(
-      margin: const EdgeInsets.only(left: kDefaultPadding),
-      padding: const EdgeInsets.symmetric(
-        horizontal: kDefaultPadding /3 ,
-        vertical: kDefaultPadding / 2,
-      ),
-      decoration: BoxDecoration(
-        color: kPrimaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-        border: Border.all(color: Colors.white),
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            "assets/images/profile_pic.jpg",
-            height: 38,
-          ),
-          Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
-              child: Text(
-                userName,
-                style: const TextStyle(color: Colors.white),
-              )),
-          const Icon(
-            Icons.keyboard_arrow_down,
-            color: Colors.white,
-          ),
-        ],
+  Widget ProfileCard(String userName, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return SizedBox(child: DialogProfileEmployee());
+          },
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(left: kDefaultPadding),
+        padding: const EdgeInsets.symmetric(
+          horizontal: kDefaultPadding / 3,
+          vertical: kDefaultPadding / 2,
+        ),
+        decoration: BoxDecoration(
+          color: kPrimaryColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border.all(color: Colors.white),
+        ),
+        child: Row(
+          children: [
+            Image.asset(
+              "assets/images/profile_pic.jpg",
+              height: 38,
+            ),
+            Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
+                child: Text(
+                  userName,
+                  style: const TextStyle(color: Colors.white),
+                )),
+            const Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
-

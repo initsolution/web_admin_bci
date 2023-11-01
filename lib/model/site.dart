@@ -84,8 +84,10 @@ class Site {
       id: map['id'] != null ? map['id'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       towerType: map['towerType'] != null ? map['towerType'] as String : null,
-      towerHeight: map['towerHeight'] != null ? map['towerHeight'] as int : null,
-      fabricator: map['fabricator'] != null ? map['fabricator'] as String : null,
+      towerHeight:
+          map['towerHeight'] != null ? map['towerHeight'] as int : null,
+      fabricator:
+          map['fabricator'] != null ? map['fabricator'] as String : null,
       tenants: map['tenants'] != null ? map['tenants'] as String : null,
       region: map['region'] != null ? map['region'] as String : null,
       province: map['province'] != null ? map['province'] as String : null,
@@ -103,33 +105,36 @@ class Site {
   @override
   bool operator ==(covariant Site other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.name == name &&
-      other.towerType == towerType &&
-      other.towerHeight == towerHeight &&
-      other.fabricator == fabricator &&
-      other.tenants == tenants &&
-      other.region == region &&
-      other.province == province &&
-      other.address == address &&
-      other.longitude == longitude &&
-      other.latitude == latitude;
+
+    return other.id == id &&
+        other.name == name &&
+        other.towerType == towerType &&
+        other.towerHeight == towerHeight &&
+        other.fabricator == fabricator &&
+        other.tenants == tenants &&
+        other.region == region &&
+        other.province == province &&
+        other.address == address &&
+        other.longitude == longitude &&
+        other.latitude == latitude;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-      name.hashCode ^
-      towerType.hashCode ^
-      towerHeight.hashCode ^
-      fabricator.hashCode ^
-      tenants.hashCode ^
-      region.hashCode ^
-      province.hashCode ^
-      address.hashCode ^
-      longitude.hashCode ^
-      latitude.hashCode;
+        name.hashCode ^
+        towerType.hashCode ^
+        towerHeight.hashCode ^
+        fabricator.hashCode ^
+        tenants.hashCode ^
+        region.hashCode ^
+        province.hashCode ^
+        address.hashCode ^
+        longitude.hashCode ^
+        latitude.hashCode;
+  }
+
+  bool isEqual(Site site) {
+    return id == site.id;
   }
 }

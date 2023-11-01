@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/model/province.dart';
 import 'package:flutter_web_ptb/model/site.dart';
+import 'package:flutter_web_ptb/model/tenant.dart';
 import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_ptb/providers/tenant_provider.dart';
@@ -13,8 +14,10 @@ import 'package:multiselect/multiselect.dart';
 import '../../providers/tenant_state.dart';
 
 // ignore: must_be_immutable
-class DialogAddSite extends ConsumerWidget {
-  DialogAddSite({super.key});
+class DialogAddEditSite extends ConsumerWidget {
+  final bool isEdit;
+  Site? site;
+  DialogAddEditSite({super.key, this.isEdit = false, this.site});
   TextEditingController siteIdController = TextEditingController();
   TextEditingController siteNameController = TextEditingController();
   TextEditingController towerTypeController = TextEditingController();
@@ -26,10 +29,41 @@ class DialogAddSite extends ConsumerWidget {
   String province = "";
   String kabupaten = "";
   List<String> selectedTenants = [];
+  List<Tenant> dtTenant = [];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var stateTenant = ref.watch(tenantNotifierProvider);
+    if (isEdit) {
+      if (site != null) {
+        siteIdController.text = site!.id ?? '';
+        siteNameController.text = site!.name ?? '';
+        towerTypeController.text = site!.towerType ?? '';
+        towerHeightController.text = site!.towerHeight.toString();
+        fabricatorController.text = site!.fabricator ?? '';
+        addressController.text = site!.address ?? '';
+        longitudeController.text = site!.longitude ?? '';
+        latitudeController.text = site!.latitude ?? '';
+        if (stateTenant is TenantLoaded) {
+          dtTenant = stateTenant.tenants;
+          if (site!.tenants!.contains(';')) {
+            var pecahTenant = site!.tenants!.split(';');
+            for (var i = 0; i < pecahTenant.length; i++) {
+              int idxTenant = dtTenant.indexWhere(
+                  (element) => element.kodeTenant == pecahTenant[i]);
+              Tenant tenant = dtTenant[idxTenant];
+              selectedTenants.add('${pecahTenant[i]} - ${tenant.name}');
+            }
+          } else {
+            int idxTenant = dtTenant
+                .indexWhere((element) => element.kodeTenant == site!.tenants!);
+            Tenant tenant = dtTenant[idxTenant];
+            selectedTenants.add('${tenant.kodeTenant} - ${tenant.name}');
+          }
+        }
+      }
+    }
+
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
@@ -40,9 +74,9 @@ class DialogAddSite extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'New Site',
-                    style: TextStyle(fontSize: 30),
+                  Text(
+                    isEdit ? 'Edit Site' : 'New Site',
+                    style: const TextStyle(fontSize: 30),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -127,8 +161,7 @@ class DialogAddSite extends ConsumerWidget {
                 DropDownMultiSelect(
                   selected_values_style: const TextStyle(color: Colors.black),
                   options: stateTenant.tenants
-                      .map((e) =>
-                          e.kodeTenant.toString() + "-" + e.name.toString())
+                      .map((e) => '${e.kodeTenant} - ${e.name}')
                       .toList(),
                   selectedValues: selectedTenants,
                   whenEmpty: 'Select Tenants',
@@ -220,7 +253,7 @@ class DialogAddSite extends ConsumerWidget {
                                     );
                                   }).toList(),
                                   onChanged: (String? value) {
-                                    debugPrint('${value!}');
+                                    debugPrint(value!);
                                     ref
                                         .read(
                                             kabupatenNotifierProvider.notifier)
@@ -270,7 +303,7 @@ class DialogAddSite extends ConsumerWidget {
                 width: MediaQuery.of(context).size.width / 2.5,
                 child: ElevatedButton(
                   onPressed: () => {saveSite(ref), Navigator.pop(context)},
-                  child: const Text('SAVE'),
+                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
                 ),
               ),
             ],
@@ -286,7 +319,7 @@ class DialogAddSite extends ConsumerWidget {
     var listTenant = "";
     for (var kodeTenant in selectedTenants) {
       var temp = kodeTenant.split("-");
-      if (listTenant.length > 0) {
+      if (listTenant.isNotEmpty) {
         listTenant += ";";
       }
       listTenant += temp[0];
@@ -308,7 +341,8 @@ class DialogAddSite extends ConsumerWidget {
     if (DEBUG) {
       debugPrint('site : ${site.toString()}');
     }
-    ref.read(siteNotifierProvider.notifier).createSite(site);
+
+    ref.read(siteNotifierProvider.notifier).createOrEditSite(site, isEdit);
   }
 
   Widget getDropdownProvince() {
@@ -362,7 +396,7 @@ class DialogAddSite extends ConsumerWidget {
                   );
                 }).toList(),
                 onChanged: (String? value) {
-                  debugPrint('${value!}');
+                  debugPrint(value!);
                   ref.read(kabupatenNotifierProvider.notifier).state = value;
                 },
               );

@@ -1,3 +1,4 @@
+import 'package:flutter_web_ptb/views/screens/asset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
 import 'package:flutter_web_ptb/views/screens/employee_screen.dart';
 import 'package:flutter_web_ptb/views/screens/error_screen.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_web_ptb/views/screens/masterasset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/mastercategorychecklistpreventive_screen.dart';
 import 'package:flutter_web_ptb/views/screens/masterpointchecklistpreventive_screen.dart';
 import 'package:flutter_web_ptb/views/screens/masterreportregulertorque_screen.dart';
+import 'package:flutter_web_ptb/views/screens/result_asset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/site_screen.dart';
 import 'package:flutter_web_ptb/views/screens/task_screen.dart';
 import 'package:flutter_web_ptb/views/screens/tenant_screen.dart';
@@ -29,6 +31,8 @@ class RouteUri {
   static const String login = '/login';
   static const String masterPointChecklistPreventive =
       '/masterPointChecklistPreventive';
+  static const String asset = '/asset';
+  static const String resultAsset = '/result-asset';
   // static const String form = '/form';
   // static const String generalUi = '/general-ui';
   // static const String colors = '/colors';
@@ -141,6 +145,18 @@ GoRouter appRouter(bool isUserLoggedIn) {
           key: state.pageKey,
           child: const MasterPointChecklistPreventiveScreen(),
         ),
+      ),
+      GoRoute(
+        path: RouteUri.asset,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const AssetScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteUri.resultAsset,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+            key: state.pageKey, child: const ResultAssetScreen()),
       ),
     ],
     redirect: (context, state) {
