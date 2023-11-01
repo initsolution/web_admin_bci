@@ -11,16 +11,16 @@ import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart
 import 'package:flutter_web_ptb/views/widgets/card_elements.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
-import 'package:go_router/go_router.dart';
 
-class DashboardScreen extends ConsumerStatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+class DashboardDetailScreen extends ConsumerStatefulWidget {
+  const DashboardDetailScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
+  ConsumerState<DashboardDetailScreen> createState() =>
+      _DashboardDetailScreenState();
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+class _DashboardDetailScreenState extends ConsumerState<DashboardDetailScreen> {
   final _dataTableHorizontalScrollController = ScrollController();
 
   @override
@@ -39,9 +39,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final size = MediaQuery.of(context).size;
     var value = ref.watch(userDataProvider.select((value) => value.username));
 
-    final summaryCardCrossAxisCount = (size.width >= kScreenWidthLg ? 4 : 2);
-
     return PortalMasterLayout(
+      selectedMenuUri: RouteUri.dashboard,
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
@@ -49,60 +48,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             title: 'Dashboard',
             subMenu: 'submenu dashboard',
             userName: value,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                final summaryCardWidth = ((constraints.maxWidth -
-                        (kDefaultPadding * (summaryCardCrossAxisCount - 1))) /
-                    summaryCardCrossAxisCount);
-
-                return Wrap(
-                  direction: Axis.horizontal,
-                  spacing: kDefaultPadding,
-                  runSpacing: kDefaultPadding,
-                  children: [
-                    SummaryCard(
-                      title: 'New Order',
-                      value: '150',
-                      icon: Icons.shopping_cart_rounded,
-                      backgroundColor: appColorScheme.info,
-                      textColor: themeData.colorScheme.onPrimary,
-                      iconColor: Colors.black12,
-                      width: summaryCardWidth,
-                    ),
-                    SummaryCard(
-                      title: 'Today Sales',
-                      value: '+12%',
-                      icon: Icons.ssid_chart_rounded,
-                      backgroundColor: appColorScheme.success,
-                      textColor: themeData.colorScheme.onPrimary,
-                      iconColor: Colors.black12,
-                      width: summaryCardWidth,
-                    ),
-                    SummaryCard(
-                      title: 'New Users',
-                      value: '44',
-                      icon: Icons.group_add_rounded,
-                      backgroundColor: appColorScheme.warning,
-                      textColor: appColorScheme.buttonTextBlack,
-                      iconColor: Colors.black12,
-                      width: summaryCardWidth,
-                    ),
-                    SummaryCard(
-                      title: 'Pending Issue',
-                      value: '0',
-                      icon: Icons.report_gmailerrorred_rounded,
-                      backgroundColor: appColorScheme.error,
-                      textColor: themeData.colorScheme.onPrimary,
-                      iconColor: Colors.black12,
-                      width: summaryCardWidth,
-                    ),
-                  ],
-                );
-              },
-            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: kDefaultPadding),
@@ -207,7 +152,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              GoRouter.of(context).go(RouteUri.detailDashboard);
+              Navigator.pushNamed(context, RouteUri.employee);
             },
             child: Text('Tekann'),
           )
