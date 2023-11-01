@@ -1,3 +1,4 @@
+import 'package:flutter_web_ptb/views/screens/dashboard_detail_screen.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
 import 'package:flutter_web_ptb/views/screens/employee_screen.dart';
 import 'package:flutter_web_ptb/views/screens/error_screen.dart';
@@ -15,6 +16,7 @@ import 'package:go_router/go_router.dart';
 class RouteUri {
   static const String home = '/';
   static const String dashboard = '/dashboard';
+  static const String detailDashboard = '/detail-dashboard';
   static const String myProfile = '/my-profile';
   static const String site = '/site';
   static const String employee = '/employee';
@@ -84,6 +86,13 @@ GoRouter appRouter(bool isUserLoggedIn) {
         pageBuilder: (context, state) => NoTransitionPage<void>(
           key: state.pageKey,
           child: const DashboardScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RouteUri.detailDashboard,
+        pageBuilder: (context, state) => NoTransitionPage<void>(
+          key: state.pageKey,
+          child: const DashboardDetailScreen(),
         ),
       ),
       GoRoute(

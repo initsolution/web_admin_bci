@@ -149,74 +149,39 @@ class _SidebarState extends ConsumerState<Sidebar> {
     if (currentLocation.isEmpty && widget.autoSelectMenu) {
       currentLocation = GoRouter.of(context).location;
     }
-    var data = 1;
-
     return Column(
-      children: data == 0
-          ? sidebarMenuConfigs.map<Widget>((menu) {
-              if (menu.children.isEmpty) {
-                return _sidebarMenu(
-                  context,
-                  EdgeInsets.fromLTRB(
-                    sidebarTheme.menuLeftPadding,
-                    sidebarTheme.menuTopPadding,
-                    sidebarTheme.menuRightPadding,
-                    sidebarTheme.menuBottomPadding,
-                  ),
-                  menu.uri,
-                  menu.icon,
-                  menu.title(context),
-                  (currentLocation.startsWith(menu.uri)),
-                );
-              } else {
-                return _expandableSidebarMenu(
-                  context,
-                  EdgeInsets.fromLTRB(
-                    sidebarTheme.menuLeftPadding,
-                    sidebarTheme.menuTopPadding,
-                    sidebarTheme.menuRightPadding,
-                    sidebarTheme.menuBottomPadding,
-                  ),
-                  menu.uri,
-                  menu.icon,
-                  menu.title(context),
-                  menu.children,
-                  currentLocation,
-                );
-              }
-            }).toList(growable: false)
-          : sidebarMenuConfigs.map<Widget>((menu) {
-              if (menu.children.isEmpty) {
-                return _sidebarMenu(
-                  context,
-                  EdgeInsets.fromLTRB(
-                    sidebarTheme.menuLeftPadding,
-                    sidebarTheme.menuTopPadding,
-                    sidebarTheme.menuRightPadding,
-                    sidebarTheme.menuBottomPadding,
-                  ),
-                  menu.uri,
-                  menu.icon,
-                  menu.title(context),
-                  (currentLocation.startsWith(menu.uri)),
-                );
-              } else {
-                return _expandableSidebarMenu(
-                  context,
-                  EdgeInsets.fromLTRB(
-                    sidebarTheme.menuLeftPadding,
-                    sidebarTheme.menuTopPadding,
-                    sidebarTheme.menuRightPadding,
-                    sidebarTheme.menuBottomPadding,
-                  ),
-                  menu.uri,
-                  menu.icon,
-                  menu.title(context),
-                  menu.children,
-                  currentLocation,
-                );
-              }
-            }).toList(growable: false),
+      children: sidebarMenuConfigs.map<Widget>((menu) {
+        if (menu.children.isEmpty) {
+          return _sidebarMenu(
+            context,
+            EdgeInsets.fromLTRB(
+              sidebarTheme.menuLeftPadding,
+              sidebarTheme.menuTopPadding,
+              sidebarTheme.menuRightPadding,
+              sidebarTheme.menuBottomPadding,
+            ),
+            menu.uri,
+            menu.icon,
+            menu.title(context),
+            (currentLocation.startsWith(menu.uri)),
+          );
+        } else {
+          return _expandableSidebarMenu(
+            context,
+            EdgeInsets.fromLTRB(
+              sidebarTheme.menuLeftPadding,
+              sidebarTheme.menuTopPadding,
+              sidebarTheme.menuRightPadding,
+              sidebarTheme.menuBottomPadding,
+            ),
+            menu.uri,
+            menu.icon,
+            menu.title(context),
+            menu.children,
+            currentLocation,
+          );
+        }
+      }).toList(growable: false),
     );
   }
 
@@ -267,7 +232,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ref.read(siteNotifierProvider.notifier).getAllSite();
             ref.read(tenantNotifierProvider.notifier).getAllTenant(params);
             params = {
-              "join" : ['site', 'makerEmployee', 'verifierEmployee']
+              "join": ['site', 'makerEmployee', 'verifierEmployee']
             };
             ref.read(taskNotifierProvider.notifier).getAllTask(params);
             ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();
