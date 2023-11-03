@@ -25,4 +25,7 @@ abstract class TaskRepo {
 
   @PATCH('/task/{id}')
   Future<HttpResponse> updateTask(@Path() int id, @Body() Task task);
+
+  @DELETE('/task/{id}')
+  Future<HttpResponse> deleteTask(@Path() int id);
 }

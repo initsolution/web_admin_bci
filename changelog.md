@@ -42,3 +42,6 @@
 
 > 01/11/2023
 > 1. Verifikator change image and accept
+
+> 03/11/2023
+> 1. Add delete task

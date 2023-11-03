@@ -8,6 +8,7 @@ import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_task.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_delete_task.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -42,7 +43,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
           GoRouter.of(context).go(RouteUri.login);
         }
       } else if (next is TaskDataChangeSuccess) {
-        ref.read(taskNotifierProvider.notifier).getAllTask(params);
+        Future(
+            () => ref.read(taskNotifierProvider.notifier).getAllTask(params));
       }
     });
     return PortalMasterLayout(
@@ -148,7 +150,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
             var state = ref.watch(taskNotifierProvider);
             if (DEBUG) debugPrint('state : $state');
             if (state is TaskLoaded) {
-              DataTableSource data = TaskData(tasks: state.tasks);
+              DataTableSource data =
+                  TaskData(tasks: state.tasks, context: context);
               return Theme(
                 data: ThemeData(
                     cardColor: Theme.of(context).cardColor,
@@ -164,6 +167,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                     DataColumn(label: Text('Status')),
                     DataColumn(label: Text('Type')),
                     DataColumn(label: Text('Created Date')),
+                    DataColumn(label: Text('Delete')),
                   ],
                   columnSpacing: 100,
                   horizontalMargin: 10,
@@ -182,7 +186,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
 
 class TaskData extends DataTableSource {
   final List<Task> tasks;
-  TaskData({required this.tasks});
+  final BuildContext context;
+  TaskData({required this.tasks, required this.context});
 
   @override
   DataRow? getRow(int index) {
@@ -193,6 +198,20 @@ class TaskData extends DataTableSource {
       DataCell(Text(tasks[index].status!)),
       DataCell(Text(tasks[index].type!)),
       DataCell(Text(tasks[index].createdDate!)),
+      DataCell(IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return SizedBox(
+                  child: DialogDeleteTask(
+                task: tasks[index],
+              ));
+            },
+          );
+        },
+      )),
     ]);
   }
 

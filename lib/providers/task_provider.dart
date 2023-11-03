@@ -94,4 +94,11 @@ class TaskNotifier extends Notifier<TaskState> {
       state = TaskDataChangeSuccess();
     }
   }
+
+  deleteTask(int id) async {
+    state = TaskLoading();
+    final httpResponse = await taskRepo.deleteTask(id);
+    if (DEBUG) debugPrint(httpResponse.response.statusCode.toString());
+    state = TaskDataChangeSuccess();
+  }
 }
