@@ -34,198 +34,34 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
 
       return PortalMasterLayout(
           selectedMenuUri: RouteUri.asset,
-          body: ListView(
-            padding: const EdgeInsets.all(kDefaultPadding),
-            children: [
-              Header(
-                title: 'Verifikator',
-                subMenu: 'Verifikasi ',
-                userName: value,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: kDefaultPadding),
-                child: Card(
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.refresh),
-                              onPressed: () {},
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.add_box),
-                              onPressed: () {
-                                ref
-                                    .read(assetNotifierProvider.notifier)
-                                    .updateStatusAsset();
-                              },
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            Checkbox(
-                                value: confirmAll,
-                                onChanged: (value) {
-                                  ref
-                                      .read(assetNotifierProvider.notifier)
-                                      .setIsPassedAllDataAsset(value!);
-                                  confirmAll = value;
-                                  setState(() {});
-                                }),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                          ],
+          body: DefaultTabController(
+              length: 2,
+              child: Scaffold(
+                body: Column(
+                  children: [
+                    const TabBar(
+                      labelColor: Colors.blue,
+                      tabs: [
+                      Tab(
+                        text: 'ASSET',
+                      ),
+                      Tab(
+                        text: 'CEKLIST',
+                      ),
+                    ]),
+                    Expanded(
+                      child: TabBarView(children: [
+                        SizedBox(
+                          child: FormAsset(groupedItems, assets),
                         ),
                         const SizedBox(
-                          height: 10,
-                        ),
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: groupedItems.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            String? category =
-                                groupedItems.keys.elementAt(index);
-                            List itemsInCategory = groupedItems[category]!;
-
-                            // Return a widget representing the category and its items
-                            return Container(
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                color: Colors.red,
-                              )),
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 50),
-                              // padding: ,
-                              child: Column(
-                                children: [
-                                  Text(category!,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25)),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  GridView.builder(
-                                    // scrollDirection: Axis.horizontal,
-                                    shrinkWrap: true,
-                                    gridDelegate:
-                                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                                            maxCrossAxisExtent: 550,
-                                            childAspectRatio: 3 / 2,
-                                            crossAxisSpacing: 20,
-                                            mainAxisSpacing: 20),
-                                    itemCount: itemsInCategory.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      Asset item = itemsInCategory[index];
-                                      // debugPrint('${item.toString()} \n');
-                                      // Return a widget representing the item
-                                      return Container(
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                          color: Colors.green,
-                                        )),
-                                        margin: const EdgeInsets.all(10),
-                                        child: Column(
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceEvenly,
-                                              children: [
-                                                Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: IconButton(
-                                                      icon: const Icon(
-                                                          Icons.change_circle),
-                                                      onPressed: () {
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (context) {
-                                                              return DialogChooseImage(
-                                                                  idSource:
-                                                                      item.id!,
-                                                                  assets:
-                                                                      assets);
-                                                            });
-                                                      },
-                                                    )),
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Checkbox(
-                                                    value: item.isPassed,
-                                                    onChanged: (value) {
-                                                      item.isPassed = value;
-                                                      ref
-                                                          .read(
-                                                              assetNotifierProvider
-                                                                  .notifier)
-                                                          .setDataAsset(item);
-                                                    },
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            Expanded(
-                                              child: GestureDetector(
-                                                onTap: () => showDialog(
-                                                    context: context,
-                                                    builder: (context) {
-                                                      return DialogDetailImage(
-                                                          id: item.id!);
-                                                    }),
-                                                child: SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.75,
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.55,
-                                                  child: Image.network(
-                                                    '$urlRepo/asset/getImage/${item.id}',
-                                                    fit: BoxFit.contain,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Text(item.description!),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+                          child: Text('HALOW'),
+                        )
+                      ]),
                     ),
-                  ),
+                  ],
                 ),
-              ),
-            ],
-          ));
+              )));
     } else if (state is AssetChangeDataSuccess) {
       Map<String, dynamic> params = {
         "join": [
@@ -244,6 +80,185 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
     }
     return const Center(
       child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget FormAsset(var groupedItems, var assets) {
+    return ListView(
+      padding: const EdgeInsets.all(kDefaultPadding),
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: kDefaultPadding),
+          child: Card(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              margin: const EdgeInsets.only(top: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.add_box),
+                        onPressed: () {
+                          ref
+                              .read(assetNotifierProvider.notifier)
+                              .updateStatusAsset();
+                        },
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      Checkbox(
+                          value: confirmAll,
+                          onChanged: (value) {
+                            ref
+                                .read(assetNotifierProvider.notifier)
+                                .setIsPassedAllDataAsset(value!);
+                            confirmAll = value;
+                            setState(() {});
+                          }),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: groupedItems.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String? category = groupedItems.keys.elementAt(index);
+                      List itemsInCategory = groupedItems[category]!;
+
+                      // Return a widget representing the category and its items
+                      return Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                          color: Colors.red,
+                        )),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 50),
+                        // padding: ,
+                        child: Column(
+                          children: [
+                            Text(category!,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 25)),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            GridView.builder(
+                              // scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 550,
+                                      childAspectRatio: 3 / 2,
+                                      crossAxisSpacing: 20,
+                                      mainAxisSpacing: 20),
+                              itemCount: itemsInCategory.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                Asset item = itemsInCategory[index];
+                                // debugPrint('${item.toString()} \n');
+                                // Return a widget representing the item
+                                return Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                    color: Colors.green,
+                                  )),
+                                  margin: const EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: IconButton(
+                                                icon: const Icon(
+                                                    Icons.change_circle),
+                                                onPressed: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return DialogChooseImage(
+                                                            idSource: item.id!,
+                                                            assets: assets);
+                                                      });
+                                                },
+                                              )),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Checkbox(
+                                              value: item.isPassed,
+                                              onChanged: (value) {
+                                                item.isPassed = value;
+                                                ref
+                                                    .read(assetNotifierProvider
+                                                        .notifier)
+                                                    .setDataAsset(item);
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () => showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return DialogDetailImage(
+                                                    id: item.id!);
+                                              }),
+                                          child: SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.75,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.55,
+                                            child: Image.network(
+                                              '$urlRepo/asset/getImage/${item.id}',
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(item.description!),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

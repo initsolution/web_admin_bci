@@ -47,11 +47,10 @@ class PortalMasterLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final mediaQueryData = MediaQuery.of(context);
     // final themeData = Theme.of(context);
-    final drawer = (mediaQueryData.size.width <= kScreenWidthLg
-        ? _sidebar(context)
-        : null);
+    final drawer = _sidebar(context);
 
     return Scaffold(
+      appBar: AppBar(),
       drawer: drawer,
       drawerEnableOpenDragGesture: false,
       onDrawerChanged: onDrawerChanged,
@@ -69,10 +68,11 @@ class PortalMasterLayout extends StatelessWidget {
     } else {
       return Row(
         children: [
-          SizedBox(
-            width: Theme.of(context).extension<AppSidebarTheme>()!.sidebarWidth,
-            child: _sidebar(context),
-          ),
+          // SizedBox(
+          //   width: Theme.of(context).extension<AppSidebarTheme>()!.sidebarWidth,
+          //   child: _sidebar(context),
+          // ),
+          // _buildNavigationRail(),
           Expanded(child: body),
         ],
       );
@@ -88,6 +88,126 @@ class PortalMasterLayout extends StatelessWidget {
       onAccountButtonPressed: () => goRouter.go(RouteUri.myProfile),
       onLogoutButtonPressed: () => goRouter.go(RouteUri.logout),
       sidebarConfigs: sidebarMenuConfigs,
+    );
+  }
+
+  Widget _buildNavigationRail() {
+    return NavigationRail(
+      labelType: NavigationRailLabelType.selected,
+      selectedIndex: 1,
+      onDestinationSelected: (int index) {},
+      destinations: const <NavigationRailDestination>[
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.dashboard_rounded,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.dashboard_rounded,
+            color: Colors.yellow,
+          ),
+          label: Text('Dashboard'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.cell_tower,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.cell_tower,
+            color: Colors.yellow,
+          ),
+          label: Text('Site'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Employee'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Tenant'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Task'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Master Asset'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Master Report Reguler Torque'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Master Category Check Preventive'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Master Point Check Preventive'),
+        ),
+        NavigationRailDestination(
+          icon: Icon(
+            Icons.people,
+            color: Colors.blue,
+          ),
+          selectedIcon: Icon(
+            Icons.people,
+            color: Colors.yellow,
+          ),
+          label: Text('Verifikasi'),
+        ),
+      ],
     );
   }
 
