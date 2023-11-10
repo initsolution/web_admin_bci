@@ -45,6 +45,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
 
   @override
   void initState() {
+    Future(() =>ref.read(siteNotifierProvider.notifier).getAllSite());
     super.initState();
     // createPDF();
   }

@@ -227,33 +227,6 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ],
           ),
           onTap: () {
-            Map<String, dynamic> params = {};
-            ref.read(employeeNotifierProvider.notifier).getAllEmployee();
-            ref.read(siteNotifierProvider.notifier).getAllSite();
-            ref.read(tenantNotifierProvider.notifier).getAllTenant(params);
-            params = {
-              "join": [
-                "site",
-                "makerEmployee",
-                "verifierEmployee",
-                "categorychecklistprev",
-                "categorychecklistprev.pointChecklistPreventive",
-                "reportRegulerTorque",
-                "reportRegulerVerticality",
-                "reportRegulerVerticality.valueVerticality"
-              ]
-            };
-            ref.read(taskNotifierProvider.notifier).getAllTask(params);
-            ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();
-            ref
-                .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
-                .getAllMasterCategoryChecklistPreventive();
-            ref
-                .read(masterReportRegulerTorqueNotifierProvider.notifier)
-                .getAllMasterReportRegulerTorqueRepo();
-            ref
-                .read(masterPointChecklistPreventiveNotifierProvider.notifier)
-                .getAllMasterPointChecklistPreventive();
             GoRouter.of(context).go(uri);
           },
           selected: isSelected,

@@ -94,7 +94,7 @@ class DialogAddTask extends ConsumerWidget {
     final String typeTask = ref.watch(typeTaskProvider);
     String status = "todo";
     DateTime now = DateTime.now();
-    String createdDate = DateFormat('kk:mm:ss EEE d MMM').format(now);
+    String createdDate = DateFormat('yyyy-MM-dd').format(now);
     // String siteId = selectedSite.id.toString();
     // String nikMaker = selectedMaker.nik.toString();
     // String nikVerifier = selectedVerifier.nik.toString();
@@ -117,7 +117,7 @@ class DialogAddTask extends ConsumerWidget {
     if (DEBUG) {
       debugPrint('site : ${task.toString()}');
     }
-    ref.read(taskNotifierProvider.notifier).createTask(task);
+    // ref.read(taskNotifierProvider.notifier).createTask(task);
   }
 
   Widget LoadSite(var stateSite) {

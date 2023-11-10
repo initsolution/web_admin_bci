@@ -87,6 +87,9 @@ class _MasterCategoryChecklistPreventiveScreenState
 
   @override
   void initState() {
+    Future(() => ref
+        .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
+        .getAllMasterCategoryChecklistPreventive());
     super.initState();
   }
 

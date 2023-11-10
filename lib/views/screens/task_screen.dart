@@ -4,6 +4,8 @@ import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/model/task.dart';
+import 'package:flutter_web_ptb/providers/employee_provider.dart';
+import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
@@ -25,6 +27,22 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
   };
   @override
   void initState() {
+    Map<String, dynamic> params = {};
+    params = {
+      "join": [
+        "site",
+        "makerEmployee",
+        "verifierEmployee",
+        "categorychecklistprev",
+        "categorychecklistprev.pointChecklistPreventive",
+        "reportRegulerTorque",
+        "reportRegulerVerticality",
+        "reportRegulerVerticality.valueVerticality"
+      ]
+    };
+    Future(() => ref.read(taskNotifierProvider.notifier).getAllTask(params));
+    Future(()=> ref.read(employeeNotifierProvider.notifier).getAllEmployee());
+    Future(() =>ref.read(siteNotifierProvider.notifier).getAllSite());
     super.initState();
   }
 

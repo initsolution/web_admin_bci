@@ -54,6 +54,14 @@ class _MasterPointChecklistPreventiveScreenState
   bool _sortUraianeAsc = true;
   bool _sortKriteriaNameAsc = true;
 
+  @override
+  void initState() {
+    Future(() => ref
+        .read(masterPointChecklistPreventiveNotifierProvider.notifier)
+        .getAllMasterPointChecklistPreventive());
+    super.initState();
+  }
+
   void sort(columnIndex) {
     setState(() {
       if (columnIndex == 0) {

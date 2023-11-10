@@ -192,6 +192,9 @@ class _MasterReportRegulerTorqueScreenState
 
   @override
   void initState() {
+    Future(() => ref
+        .read(masterReportRegulerTorqueNotifierProvider.notifier)
+        .getAllMasterReportRegulerTorqueRepo());
     super.initState();
   }
 

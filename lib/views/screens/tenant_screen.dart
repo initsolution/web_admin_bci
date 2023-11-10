@@ -100,6 +100,9 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
 
   @override
   void initState() {
+    Map<String, dynamic> params = {};
+    Future(
+        () => ref.read(tenantNotifierProvider.notifier).getAllTenant(params));
     super.initState();
   }
 
