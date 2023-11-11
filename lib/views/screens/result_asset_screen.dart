@@ -4,19 +4,23 @@ import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/model/asset.dart';
+import 'package:flutter_web_ptb/model/reportregulertorque.dart';
+import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
 import 'package:flutter_web_ptb/providers/asset_state.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
-import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_choose_image.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_detail_image.dart';
-import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
+import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
+import 'package:flutter_web_ptb/views/widgets/report_reguler_torque_widget.dart';
+import 'package:flutter_web_ptb/views/widgets/report_reguler_verticality.dart';
 import 'package:go_router/go_router.dart';
 
 class ResultAssetScreen extends ConsumerStatefulWidget {
-  const ResultAssetScreen({super.key});
+  final Task task;
+  const ResultAssetScreen({super.key, required this.task});
 
   @override
   ConsumerState<ResultAssetScreen> createState() => _ResultAssetScreenState();
@@ -24,44 +28,99 @@ class ResultAssetScreen extends ConsumerStatefulWidget {
 
 class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
   bool confirmAll = false;
+
+  List<ReportRegulerTorque>? reportRegulerTorque;
   @override
   Widget build(BuildContext context) {
     var state = ref.watch(assetNotifierProvider);
-    var value = ref.watch(userDataProvider.select((value) => value.username));
+    // var value = ref.watch(userDataProvider.select((value) => value.username));
+
     if (state is AssetLoaded) {
       List<Asset> assets = state.assets;
+
+      debugPrint('result asset');
+      debugPrint(assets.toString());
       var groupedItems = groupBy(assets, (e) => e.category);
+      if (widget.task.type == 'Reguler') {
+        reportRegulerTorque = widget.task.reportRegulerTorque!;
+        reportRegulerTorque!
+            .sort((a, b) => a.orderIndex!.compareTo(b.orderIndex!));
+        // report reguler torque
+        // report reguler verticality
+      }
 
       return PortalMasterLayout(
           selectedMenuUri: RouteUri.asset,
-          body: DefaultTabController(
-              length: 2,
-              child: Scaffold(
-                body: Column(
-                  children: [
-                    const TabBar(
-                      labelColor: Colors.blue,
-                      tabs: [
-                      Tab(
-                        text: 'ASSET',
-                      ),
-                      Tab(
-                        text: 'CEKLIST',
-                      ),
-                    ]),
-                    Expanded(
-                      child: TabBarView(children: [
-                        SizedBox(
-                          child: FormAsset(groupedItems, assets),
+          body: widget.task.type == 'Reguler'
+              ?
+              // reguler
+              DefaultTabController(
+                  length: 3,
+                  child: Scaffold(
+                    body: Column(
+                      children: [
+                        const TabBar(labelColor: Colors.blue, tabs: [
+                          Tab(
+                            text: 'REPORT TORQUE',
+                          ),
+                          Tab(
+                            text: 'REPORT VERTICALITY',
+                          ),
+                          Tab(
+                            text: 'PHOTOS',
+                          ),
+                        ]),
+                        Expanded(
+                          child: TabBarView(children: [
+                            SizedBox(
+                              child: ReportRegulerTorqueWidget(
+                                reportRegulerTorque: reportRegulerTorque!,
+                              ),
+                            ),
+                            SizedBox(
+                              child: ReportRegulerVerticalityWidget(
+                                  reportRegulerVerticality:
+                                      widget.task.reportRegulerVerticality!),
+                            ),
+                            SizedBox(
+                              child: formAsset(groupedItems, assets),
+                            ),
+                          ]),
                         ),
-                        const SizedBox(
-                          child: Text('HALOW'),
-                        )
-                      ]),
+                      ],
                     ),
-                  ],
-                ),
-              )));
+                  ))
+              :
+              //preventive
+              DefaultTabController(
+                  length: 2,
+                  child: Scaffold(
+                    body: Column(
+                      children: [
+                        const TabBar(labelColor: Colors.blue, tabs: [
+                          Tab(
+                            text: 'ASSET',
+                          ),
+                          Tab(
+                            text: 'CEKLIST',
+                          ),
+                        ]),
+                        Expanded(
+                          child: TabBarView(children: [
+                            SizedBox(
+                              child: formAsset(groupedItems, assets),
+                            ),
+                            SizedBox(
+                              child: ReportPreventiveWidget(
+                                categoryChecklistPreventives:
+                                    widget.task.categorychecklistprev!,
+                              ),
+                            )
+                          ]),
+                        ),
+                      ],
+                    ),
+                  )));
     } else if (state is AssetChangeDataSuccess) {
       Map<String, dynamic> params = {
         "join": [
@@ -83,7 +142,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
     );
   }
 
-  Widget FormAsset(var groupedItems, var assets) {
+  Widget formAsset(var groupedItems, var assets) {
     return ListView(
       padding: const EdgeInsets.all(kDefaultPadding),
       children: [
@@ -262,6 +321,8 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
     );
   }
 }
+
+
 
 // SliverList.builder(
 //                   itemCount: groupedItems.length,

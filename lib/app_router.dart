@@ -1,3 +1,4 @@
+import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/views/screens/asset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_detail_screen.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_screen.dart';
@@ -164,8 +165,14 @@ GoRouter appRouter(bool isUserLoggedIn) {
       ),
       GoRoute(
         path: RouteUri.resultAsset,
-        pageBuilder: (context, state) => NoTransitionPage<void>(
-            key: state.pageKey, child: const ResultAssetScreen()),
+        pageBuilder: (context, state) {
+          Task task = state.extra as Task;
+          return NoTransitionPage<void>(
+              key: state.pageKey,
+              child: ResultAssetScreen(
+                task: task,
+              ));
+        },
       ),
     ],
     redirect: (context, state) {

@@ -23,6 +23,17 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       site: json['site'] == null
           ? null
           : Site.fromJson(json['site'] as Map<String, dynamic>),
+      categorychecklistprev: (json['categorychecklistprev'] as List<dynamic>?)
+          ?.map((e) =>
+              CategoryChecklistPreventive.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      reportRegulerTorque: (json['reportRegulerTorque'] as List<dynamic>?)
+          ?.map((e) => ReportRegulerTorque.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      reportRegulerVerticality: json['reportRegulerVerticality'] == null
+          ? null
+          : ReportRegulerVerticality.fromJson(
+              json['reportRegulerVerticality'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
@@ -36,4 +47,7 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'makerEmployee': instance.makerEmployee,
       'verifierEmployee': instance.verifierEmployee,
       'site': instance.site,
+      'categorychecklistprev': instance.categorychecklistprev,
+      'reportRegulerTorque': instance.reportRegulerTorque,
+      'reportRegulerVerticality': instance.reportRegulerVerticality,
     };

@@ -174,6 +174,7 @@ class TaskData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     Task task = tasks[index];
+    debugPrint(task.toString());
     return DataRow(cells: [
       DataCell(Text(task.id!.toString())),
       DataCell(Text(task.site!.name!)),
@@ -187,7 +188,9 @@ class TaskData extends DataTableSource {
         onPressed: () {
           Map<String, dynamic> header = {
             'filter': 'task.id||eq||${task.id}',
-            'join': ['task'],
+            "join": [
+              "task",
+            ],
             'sort': 'orderIndex,ASC'
           };
           ref.read(assetNotifierProvider.notifier).getAllAsset(header);
@@ -198,7 +201,7 @@ class TaskData extends DataTableSource {
           //         child: DialogAsset(),
           //       );
           //     });
-          GoRouter.of(context).go(RouteUri.resultAsset);
+          GoRouter.of(context).go(RouteUri.resultAsset, extra: task);
         },
       )),
     ]);

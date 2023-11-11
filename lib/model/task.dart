@@ -1,7 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+import 'package:flutter/foundation.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:flutter_web_ptb/model/categorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
+import 'package:flutter_web_ptb/model/reportregulertorque.dart';
+import 'package:flutter_web_ptb/model/reportregulerverticality.dart';
 import 'package:flutter_web_ptb/model/site.dart';
 
 part 'task.g.dart';
@@ -18,6 +23,9 @@ class Task {
   Employee? makerEmployee;
   Employee? verifierEmployee;
   Site? site;
+  List<CategoryChecklistPreventive>? categorychecklistprev;
+  List<ReportRegulerTorque>? reportRegulerTorque;
+  ReportRegulerVerticality? reportRegulerVerticality;
   Task({
     this.id,
     this.createdDate,
@@ -29,11 +37,10 @@ class Task {
     this.makerEmployee,
     this.verifierEmployee,
     this.site,
+    this.categorychecklistprev,
+    this.reportRegulerTorque,
+    this.reportRegulerVerticality,
   });
-
-  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
-
-  Map<String, dynamic> toJson() => _$TaskToJson(this);
 
   Task copyWith({
     int? id,
@@ -46,6 +53,9 @@ class Task {
     Employee? makerEmployee,
     Employee? verifierEmployee,
     Site? site,
+    List<CategoryChecklistPreventive>? categorychecklistprev,
+    List<ReportRegulerTorque>? reportRegulerTorque,
+    ReportRegulerVerticality? reportRegulerVerticality,
   }) {
     return Task(
       id: id ?? this.id,
@@ -58,6 +68,11 @@ class Task {
       makerEmployee: makerEmployee ?? this.makerEmployee,
       verifierEmployee: verifierEmployee ?? this.verifierEmployee,
       site: site ?? this.site,
+      categorychecklistprev:
+          categorychecklistprev ?? this.categorychecklistprev,
+      reportRegulerTorque: reportRegulerTorque ?? this.reportRegulerTorque,
+      reportRegulerVerticality:
+          reportRegulerVerticality ?? this.reportRegulerVerticality,
     );
   }
 
@@ -73,12 +88,17 @@ class Task {
       'makerEmployee': makerEmployee?.toMap(),
       'verifierEmployee': verifierEmployee?.toMap(),
       'site': site?.toMap(),
+      'categorychecklistprev':
+          categorychecklistprev?.map((x) => x?.toMap()).toList(),
+      'reportRegulerTorque':
+          reportRegulerTorque?.map((x) => x?.toMap()).toList(),
+      'reportRegulerVerticality': reportRegulerVerticality?.toMap(),
     };
   }
 
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
-      id: map['id'] != null ? map['id'] as int : 0,
+      id: map['id'] != null ? map['id'] as int : null,
       createdDate:
           map['createdDate'] != null ? map['createdDate'] as String : null,
       submitedDate:
@@ -98,12 +118,36 @@ class Task {
       site: map['site'] != null
           ? Site.fromMap(map['site'] as Map<String, dynamic>)
           : null,
+      categorychecklistprev: map['categorychecklistprev'] != null
+          ? List<CategoryChecklistPreventive>.from(
+              (map['categorychecklistprev'] as List<int>)
+                  .map<CategoryChecklistPreventive?>(
+                (x) => CategoryChecklistPreventive.fromMap(
+                    x as Map<String, dynamic>),
+              ),
+            )
+          : null,
+      reportRegulerTorque: map['reportRegulerTorque'] != null
+          ? List<ReportRegulerTorque>.from(
+              (map['reportRegulerTorque'] as List<int>)
+                  .map<ReportRegulerTorque?>(
+                (x) => ReportRegulerTorque.fromMap(x as Map<String, dynamic>),
+              ),
+            )
+          : null,
+      reportRegulerVerticality: map['reportRegulerVerticality'] != null
+          ? ReportRegulerVerticality.fromMap(
+              map['reportRegulerVerticality'] as Map<String, dynamic>)
+          : null,
     );
   }
 
+  factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TaskToJson(this);
   @override
   String toString() {
-    return 'Task(id: $id, createdDate: $createdDate, submitedDate: $submitedDate, verifiedDate: $verifiedDate, status: $status, type: $type, towerCategory: $towerCategory, makerEmployee: $makerEmployee, verifierEmployee: $verifierEmployee, site: $site)';
+    return 'Task(id: $id, createdDate: $createdDate, submitedDate: $submitedDate, verifiedDate: $verifiedDate, status: $status, type: $type, towerCategory: $towerCategory, makerEmployee: $makerEmployee, verifierEmployee: $verifierEmployee, site: $site, categorychecklistprev: $categorychecklistprev, reportRegulerTorque: $reportRegulerTorque, reportRegulerVerticality: $reportRegulerVerticality)';
   }
 
   @override
@@ -119,7 +163,10 @@ class Task {
         other.towerCategory == towerCategory &&
         other.makerEmployee == makerEmployee &&
         other.verifierEmployee == verifierEmployee &&
-        other.site == site;
+        other.site == site &&
+        listEquals(other.categorychecklistprev, categorychecklistprev) &&
+        listEquals(other.reportRegulerTorque, reportRegulerTorque) &&
+        other.reportRegulerVerticality == reportRegulerVerticality;
   }
 
   @override
@@ -133,6 +180,9 @@ class Task {
         towerCategory.hashCode ^
         makerEmployee.hashCode ^
         verifierEmployee.hashCode ^
-        site.hashCode;
+        site.hashCode ^
+        categorychecklistprev.hashCode ^
+        reportRegulerTorque.hashCode ^
+        reportRegulerVerticality.hashCode;
   }
 }

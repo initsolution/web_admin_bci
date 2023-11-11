@@ -22,7 +22,16 @@ class TaskScreen extends ConsumerStatefulWidget {
 
 class _TaskScreenState extends ConsumerState<TaskScreen> {
   Map<String, dynamic> params = {
-    "join": ['site', 'makerEmployee', 'verifierEmployee']
+    "join": [
+      "site",
+      "makerEmployee",
+      "verifierEmployee",
+      "categorychecklistprev",
+      "categorychecklistprev.pointChecklistPreventive",
+      "reportRegulerTorque",
+      "reportRegulerVerticality",
+      "reportRegulerVerticality.valueVerticality"
+    ]
   };
   @override
   void initState() {
