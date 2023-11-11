@@ -142,6 +142,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
 
   @override
   void initState() {
+    Future(()=> ref.read(employeeNotifierProvider.notifier).getAllEmployee());
     super.initState();
   }
 

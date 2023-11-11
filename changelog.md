@@ -43,6 +43,10 @@
 > 01/11/2023
 > 1. Verifikator change image and accept
 
+> 10/11/2023
+> 1. create date pada task yyyy-mm-dd
+> 2. initstate pada setiap screen
+
 > 03/11/2023
 > 1. Add delete task
 

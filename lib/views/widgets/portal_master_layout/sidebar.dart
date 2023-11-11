@@ -2,18 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/master_layout_config.dart';
-import 'package:flutter_web_ptb/providers/employee_provider.dart';
-import 'package:flutter_web_ptb/providers/masterasset_provider.dart';
-import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_provider.dart';
-import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_provider.dart';
-import 'package:flutter_web_ptb/providers/masterreportregulertorque_provider.dart';
-import 'package:flutter_web_ptb/providers/site_provider.dart';
-import 'package:flutter_web_ptb/providers/tenant_provider.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_sidebar_theme.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../providers/task_provider.dart';
 
 class SidebarMenuConfig {
   final String uri;
@@ -227,33 +218,6 @@ class _SidebarState extends ConsumerState<Sidebar> {
             ],
           ),
           onTap: () {
-            Map<String, dynamic> params = {};
-            ref.read(employeeNotifierProvider.notifier).getAllEmployee();
-            ref.read(siteNotifierProvider.notifier).getAllSite();
-            ref.read(tenantNotifierProvider.notifier).getAllTenant(params);
-            params = {
-              "join": [
-                "site",
-                "makerEmployee",
-                "verifierEmployee",
-                "categorychecklistprev",
-                "categorychecklistprev.pointChecklistPreventive",
-                "reportRegulerTorque",
-                "reportRegulerVerticality",
-                "reportRegulerVerticality.valueVerticality"
-              ]
-            };
-            ref.read(taskNotifierProvider.notifier).getAllTask(params);
-            ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset();
-            ref
-                .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
-                .getAllMasterCategoryChecklistPreventive();
-            ref
-                .read(masterReportRegulerTorqueNotifierProvider.notifier)
-                .getAllMasterReportRegulerTorqueRepo();
-            ref
-                .read(masterPointChecklistPreventiveNotifierProvider.notifier)
-                .getAllMasterPointChecklistPreventive();
             GoRouter.of(context).go(uri);
           },
           selected: isSelected,

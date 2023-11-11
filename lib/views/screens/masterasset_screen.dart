@@ -109,6 +109,8 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
 
   @override
   void initState() {
+    Future(() =>
+        ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset());
     super.initState();
   }
 
