@@ -117,7 +117,7 @@ class DialogAddTask extends ConsumerWidget {
     if (DEBUG) {
       debugPrint('site : ${task.toString()}');
     }
-    // ref.read(taskNotifierProvider.notifier).createTask(task);
+    ref.read(taskNotifierProvider.notifier).createTask(task);
   }
 
   Widget LoadSite(var stateSite) {

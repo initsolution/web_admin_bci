@@ -10,6 +10,8 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 
 String typeTask = 'Reguler';
+String statusTask = 'All';
+final statusTaskProvider = StateProvider<String>((ref) => statusTask);
 final typeTaskProvider = StateProvider<String>((ref) => typeTask);
 
 final taskNotifierProvider = NotifierProvider<TaskNotifier, TaskState>(
@@ -23,6 +25,7 @@ class TaskNotifier extends Notifier<TaskState> {
 
   TaskNotifier({required this.taskRepo});
 
+  List<Task>? tasks;
   @override
   TaskState build() {
     return TaskInitial();
@@ -38,12 +41,11 @@ class TaskNotifier extends Notifier<TaskState> {
           await taskRepo.getAllTask('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${data.data}');
-        List<Task> tasks =
-            (data.data as List).map((e) => Task.fromJson(e)).toList();
-        if (tasks.isEmpty) {
+        tasks = (data.data as List).map((e) => Task.fromJson(e)).toList();
+        if (tasks!.isEmpty) {
           state = TaskLoadedEmpty();
         } else {
-          state = TaskLoaded(tasks: tasks);
+          state = TaskLoaded(tasks: tasks!);
         }
       }
     } on DioException catch (error) {
@@ -100,5 +102,26 @@ class TaskNotifier extends Notifier<TaskState> {
     final httpResponse = await taskRepo.deleteTask(id);
     if (DEBUG) debugPrint(httpResponse.response.statusCode.toString());
     state = TaskDataChangeSuccess();
+  }
+
+  searchTask(String search) async {
+    state = TaskLoading();
+    List<Task> searchTask = tasks!
+        .where((task) =>
+            task.site!.name!.toLowerCase().contains(search.toLowerCase()))
+        .toList();
+    state = TaskLoaded(tasks: searchTask);
+  }
+
+  filterStatus(String status) {
+    state = TaskLoading();
+    if (status == 'All') {
+      state = TaskLoaded(tasks: tasks!);
+    } else {
+      List<Task> searchTask = tasks!
+          .where((task) => task.status!.toLowerCase() == (status.toLowerCase()))
+          .toList();
+      state = TaskLoaded(tasks: searchTask);
+    }
   }
 }

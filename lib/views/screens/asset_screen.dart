@@ -31,10 +31,21 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
     token = sharedPref.getString(StorageKeys.token) ?? '';
     Employee employee = Employee.fromMap(JwtDecoder.decode(token)['employee']);
     params = {
-      "join": ['site', 'makerEmployee', 'verifierEmployee'],
-      'filter': 'verifierEmployee.nik||eq||${employee.nik}',
+      "join": [
+        'site',
+        'makerEmployee',
+        'verifierEmployee',
+        'categorychecklistprev',
+        'categorychecklistprev.pointChecklistPreventive',
+        'reportRegulerTorque',
+        'reportRegulerVerticality',
+        'reportRegulerVerticality.valueVerticality'
+      ],
+      // 'filter': 'verifierEmployee.nik||eq||${employee.nik}',
       'sort': ['updated_at,DESC']
     };
+
+    Future(() => ref.read(taskNotifierProvider.notifier).getAllTask(params));
   }
 
   @override
@@ -92,16 +103,28 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                         const SizedBox(
                           width: 30,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {},
+                        SizedBox(
+                          width: 100,
+                          height: 40,
+                          child: TextField(
+                            onChanged: (value) => Future(() => ref
+                                .read(taskNotifierProvider.notifier)
+                                .searchTask(
+                                    value)), // onChanged return the value of the field
+                            decoration: InputDecoration(
+                                labelText: "Search ...",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                )),
+                          ),
                         ),
                         const SizedBox(
                           width: 30,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
+                        SizedBox(
+                          width: 150,
+                          height: 40,
+                          child: getDropdownStatus(),
                         ),
                         const SizedBox(
                           width: 30,
@@ -163,6 +186,26 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
           },
         ));
   }
+
+  Widget getDropdownStatus() {
+    List<String> dataStatus = ['All', 'Todo', 'Review', 'Verified'];
+    return Consumer(builder: (_, WidgetRef ref, __) {
+      final String status = ref.watch(statusTaskProvider);
+      return DropdownButton(
+        value: status.isNotEmpty ? status : null,
+        onChanged: (value) {
+          ref.read(taskNotifierProvider.notifier).filterStatus(value!);
+          ref.read(statusTaskProvider.notifier).state = value;
+        },
+        items: dataStatus.map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(value),
+          );
+        }).toList(),
+      );
+    });
+  }
 }
 
 class TaskData extends DataTableSource {
@@ -183,27 +226,23 @@ class TaskData extends DataTableSource {
       DataCell(Text(task.status!)),
       DataCell(Text(task.type!)),
       DataCell(Text(task.createdDate!)),
-      DataCell(IconButton(
-        icon: const Icon(Icons.verified_outlined),
-        onPressed: () {
-          Map<String, dynamic> header = {
-            'filter': 'task.id||eq||${task.id}',
-            "join": [
-              "task",
-            ],
-            'sort': 'orderIndex,ASC'
-          };
-          ref.read(assetNotifierProvider.notifier).getAllAsset(header);
-          // showDialog(
-          //     context: context,
-          //     builder: (context) {
-          //       return const SizedBox(
-          //         child: DialogAsset(),
-          //       );
-          //     });
-          GoRouter.of(context).go(RouteUri.resultAsset, extra: task);
-        },
-      )),
+      DataCell(task.status == 'todo'
+          ? Container()
+          : IconButton(
+              icon: const Icon(Icons.verified_outlined),
+              onPressed: () {
+                Map<String, dynamic> header = {
+                  'filter': 'task.id||eq||${task.id}',
+                  "join": [
+                    "task",
+                  ],
+                  'sort': 'orderIndex,ASC'
+                };
+                ref.read(assetNotifierProvider.notifier).getAllAsset(header);
+
+                GoRouter.of(context).go(RouteUri.resultAsset, extra: task);
+              },
+            )),
     ]);
   }
 
