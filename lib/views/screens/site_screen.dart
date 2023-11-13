@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,11 +12,11 @@ import 'package:flutter_web_ptb/model/site.dart';
 import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter_web_ptb/providers/site_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_edit_site.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_web_ptb/theme/theme.dart';
 
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
@@ -42,12 +43,19 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
   bool _sortAddressAsc = true;
   bool _sortRegionalAsc = true;
   bool _sortProvinceAsc = true;
+  final _dataTableHorizontalScrollController = ScrollController();
 
   @override
   void initState() {
-    Future(() =>ref.read(siteNotifierProvider.notifier).getAllSite());
+    Future(() => ref.read(siteNotifierProvider.notifier).getAllSite());
     super.initState();
     // createPDF();
+  }
+
+  @override
+  void dispose() {
+    _dataTableHorizontalScrollController.dispose();
+    super.dispose();
   }
 
   savePDF() async {
@@ -259,7 +267,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Center(child: tableSite())
+                    tableSite(),
                   ],
                 ),
               ),
@@ -355,92 +363,114 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
   }
 
   Widget tableSite() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            var state = ref.watch(siteNotifierProvider);
-            if (DEBUG) debugPrint('state : $state');
-            if (state is SiteLoaded) {
-              DataTableSource data =
-                  SiteData(sites: state.sites, ref: ref, context: context);
-              filterData = state.sites;
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
-                  source: data,
-                  header: const Text('Site'),
-                  columns: [
-                    DataColumn(
-                      label: const Text('ID', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double dataTableWidth =
+                  max(kScreenWidthMd, constraints.maxWidth);
+              return Scrollbar(
+                controller: _dataTableHorizontalScrollController,
+                thumbVisibility: true,
+                trackVisibility: true,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _dataTableHorizontalScrollController,
+                  child: SizedBox(
+                    width: dataTableWidth,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        var state = ref.watch(siteNotifierProvider);
+                        if (DEBUG) debugPrint('state : $state');
+                        if (state is SiteLoaded) {
+                          DataTableSource data = SiteData(
+                              sites: state.sites, ref: ref, context: context);
+                          filterData = state.sites;
+                          return PaginatedDataTable(
+                            source: data,
+                            header: const Text('Site'),
+                            columns: [
+                              DataColumn(
+                                label: const Text('ID'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Name'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Tower Type'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Tower Height'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Fabricator'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              const DataColumn(label: Text('Tenants')),
+                              DataColumn(
+                                label: const Text('Address'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Regional'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Province'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              const DataColumn(label: Text('Longtitude')),
+                              const DataColumn(label: Text('Latitude')),
+                              const DataColumn(label: Text('Action')),
+                            ],
+                            horizontalMargin: 10,
+                            rowsPerPage: 10,
+                            showCheckboxColumn: false,
+                          );
+                        } else if (state is SiteLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return Container();
                       },
                     ),
-                    DataColumn(
-                      label: const Text('Name', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Tower Type', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Tower Height', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Fabricator', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    const DataColumn(
-                        label: Text('Tenants', style: tableHeader)),
-                    DataColumn(
-                      label: const Text('Address', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Regional', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Province', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    const DataColumn(
-                        label: Text('Longtitude', style: tableHeader)),
-                    const DataColumn(
-                        label: Text('Latitude', style: tableHeader)),
-                    const DataColumn(label: Text('Action', style: tableHeader)),
-                  ],
-                  horizontalMargin: 10,
-                  rowsPerPage: 10,
-                  showCheckboxColumn: false,
+                  ),
                 ),
               );
-            } else if (state is SiteLoading) {
-              return const CircularProgressIndicator();
-            }
-            return Container();
-          },
-        ));
+            },
+          )),
+    );
   }
 }
 

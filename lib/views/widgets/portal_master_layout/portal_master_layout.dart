@@ -4,7 +4,6 @@ import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/master_layout_config.dart';
 // import 'package:flutter_web_ptb/providers/app_preferences_provider.dart';
 // import 'package:flutter_web_ptb/theme/theme_extensions/app_color_scheme.dart';
-import 'package:flutter_web_ptb/theme/theme_extensions/app_sidebar_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/sidebar.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:provider/provider.dart';
@@ -45,7 +44,6 @@ class PortalMasterLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQueryData = MediaQuery.of(context);
     // final themeData = Theme.of(context);
     final drawer = _sidebar(context);
 

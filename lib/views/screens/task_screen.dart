@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_task.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_delete_task.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
@@ -23,6 +26,7 @@ class TaskScreen extends ConsumerStatefulWidget {
 }
 
 class _TaskScreenState extends ConsumerState<TaskScreen> {
+  final _dataTableHorizontalScrollController = ScrollController();
   Map<String, dynamic> params = {
     "join": [
       "site",
@@ -51,9 +55,15 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
       ]
     };
     Future(() => ref.read(taskNotifierProvider.notifier).getAllTask(params));
-    Future(()=> ref.read(employeeNotifierProvider.notifier).getAllEmployee());
-    Future(() =>ref.read(siteNotifierProvider.notifier).getAllSite());
+    Future(() => ref.read(employeeNotifierProvider.notifier).getAllEmployee());
+    Future(() => ref.read(siteNotifierProvider.notifier).getAllSite());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dataTableHorizontalScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -152,7 +162,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Center(child: tableTask())
+                    tableTask(),
                   ],
                 ),
               ),
@@ -170,44 +180,69 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
   }
 
   Widget tableTask() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            var state = ref.watch(taskNotifierProvider);
-            if (DEBUG) debugPrint('state : $state');
-            if (state is TaskLoaded) {
-              DataTableSource data =
-                  TaskData(tasks: state.tasks, context: context);
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
-                  source: data,
-                  header: const Text('Task'),
-                  columns: const [
-                    DataColumn(label: Text('Site')),
-                    DataColumn(label: Text('Maker')),
-                    DataColumn(label: Text('Verifier')),
-                    DataColumn(label: Text('Status')),
-                    DataColumn(label: Text('Type')),
-                    DataColumn(label: Text('Created Date')),
-                    DataColumn(label: Text('Delete')),
-                  ],
-                  columnSpacing: 100,
-                  horizontalMargin: 10,
-                  rowsPerPage: 10,
-                  showCheckboxColumn: false,
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double dataTableWidth =
+                  max(kScreenWidthMd, constraints.maxWidth);
+              return Scrollbar(
+                controller: _dataTableHorizontalScrollController,
+                thumbVisibility: true,
+                trackVisibility: true,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _dataTableHorizontalScrollController,
+                  child: SizedBox(
+                    width: dataTableWidth,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        var state = ref.watch(taskNotifierProvider);
+                        if (DEBUG) debugPrint('state : $state');
+                        if (state is TaskLoaded) {
+                          DataTableSource data =
+                              TaskData(tasks: state.tasks, context: context);
+                          return PaginatedDataTable(
+                            source: data,
+                            header: const Text('Task'),
+                            columns: const [
+                              DataColumn(label: Text('Site')),
+                              DataColumn(label: Text('Maker')),
+                              DataColumn(label: Text('Verifier')),
+                              DataColumn(label: Text('Status')),
+                              DataColumn(label: Text('Type')),
+                              DataColumn(label: Text('Created Date')),
+                              DataColumn(label: Text('Delete')),
+                            ],
+                            columnSpacing: 100,
+                            horizontalMargin: 10,
+                            rowsPerPage: 10,
+                            showCheckboxColumn: false,
+                          );
+                        } else if (state is TaskLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ),
                 ),
               );
-            } else if (state is TaskLoading) {
-              return const CircularProgressIndicator();
-            }
-            return Container();
-          },
-        ));
+            },
+          )),
+    );
   }
 }
 

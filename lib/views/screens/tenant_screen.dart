@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -6,7 +8,7 @@ import 'package:flutter_web_ptb/model/tenant.dart';
 import 'package:flutter_web_ptb/providers/tenant_provider.dart';
 import 'package:flutter_web_ptb/providers/tenant_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
-import 'package:flutter_web_ptb/theme/theme.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_tenant.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
@@ -26,6 +28,7 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
   late List<Tenant> filterData;
   bool _sortKode = true;
   bool _sortNameAsc = true;
+  final _dataTableHorizontalScrollController = ScrollController();
 
   void sort(columnIndex) {
     setState(() {
@@ -52,50 +55,75 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
   }
 
   Widget tableTenant() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            var state = ref.watch(tenantNotifierProvider);
-            if (state is TenantLoaded) {
-              DataTableSource data = TenantData(tenants: state.tenants);
-              filterData = state.tenants;
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
-                  source: data,
-                  header: const Text('Tenant'),
-                  columns: [
-                    DataColumn(
-                      label: const Text('Kode', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double dataTableWidth =
+                  max(kScreenWidthMd, constraints.maxWidth);
+              return Scrollbar(
+                controller: _dataTableHorizontalScrollController,
+                thumbVisibility: true,
+                trackVisibility: true,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _dataTableHorizontalScrollController,
+                  child: SizedBox(
+                    width: dataTableWidth,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        var state = ref.watch(tenantNotifierProvider);
+                        if (state is TenantLoaded) {
+                          DataTableSource data =
+                              TenantData(tenants: state.tenants);
+                          filterData = state.tenants;
+                          return PaginatedDataTable(
+                            source: data,
+                            header: const Text('Tenant'),
+                            columns: [
+                              DataColumn(
+                                label: const Text('Kode'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Name'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              const DataColumn(label: Text('Is Active')),
+                            ],
+                            columnSpacing: 100,
+                            horizontalMargin: 10,
+                            rowsPerPage: 10,
+                            showCheckboxColumn: false,
+                          );
+                        } else if (state is TenantLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return Container();
                       },
                     ),
-                    DataColumn(
-                      label: const Text('Name', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    const DataColumn(
-                        label: Text('Is Active', style: tableHeader)),
-                  ],
-                  columnSpacing: 100,
-                  horizontalMargin: 10,
-                  rowsPerPage: 10,
-                  showCheckboxColumn: false,
+                  ),
                 ),
               );
-            } else if (state is TenantLoading) {
-              return const CircularProgressIndicator();
-            }
-            return Container();
-          },
-        ));
+            },
+          )),
+    );
   }
 
   @override
@@ -104,6 +132,12 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
     Future(
         () => ref.read(tenantNotifierProvider.notifier).getAllTenant(params));
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dataTableHorizontalScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -204,7 +238,7 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Center(child: tableTenant())
+                    tableTenant(),
                   ],
                 ),
               ),

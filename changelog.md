@@ -54,3 +54,6 @@
 > 1. add report preventive
 > 2. add report reguler
 > 3. search for verifikator by site name
+
+> 13/11/2023
+> 1. Modif tampilan tabel semua screen

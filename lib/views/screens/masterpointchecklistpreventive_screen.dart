@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -9,7 +11,7 @@ import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_stat
 import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_provider.dart';
 import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
-import 'package:flutter_web_ptb/theme/theme.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_masterpointchecklistpreventive.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
@@ -53,6 +55,7 @@ class _MasterPointChecklistPreventiveScreenState
   bool _sortCategoryNameAsc = true;
   bool _sortUraianeAsc = true;
   bool _sortKriteriaNameAsc = true;
+  final _dataTableHorizontalScrollController = ScrollController();
 
   @override
   void initState() {
@@ -60,6 +63,12 @@ class _MasterPointChecklistPreventiveScreenState
         .read(masterPointChecklistPreventiveNotifierProvider.notifier)
         .getAllMasterPointChecklistPreventive());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dataTableHorizontalScrollController.dispose();
+    super.dispose();
   }
 
   void sort(columnIndex) {
@@ -100,52 +109,83 @@ class _MasterPointChecklistPreventiveScreenState
   }
 
   Widget tableMaster() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-      child: Consumer(builder: (context, ref, child) {
-        var state = ref.watch(masterPointChecklistPreventiveNotifierProvider);
-        if (state is MasterPointChecklistPreventiveLoaded) {
-          DataTableSource data = MasterPointChecklistPreventivetData(
-              masterData: state.masterPointChecklistPreventive);
-          filterData = state.masterPointChecklistPreventive;
-          return Theme(
-            data: ThemeData(
-                cardColor: Theme.of(context).cardColor,
-                textTheme:
-                    const TextTheme(titleLarge: TextStyle(color: Colors.blue))),
-            child: PaginatedDataTable(
-              columns: [
-                DataColumn(
-                  label: const Text('Name Category', style: tableHeader),
-                  onSort: (columnIndex, _) {
-                    sort(columnIndex);
-                  },
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double dataTableWidth =
+                  max(kScreenWidthMd, constraints.maxWidth);
+              return Scrollbar(
+                controller: _dataTableHorizontalScrollController,
+                thumbVisibility: true,
+                trackVisibility: true,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _dataTableHorizontalScrollController,
+                  child: SizedBox(
+                    width: dataTableWidth,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        var state = ref.watch(
+                            masterPointChecklistPreventiveNotifierProvider);
+                        if (state is MasterPointChecklistPreventiveLoaded) {
+                          DataTableSource data =
+                              MasterPointChecklistPreventivetData(
+                                  masterData:
+                                      state.masterPointChecklistPreventive);
+                          filterData = state.masterPointChecklistPreventive;
+                          return PaginatedDataTable(
+                            columns: [
+                              DataColumn(
+                                label: const Text('Name Category'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Uraian'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Kriteria'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                            ],
+                            source: data,
+                            header:
+                                const Text('Master Point Checklist Preventive'),
+                            horizontalMargin: 10,
+                            rowsPerPage: 10,
+                            showCheckboxColumn: false,
+                          );
+                        } else if (state
+                            is MasterPointChecklistPreventiveLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ),
                 ),
-                DataColumn(
-                  label: const Text('Uraian', style: tableHeader),
-                  onSort: (columnIndex, _) {
-                    sort(columnIndex);
-                  },
-                ),
-                DataColumn(
-                  label: const Text('Kriteria', style: tableHeader),
-                  onSort: (columnIndex, _) {
-                    sort(columnIndex);
-                  },
-                ),
-              ],
-              source: data,
-              header: const Text('Master Point Checklist Preventive'),
-              horizontalMargin: 10,
-              rowsPerPage: 10,
-              showCheckboxColumn: false,
-            ),
-          );
-        } else if (state is MasterPointChecklistPreventiveLoading) {
-          return const CircularProgressIndicator();
-        }
-        return Container();
-      }),
+              );
+            },
+          )),
     );
   }
 
@@ -269,7 +309,7 @@ class _MasterPointChecklistPreventiveScreenState
                   const SizedBox(
                     height: 10,
                   ),
-                  Center(child: tableMaster())
+                  tableMaster(),
                 ],
               ),
             ),
