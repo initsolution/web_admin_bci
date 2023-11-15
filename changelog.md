@@ -57,3 +57,6 @@
 
 > 13/11/2023
 > 1. Modif tampilan tabel semua screen
+
+> 15/11/2023
+> 1. Generate PDF untuk verticality
