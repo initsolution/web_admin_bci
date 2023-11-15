@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -6,7 +8,7 @@ import 'package:flutter_web_ptb/model/masterasset.dart';
 import 'package:flutter_web_ptb/providers/masterasset_provider.dart';
 import 'package:flutter_web_ptb/providers/masterasset_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
-import 'package:flutter_web_ptb/theme/theme.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_masterasset.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
@@ -26,6 +28,7 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
   late List<MasterAsset> filterData;
   bool _sortTaskTypeAsc = true;
   bool _sortSectionAsc = true;
+  final _dataTableHorizontalScrollController = ScrollController();
 
   void sort(columnIndex) {
     setState(() {
@@ -52,59 +55,78 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
   }
 
   Widget tableMasterAsset() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            var state = ref.watch(masterAssetNotifierProvider);
-            if (state is MasterAssetLoaded) {
-              DataTableSource data =
-                  MasterAssetData(masterAssets: state.masterAssets);
-              filterData = state.masterAssets;
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
-                  source: data,
-                  header: const Text('Master Asset'),
-                  columns: [
-                    DataColumn(
-                      label: const Text(
-                        'Task Type',
-                        style: tableHeader,
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double dataTableWidth =
+                  max(kScreenWidthMd, constraints.maxWidth);
+              return Scrollbar(
+                  controller: _dataTableHorizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _dataTableHorizontalScrollController,
+                    child: SizedBox(
+                      width: dataTableWidth,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          var state = ref.watch(masterAssetNotifierProvider);
+                          if (state is MasterAssetLoaded) {
+                            DataTableSource data = MasterAssetData(
+                                masterAssets: state.masterAssets);
+                            filterData = state.masterAssets;
+                            return PaginatedDataTable(
+                              source: data,
+                              header: const Text('Master Asset'),
+                              columns: [
+                                DataColumn(
+                                  label: const Text(
+                                    'Task Type',
+                                  ),
+                                  onSort: (columnIndex, _) {
+                                    sort(columnIndex);
+                                  },
+                                ),
+                                DataColumn(
+                                  label: const Text('Section'),
+                                  onSort: (columnIndex, _) {
+                                    sort(columnIndex);
+                                  },
+                                ),
+                                const DataColumn(label: Text('Fabricator')),
+                                const DataColumn(label: Text('Tower Height')),
+                                const DataColumn(label: Text('Category')),
+                                const DataColumn(label: Text('Description')),
+                              ],
+                              horizontalMargin: 10,
+                              rowsPerPage: 10,
+                              showCheckboxColumn: false,
+                            );
+                          } else if (state is MasterAssetLoading) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
                       ),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
                     ),
-                    DataColumn(
-                      label: const Text('Section', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    const DataColumn(
-                        label: Text('Fabricator', style: tableHeader)),
-                    const DataColumn(
-                        label: Text('Tower Height', style: tableHeader)),
-                    const DataColumn(
-                        label: Text('Category', style: tableHeader)),
-                    const DataColumn(
-                        label: Text('Description', style: tableHeader)),
-                  ],
-                  horizontalMargin: 10,
-                  rowsPerPage: 10,
-                  showCheckboxColumn: false,
-                ),
-              );
-            } else if (state is MasterAssetLoading) {
-              return const CircularProgressIndicator();
-            }
-            return Container();
-          },
-        ));
+                  ));
+            },
+          )),
+    );
   }
 
   @override
@@ -112,6 +134,12 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
     Future(() =>
         ref.read(masterAssetNotifierProvider.notifier).getAllMasterAsset());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dataTableHorizontalScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -210,7 +238,7 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Center(child: tableMasterAsset())
+                    tableMasterAsset(),
                   ],
                 ),
               ),

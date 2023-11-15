@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -6,7 +8,7 @@ import 'package:flutter_web_ptb/model/masterreportregulertorque.dart';
 import 'package:flutter_web_ptb/providers/masterreportregulertorque_provider.dart';
 import 'package:flutter_web_ptb/providers/masterreportregulertorque_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
-import 'package:flutter_web_ptb/theme/theme.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -34,6 +36,7 @@ class _MasterReportRegulerTorqueScreenState
   bool _sortBoltSizeAsc = true;
   bool _sortMinumumTorqueAsc = true;
   bool _sortQtyBoltAsc = true;
+  final _dataTableHorizontalScrollController = ScrollController();
 
   void sort(columnIndex) {
     setState(() {
@@ -116,78 +119,105 @@ class _MasterReportRegulerTorqueScreenState
   }
 
   Widget tableMasterReportRegulerTorque() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            var state = ref.watch(masterReportRegulerTorqueNotifierProvider);
-            if (state is MasterReportRegulerTorqueStateLoaded) {
-              DataTableSource data = MasterReportRegulerTorqueData(
-                  masterTorque: state.masterReportRegulerTorque);
-              filterData = state.masterReportRegulerTorque;
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
-                  source: data,
-                  header: const Text('Master Report Reguler Torque'),
-                  columns: [
-                    DataColumn(
-                      label: const Text('Fabricator', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double dataTableWidth =
+                  max(kScreenWidthMd, constraints.maxWidth);
+              return Scrollbar(
+                controller: _dataTableHorizontalScrollController,
+                thumbVisibility: true,
+                trackVisibility: true,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _dataTableHorizontalScrollController,
+                  child: SizedBox(
+                    width: dataTableWidth,
+                    child: Consumer(
+                      builder: (context, ref, child) {
+                        var state = ref
+                            .watch(masterReportRegulerTorqueNotifierProvider);
+                        if (state is MasterReportRegulerTorqueStateLoaded) {
+                          DataTableSource data = MasterReportRegulerTorqueData(
+                              masterTorque: state.masterReportRegulerTorque);
+                          filterData = state.masterReportRegulerTorque;
+                          return PaginatedDataTable(
+                            source: data,
+                            header: const Text('Master Report Reguler Torque'),
+                            columns: [
+                              DataColumn(
+                                label: const Text('Fabricator'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Tower Height'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Tower Segment'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Elevasi'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Bolt Size'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Minimum Torque'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              DataColumn(
+                                label: const Text('Qty Bolt'),
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                            ],
+                            horizontalMargin: 10,
+                            rowsPerPage: 10,
+                            showCheckboxColumn: false,
+                          );
+                        } else if (state
+                            is MasterReportRegulerTorqueStateLoading) {
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        return Container();
                       },
                     ),
-                    DataColumn(
-                      label: const Text('Tower Height', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Tower Segment', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Elevasi', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Bolt Size', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Minimum Torque', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Qty Bolt', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                  ],
-                  horizontalMargin: 10,
-                  rowsPerPage: 10,
-                  showCheckboxColumn: false,
+                  ),
                 ),
               );
-            } else if (state is MasterReportRegulerTorqueStateLoading) {
-              return const CircularProgressIndicator();
-            }
-            return Container();
-          },
-        ));
+            },
+          )),
+    );
   }
 
   @override
@@ -196,6 +226,12 @@ class _MasterReportRegulerTorqueScreenState
         .read(masterReportRegulerTorqueNotifierProvider.notifier)
         .getAllMasterReportRegulerTorqueRepo());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dataTableHorizontalScrollController.dispose();
+    super.dispose();
   }
 
   @override

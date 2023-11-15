@@ -55,6 +55,12 @@
 > 2. add report reguler
 > 3. search for verifikator by site name
 
+> 13/11/2023
+> 1. Modif tampilan tabel semua screen
+
+> 15/11/2023
+> 1. Generate PDF untuk verticality
+
 >13/11/2023
 1. fiter site
 2. filter asset

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -6,12 +8,11 @@ import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../theme/theme.dart';
 // import 'package:provider/provider.dart';
 
 // import '../../providers/user_data_provider.dart';
@@ -29,6 +30,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
   bool _sortNameAsc = true;
   bool _sortEmailAsc = true;
   bool _sortHpAsc = true;
+  final _dataTableHorizontalScrollController = ScrollController();
 
   void sort(columnIndex) {
     setState(() {
@@ -74,76 +76,106 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
 
   Widget tableEmployee() {
     // var state = ref.watch(employeeNotifierProvider);
-
-    return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            var state = ref.watch(employeeNotifierProvider);
-            if (state is EmployeeLoaded) {
-              filterData = state.employees;
-              DataTableSource data = EmployeeData(employees: filterData);
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
-                  // sortColumnIndex: 0,
-                  source: data,
-                  header: const Text('Employee'),
-                  columns: [
-                    DataColumn(
-                      label: const Text('Nik', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final double dataTableWidth =
+                  max(kScreenWidthMd, constraints.maxWidth);
+              return Scrollbar(
+                  controller: _dataTableHorizontalScrollController,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    controller: _dataTableHorizontalScrollController,
+                    child: SizedBox(
+                      width: dataTableWidth,
+                      child: Consumer(
+                        builder: (context, ref, child) {
+                          var state = ref.watch(employeeNotifierProvider);
+                          if (state is EmployeeLoaded) {
+                            filterData = state.employees;
+                            DataTableSource data =
+                                EmployeeData(employees: filterData);
+                            return PaginatedDataTable(
+                              // sortColumnIndex: 0,
+                              source: data,
+                              header: const Text('Employee'),
+                              columns: [
+                                DataColumn(
+                                  label: const Text('Nik'),
+                                  onSort: (columnIndex, _) {
+                                    sort(columnIndex);
+                                  },
+                                ),
+                                DataColumn(
+                                  label: const Text('Name'),
+                                  onSort: (columnIndex, _) {
+                                    sort(columnIndex);
+                                  },
+                                ),
+                                DataColumn(
+                                  label: const Text('Email'),
+                                  onSort: (columnIndex, _) {
+                                    sort(columnIndex);
+                                  },
+                                ),
+                                DataColumn(
+                                  label: const Text('Hp'),
+                                  onSort: (columnIndex, _) {
+                                    sort(columnIndex);
+                                  },
+                                ),
+                                const DataColumn(
+                                  label: Text('Status Aktif'),
+                                ),
+                                const DataColumn(
+                                  label: Text('Status Karyawan'),
+                                ),
+                                const DataColumn(
+                                  label: Text('Role'),
+                                ),
+                              ],
+                              horizontalMargin: 10,
+                              rowsPerPage: 10,
+                              showCheckboxColumn: false,
+                            );
+                          } else if (state is EmployeeLoading) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(20),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
                     ),
-                    DataColumn(
-                      label: const Text('Name', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Email', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    DataColumn(
-                      label: const Text('Hp', style: tableHeader),
-                      onSort: (columnIndex, _) {
-                        sort(columnIndex);
-                      },
-                    ),
-                    const DataColumn(
-                      label: Text('Status Aktif', style: tableHeader),
-                    ),
-                    const DataColumn(
-                      label: Text('Status Karyawan', style: tableHeader),
-                    ),
-                    const DataColumn(
-                      label: Text('Role', style: tableHeader),
-                    ),
-                  ],
-                  horizontalMargin: 10,
-                  rowsPerPage: 10,
-                  showCheckboxColumn: false,
-                ),
-              );
-            } else if (state is EmployeeLoading) {
-              return const CircularProgressIndicator();
-            }
-            return Container();
-          },
-        ));
+                  ));
+            },
+          )),
+    );
   }
 
   @override
   void initState() {
-    Future(()=> ref.read(employeeNotifierProvider.notifier).getAllEmployee());
+    Future(() => ref.read(employeeNotifierProvider.notifier).getAllEmployee());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _dataTableHorizontalScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -242,7 +274,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Center(child: tableEmployee())
+                    tableEmployee(),
                   ],
                 ),
               ),

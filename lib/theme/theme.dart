@@ -16,8 +16,7 @@ const Color kTextColor = Color(0xFF2A2B2D);
 
 const Color kScreenBackgroundColor = Color(0xFFF4F6F9);
 
-const TextStyle tableHeader =
-    TextStyle(fontWeight: FontWeight.bold, fontSize: 14);
+const Color kDataTableHeaderColor = Color(0xFFF1F3F9);
 
 class AppThemeData {
   AppThemeData._();
@@ -51,6 +50,11 @@ class AppThemeData {
       ),
       cardTheme: const CardTheme(
         margin: EdgeInsets.zero,
+      ),
+      dataTableTheme: DataTableThemeData(
+        headingRowColor: MaterialStateProperty.all(kDataTableHeaderColor),
+        headingTextStyle:
+            const TextStyle(color: kTextColor, fontWeight: FontWeight.bold),
       ),
     );
 
