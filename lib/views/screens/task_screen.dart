@@ -51,8 +51,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
       ]
     };
     Future(() => ref.read(taskNotifierProvider.notifier).getAllTask(params));
-    Future(()=> ref.read(employeeNotifierProvider.notifier).getAllEmployee());
-    Future(() =>ref.read(siteNotifierProvider.notifier).getAllSite());
+    Future(() => ref.read(employeeNotifierProvider.notifier).getAllEmployee());
+    Future(() => ref.read(siteNotifierProvider.notifier).getAllSite({}));
     super.initState();
   }
 
@@ -133,16 +133,20 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                         const SizedBox(
                           width: 30,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
+                        SizedBox(
+                          width: 100,
+                          height: 40,
+                          child: TextField(
+                            onChanged: (value) => Future(() => ref
+                                .read(taskNotifierProvider.notifier)
+                                .searchTask(
+                                    value)), // onChanged return the value of the field
+                            decoration: InputDecoration(
+                                labelText: "Search ...",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                )),
+                          ),
                         ),
                         const SizedBox(
                           width: 30,

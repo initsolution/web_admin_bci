@@ -12,6 +12,7 @@ import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -24,12 +25,19 @@ class AssetScreen extends ConsumerStatefulWidget {
 
 class _AssetScreenState extends ConsumerState<AssetScreen> {
   Map<String, dynamic> params = {};
-
+  Map<String, dynamic> filter = {};
   String token = '';
+  late Employee employee;
+  late DateTimeRange dateRange;
   getDataToken() async {
     final sharedPref = await SharedPreferences.getInstance();
     token = sharedPref.getString(StorageKeys.token) ?? '';
-    Employee employee = Employee.fromMap(JwtDecoder.decode(token)['employee']);
+    employee = Employee.fromMap(JwtDecoder.decode(token)['employee']);
+    debugPrint(employee.toString());
+    await getTaskWithFilter();
+  }
+
+  getTaskWithFilter() async {
     params = {
       "join": [
         'site',
@@ -44,14 +52,33 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
       // 'filter': 'verifierEmployee.nik||eq||${employee.nik}',
       'sort': ['updated_at,DESC']
     };
+    if (employee.role! == 'Verify') {
+      filter = {
+        'filter': [
+          'verifierEmployee.nik||eq||${employee.nik}',
+          'created_at||gte||${DateFormat('yyyy-MM-dd').format(dateRange.start)}',
+          'created_at||lte||${DateFormat('yyyy-MM-dd').format(dateRange.end.add(const Duration(days: 1)))}',
+        ]
+      };
+    } else {
+      filter = {
+        'filter': [
+          'created_at||gte||${DateFormat('yyyy-MM-dd').format(dateRange.start)}',
+          'created_at||lte||${DateFormat('yyyy-MM-dd').format(dateRange.end.add(const Duration(days: 1)))}',
+        ]
+      };
+    }
+    params.addAll(filter);
 
     Future(() => ref.read(taskNotifierProvider.notifier).getAllTask(params));
   }
 
   @override
   void initState() {
+    dateRange = DateTimeRange(
+        start: DateTime.now().subtract(const Duration(days: 30)),
+        end: DateTime.now());
     getDataToken();
-
     super.initState();
   }
 
@@ -83,7 +110,29 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        SizedBox(
+                          width: 150,
+                          // height: 40,
+                          child: getDropdownStatus(),
+                        ),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                        datePick(),
+                        const SizedBox(
+                          width: 30,
+                        ),
+                      ],
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         IconButton(
                           icon: const Icon(Icons.refresh),
@@ -96,16 +145,9 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                         const SizedBox(
                           width: 30,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.filter_list),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
                         SizedBox(
                           width: 100,
-                          height: 40,
+                          // height: 40,
                           child: TextField(
                             onChanged: (value) => Future(() => ref
                                 .read(taskNotifierProvider.notifier)
@@ -117,14 +159,6 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                                   borderRadius: BorderRadius.circular(5.0),
                                 )),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        SizedBox(
-                          width: 150,
-                          height: 40,
-                          child: getDropdownStatus(),
                         ),
                         const SizedBox(
                           width: 30,
@@ -141,6 +175,43 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget datePick() {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        side: const BorderSide(color: Color.fromARGB(255, 187, 201, 230)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        foregroundColor: Colors.white,
+        elevation: 0,
+        shadowColor: Colors.transparent,
+      ),
+      onPressed: () {
+        showDateRangePicker(
+                context: context,
+                firstDate: DateTime(2022),
+                lastDate: DateTime(2040),
+                initialDateRange: dateRange,
+                initialEntryMode: DatePickerEntryMode.calendarOnly)
+            .then((value) {
+          setState(() {
+            if (value != null) dateRange = value;
+            debugPrint(
+                'periode : ${DateFormat('dd/MM/yyyy').format(dateRange.start)}  -  ${DateFormat('dd/MM/yyyy').format(dateRange.end)}');
+          });
+          getTaskWithFilter();
+        });
+      },
+      icon: const Icon(
+        Icons.calendar_month_rounded,
+        color: Colors.white,
+      ),
+      label: Text(
+        '${DateFormat('dd/MM/yyyy').format(dateRange.start)}  -  ${DateFormat('dd/MM/yyyy').format(dateRange.end)} ',
+        style: const TextStyle(color: Colors.white),
       ),
     );
   }
@@ -189,8 +260,8 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
 
   Widget getDropdownStatus() {
     List<String> dataStatus = ['All', 'Todo', 'Review', 'Verified'];
+    final String status = ref.watch(statusTaskProvider);
     return Consumer(builder: (_, WidgetRef ref, __) {
-      final String status = ref.watch(statusTaskProvider);
       return DropdownButton(
         value: status.isNotEmpty ? status : null,
         onChanged: (value) {

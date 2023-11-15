@@ -54,3 +54,8 @@
 > 1. add report preventive
 > 2. add report reguler
 > 3. search for verifikator by site name
+
+>13/11/2023
+1. fiter site
+2. filter asset
+3. filter task
