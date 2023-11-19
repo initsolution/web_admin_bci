@@ -65,3 +65,6 @@
 1. fiter site
 2. filter asset
 3. filter task
+
+>19/11/2023
+1. update asset for pdf -> not solve

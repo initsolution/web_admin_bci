@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -17,6 +20,12 @@ import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
 import 'package:flutter_web_ptb/views/widgets/report_reguler_torque_widget.dart';
 import 'package:flutter_web_ptb/views/widgets/report_reguler_verticality.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdf/pdf.dart';
+
+import 'package:pdf/widgets.dart' as pw;
+import 'dart:html' as html;
+
+import 'package:http/http.dart' as http;
 
 class ResultAssetScreen extends ConsumerStatefulWidget {
   final Task task;
@@ -28,7 +37,8 @@ class ResultAssetScreen extends ConsumerStatefulWidget {
 
 class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
   bool confirmAll = false;
-
+  var anchor;
+  final pdf = pw.Document();
   List<ReportRegulerTorque>? reportRegulerTorque;
   @override
   Widget build(BuildContext context) {
@@ -37,9 +47,6 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
 
     if (state is AssetLoaded) {
       List<Asset> assets = state.assets;
-
-      debugPrint('result asset');
-      debugPrint(assets.toString());
       var groupedItems = groupBy(assets, (e) => e.category);
       if (widget.task.type == 'Reguler') {
         reportRegulerTorque = widget.task.reportRegulerTorque!;
@@ -142,10 +149,137 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
     );
   }
 
-  Widget formAsset(var groupedItems, var assets) {
+  savePDF(var pdf) async {
+    debugPrint('start save');
+    Uint8List pdfInBytes = await pdf.save();
+    final blob = html.Blob([pdfInBytes], 'application/pdf');
+    final url = html.Url.createObjectUrlFromBlob(blob);
+    anchor = html.document.createElement('a') as html.AnchorElement
+      ..href = url
+      ..style.display = 'none'
+      ..download = 'report_asset.pdf';
+    html.document.body!.children.add(anchor);
+  }
+
+  createPDF(var groupedItems, List<Asset> assets) async {
+    debugPrint('create pdf');
+    var asset = await tableRender(groupedItems, assets);
+    List<pw.Widget> widgets = [];
+    widgets.add(pw.Table(border: pw.TableBorder.all(), children: [...asset]));
+    pdf.addPage(pw.MultiPage(
+        pageFormat: PdfPageFormat.a4,
+        build: (context) {
+          // nanti di cari
+          return widgets;
+        }));
+    debugPrint('save to pdf');
+    savePDF(pdf);
+  }
+
+  FutureOr<List<pw.TableRow>> tableRender(
+      var groupedItems, List<Asset> assets) async {
+    List<pw.TableRow> dataRender = [];
+    for (int i = 0; i < assets.length; i++) {
+      Asset item = assets[i];
+      var response = await http
+          .get(Uri.http('103.82.241.80:3000', '/asset/getImage/${item.id}'));
+      var gambarAsset = response.bodyBytes;
+      dataRender.add(pw.TableRow(children: [
+        pw.Column(children: [
+          pw.SizedBox(
+            height: 160,
+            width: 240,
+            child: pw.Image(
+              pw.MemoryImage(gambarAsset.buffer.asUint8List()),
+              fit: pw.BoxFit.contain,
+            ),
+          ),
+          pw.Text(item.description!)
+        ])
+      ]));
+    }
+    return dataRender;
+  }
+
+  // FutureOr<List<pw.TableRow>> tableRender(
+  //     var groupedItems, List<Asset> assets) async {
+  //   List<pw.TableRow> dataRender = [];
+  //   for (int i = 0; i < groupedItems.length; i++) {
+  //     String? category = groupedItems.keys.elementAt(i);
+  //     debugPrint('table render $category');
+  //     List itemsInCategory = groupedItems[category]!;
+  //     pw.TableRow tableRow = pw.TableRow(children: [
+  //       pw.Container(
+  //           child:
+  //               pw.Text(category ?? '', style: const pw.TextStyle(fontSize: 8)),
+  //           padding: const pw.EdgeInsets.symmetric(vertical: 3, horizontal: 3)),
+  //       pw.Container(
+  //           child: pw.Text('', style: const pw.TextStyle(fontSize: 8)),
+  //           padding: const pw.EdgeInsets.symmetric(vertical: 3, horizontal: 3)),
+  //     ]);
+  //     dataRender.add(tableRow);
+  //     debugPrint('in i : $i length ${dataRender.length}');
+  //     int temp = 1;
+  //     for (int j = 0; j < itemsInCategory.length; j++) {
+  //       pw.TableRow tableRowIsi;
+  //       Asset item = itemsInCategory[j];
+  //       List<pw.Container> dataGambar = [];
+  //       debugPrint('temp : $temp');
+  //       if (temp > 2) {
+  //         tableRowIsi = pw.TableRow(children: [...dataGambar]);
+  //         dataRender.add(tableRowIsi);
+  //         debugPrint('in i : $i in j: $j length ${dataRender.length}');
+  //         if (j < itemsInCategory.length) {
+  //           debugPrint(item.description!);
+  //           dataGambar.add(pw.Container(
+  //               child: pw.Column(children: [
+  //             // pw.SizedBox(
+  //             //   height: 30 * 0.75,
+  //             //   width: 30 * 0.55,
+  //             //   child: pw.Image(
+  //             //     pw.MemoryImage(gambarAsset.buffer.asUint8List()),
+  //             //     fit: pw.BoxFit.contain,
+  //             //   ),
+  //             // ),
+  //             pw.Text(item.description!)
+  //           ])));
+  //         }
+  //         temp = 1;
+  //       } else {
+  //         debugPrint(item.description!);
+  //         // var response = await http.get(
+  //         //     Uri.http('103.82.241.80:3000', '/asset/getImage/${item.id}'));
+  //         // var gambarAsset = response.bodyBytes;
+
+  //         dataGambar.add(pw.Container(
+  //             child: pw.Column(children: [
+  //           // pw.SizedBox(
+  //           //   height: 30 * 0.75,
+  //           //   width: 30 * 0.55,
+  //           //   child: pw.Image(
+  //           //     pw.MemoryImage(gambarAsset.buffer.asUint8List()),
+  //           //     fit: pw.BoxFit.contain,
+  //           //   ),
+  //           // ),
+  //           pw.Text(item.description!)
+  //         ])));
+  //         temp++;
+  //       }
+  //     }
+  //   }
+  //   return dataRender;
+  // }
+
+  Widget formAsset(var groupedItems, List<Asset> assets) {
+    createPDF(groupedItems, assets);
     return ListView(
       padding: const EdgeInsets.all(kDefaultPadding),
       children: [
+        ElevatedButton(
+            onPressed: () {
+              anchor.click();
+            },
+            child: const Text('PDF')),
         Padding(
           padding: const EdgeInsets.only(bottom: kDefaultPadding),
           child: Card(

@@ -24,7 +24,7 @@ class ReportRegulerVerticalityWidget extends StatelessWidget {
     anchor = html.document.createElement('a') as html.AnchorElement
       ..href = url
       ..style.display = 'none'
-      ..download = 'pdf.pdf';
+      ..download = 'report_reguler_verticality.pdf';
     html.document.body!.children.add(anchor);
   }
 
