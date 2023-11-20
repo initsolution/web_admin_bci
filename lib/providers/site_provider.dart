@@ -23,7 +23,7 @@ final siteNotifierProvider = NotifierProvider<SiteNotifier, SiteState>(
 
 class SiteNotifier extends Notifier<SiteState> {
   final SiteRepo siteRepo;
-
+  List<Site>? sites;
   SiteNotifier({required this.siteRepo});
 
   @override
@@ -31,9 +31,8 @@ class SiteNotifier extends Notifier<SiteState> {
     return SiteInitial();
   }
 
-  getAllSite() async {
+  getAllSite(Map<String, dynamic>? header) async {
     state = SiteLoading();
-    Map<String, dynamic> header = {};
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
@@ -41,12 +40,11 @@ class SiteNotifier extends Notifier<SiteState> {
           await siteRepo.getAllSite('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
-        List<Site> sites =
-            (data.data as List).map((e) => Site.fromJson(e)).toList();
-        if (sites.isEmpty) {
+        sites = (data.data as List).map((e) => Site.fromJson(e)).toList();
+        if (sites!.isEmpty) {
           state = SiteLoadedEmpty();
         } else {
-          state = SiteLoaded(sites: sites);
+          state = SiteLoaded(sites: sites!);
         }
       }
     } on DioException catch (error) {
@@ -73,5 +71,14 @@ class SiteNotifier extends Notifier<SiteState> {
     if (httpResponse.response.statusCode == 201) {
       state = SiteDataChangeSuccess();
     }
+  }
+
+  searchSite(String search) async {
+    state = SiteLoading();
+    List<Site> searchSite = sites!
+        .where(
+            (site) => site.name!.toLowerCase().contains(search.toLowerCase()))
+        .toList();
+    state = SiteLoaded(sites: searchSite);
   }
 }

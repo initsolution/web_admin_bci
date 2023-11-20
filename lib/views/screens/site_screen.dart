@@ -14,6 +14,7 @@ import 'package:flutter_web_ptb/providers/site_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_edit_site.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_filter_site.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -47,7 +48,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
 
   @override
   void initState() {
-    Future(() => ref.read(siteNotifierProvider.notifier).getAllSite());
+    Future(() => ref.read(siteNotifierProvider.notifier).getAllSite({}));
     super.initState();
     // createPDF();
   }
@@ -179,7 +180,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
           GoRouter.of(context).go(RouteUri.login);
         }
       } else if (next is SiteDataChangeSuccess) {
-        ref.read(siteNotifierProvider.notifier).getAllSite();
+        ref.read(siteNotifierProvider.notifier).getAllSite({});
       }
     });
     return PortalMasterLayout(
@@ -229,7 +230,9 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                       IconButton(
                         icon: const Icon(Icons.refresh),
                         onPressed: () {
-                          ref.read(siteNotifierProvider.notifier).getAllSite();
+                          ref
+                              .read(siteNotifierProvider.notifier)
+                              .getAllSite({});
                         },
                       ),
                       const SizedBox(
@@ -237,14 +240,29 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                       ),
                       IconButton(
                         icon: const Icon(Icons.filter_list),
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => DialogFilterSite());
+                        },
                       ),
                       const SizedBox(
                         width: 30,
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.search),
-                        onPressed: () {},
+                      SizedBox(
+                        width: 100,
+                        height: 40,
+                        child: TextField(
+                          onChanged: (value) => Future(() => ref
+                              .read(siteNotifierProvider.notifier)
+                              .searchSite(
+                                  value)), // onChanged return the value of the field
+                          decoration: InputDecoration(
+                              labelText: "Search ...",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              )),
+                        ),
                       ),
                       const SizedBox(
                         width: 30,
