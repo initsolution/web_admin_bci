@@ -202,7 +202,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
       dataRender.add(pw.TableRow(children: [
         pw.Column(children: [pw.Text('$category')])
       ]));
-      for (int j = 0; j < itemsInCategory.length; j++) {
+      for (int j = 0; j < itemsInCategory.length; j += 2) {
         var response = await http.get(Uri.http(
             '103.82.241.80:3000', '/asset/getImage/${itemsInCategory[j].id}'));
         var gambarAsset = response.bodyBytes;
@@ -211,15 +211,27 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
             children: [
               pw.Column(children: [
                 pw.SizedBox(
-                  height: 48,
-                  width: 64,
+                  height: 144,
+                  width: 192,
                   child: pw.Image(
                     pw.MemoryImage(gambarAsset.buffer.asUint8List()),
                     fit: pw.BoxFit.contain,
                   ),
                 ),
                 pw.Text(itemsInCategory[j].description!)
-              ])
+              ]),
+              if (j + 1 < itemsInCategory.length)
+                pw.Column(children: [
+                  pw.SizedBox(
+                    height: 144,
+                    width: 192,
+                    child: pw.Image(
+                      pw.MemoryImage(gambarAsset.buffer.asUint8List()),
+                      fit: pw.BoxFit.contain,
+                    ),
+                  ),
+                  pw.Text(itemsInCategory[j + 1].description!)
+                ])
             ],
           ),
         );

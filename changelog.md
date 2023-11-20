@@ -64,10 +64,14 @@
 > 15/11/2023
 > 1. Generate PDF untuk verticality
 
->13/11/2023
-1. fiter site
-2. filter asset
-3. filter task
+> 13/11/2023
+> 1. fiter site
+> 2. filter asset
+> 3. filter task
 
->19/11/2023
-1. update asset for pdf -> not solve
+> 19/11/2023
+> 1. update asset for pdf -> not solve
+
+> 20/11/2023
+> 1. 2 column pdf
+
