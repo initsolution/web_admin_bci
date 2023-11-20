@@ -161,42 +161,69 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
     html.document.body!.children.add(anchor);
   }
 
-  createPDF(var groupedItems, List<Asset> assets) async {
+  createPDF(var groupedItems) async {
     debugPrint('create pdf');
-    var asset = await tableRender(groupedItems, assets);
-    List<pw.Widget> widgets = [];
-    widgets.add(pw.Table(border: pw.TableBorder.all(), children: [...asset]));
-    pdf.addPage(pw.MultiPage(
+    var asset = await tableRender(groupedItems);
+    // List<pw.Widget> widgets = [];
+    // widgets.add(pw.Table(border: pw.TableBorder.all(), children: [...asset]));
+    // pdf.addPage(
+    //   pw.MultiPage(
+    //     pageFormat: PdfPageFormat.a4,
+    //     build: (context) {
+    //       // nanti di cari
+    //       return [
+    //         pw.Table(border: pw.TableBorder.all(), children: [...asset])
+    //       ];
+    //     },
+    //   ),
+    // );
+
+    pdf.addPage(
+      pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        build: (context) {
-          // nanti di cari
-          return widgets;
-        }));
+        build: (pw.Context context) {
+          return [
+            pw.Table(border: pw.TableBorder.all(), children: [...asset])
+          ];
+        },
+      ),
+    );
     debugPrint('save to pdf');
     savePDF(pdf);
   }
 
-  FutureOr<List<pw.TableRow>> tableRender(
-      var groupedItems, List<Asset> assets) async {
+  FutureOr<List<pw.TableRow>> tableRender(var groupedItems) async {
     List<pw.TableRow> dataRender = [];
-    for (int i = 0; i < assets.length; i++) {
-      Asset item = assets[i];
-      var response = await http
-          .get(Uri.http('103.82.241.80:3000', '/asset/getImage/${item.id}'));
-      var gambarAsset = response.bodyBytes;
+    // debugPrint('table render : ${assets.length}');
+    for (int i = 0; i < groupedItems.length; i++) {
+      String? category = groupedItems.keys.elementAt(i);
+      List itemsInCategory = groupedItems[category]!;
+      // Asset item = assets[i];
       dataRender.add(pw.TableRow(children: [
-        pw.Column(children: [
-          pw.SizedBox(
-            height: 160,
-            width: 240,
-            child: pw.Image(
-              pw.MemoryImage(gambarAsset.buffer.asUint8List()),
-              fit: pw.BoxFit.contain,
-            ),
-          ),
-          pw.Text(item.description!)
-        ])
+        pw.Column(children: [pw.Text('$category')])
       ]));
+      for (int j = 0; j < itemsInCategory.length; j++) {
+        var response = await http.get(Uri.http(
+            '103.82.241.80:3000', '/asset/getImage/${itemsInCategory[j].id}'));
+        var gambarAsset = response.bodyBytes;
+        dataRender.add(
+          pw.TableRow(
+            children: [
+              pw.Column(children: [
+                pw.SizedBox(
+                  height: 48,
+                  width: 64,
+                  child: pw.Image(
+                    pw.MemoryImage(gambarAsset.buffer.asUint8List()),
+                    fit: pw.BoxFit.contain,
+                  ),
+                ),
+                pw.Text(itemsInCategory[j].description!)
+              ])
+            ],
+          ),
+        );
+      }
     }
     return dataRender;
   }
@@ -271,7 +298,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
   // }
 
   Widget formAsset(var groupedItems, List<Asset> assets) {
-    createPDF(groupedItems, assets);
+    createPDF(groupedItems);
     return ListView(
       padding: const EdgeInsets.all(kDefaultPadding),
       children: [
