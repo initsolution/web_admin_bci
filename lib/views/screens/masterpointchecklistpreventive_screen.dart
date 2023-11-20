@@ -191,7 +191,6 @@ class _MasterPointChecklistPreventiveScreenState
 
   @override
   Widget build(BuildContext context) {
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(masterPointChecklistPreventiveNotifierProvider,
         (previous, next) {
       if (next is MasterPointChecklistPreventiveErrorServer) {
@@ -214,10 +213,10 @@ class _MasterPointChecklistPreventiveScreenState
         body: ListView(
       padding: const EdgeInsets.all(kDefaultPadding),
       children: [
-        Header(
-            title: 'Master Point Checklist Preventive',
-            subMenu: 'submenu Master Point Checklist Preventive',
-            userName: value),
+        const Header(
+          title: 'Master Point Checklist Preventive',
+          subMenu: 'submenu Master Point Checklist Preventive',
+        ),
         const SizedBox(
           height: 20,
         ),

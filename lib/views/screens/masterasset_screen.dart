@@ -145,7 +145,6 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
   @override
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(masterAssetNotifierProvider, (previous, next) {
       if (next is MasterAssetErrorServer) {
         if (next.statusCode == 401) {
@@ -164,11 +163,7 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
-            title: 'Master Asset',
-            subMenu: 'submenu master asset',
-            userName: value,
-          ),
+          const Header(title: 'Master Asset', subMenu: 'submenu master asset'),
           const SizedBox(
             height: 20,
           ),

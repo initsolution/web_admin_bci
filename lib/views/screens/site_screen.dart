@@ -168,7 +168,6 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(siteNotifierProvider, (previous, next) {
       if (next is SiteErrorServer) {
         if (next.statusCode == 401) {
@@ -187,89 +186,81 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
+          const Header(
             title: 'Data Site',
             subMenu: 'All',
-            userName: value,
           ),
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: kDefaultPadding),
-            child: Card(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Container(
-                margin: const EdgeInsets.only(top: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            Map<String, dynamic> header = {
-                              "filter": "isActive||eq||true"
-                            };
-                            ref
-                                .read(tenantNotifierProvider.notifier)
-                                .getAllTenant(header);
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return SizedBox(child: DialogAddEditSite());
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.refresh),
-                          onPressed: () {
-                            ref
-                                .read(siteNotifierProvider.notifier)
-                                .getAllSite();
-                          },
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.filter_list),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        // IconButton(
-                        //   icon: const Icon(Icons.more_vert),
-                        //   onPressed: () {},
-                        // ),
-                        // const SizedBox(
-                        //   width: 30,
-                        // ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    tableSite(),
-                  ],
-                ),
+          Card(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              margin: const EdgeInsets.only(top: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          Map<String, dynamic> header = {
+                            "filter": "isActive||eq||true"
+                          };
+                          ref
+                              .read(tenantNotifierProvider.notifier)
+                              .getAllTenant(header);
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(child: DialogAddEditSite());
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: () {
+                          ref.read(siteNotifierProvider.notifier).getAllSite();
+                        },
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.filter_list),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      // IconButton(
+                      //   icon: const Icon(Icons.more_vert),
+                      //   onPressed: () {},
+                      // ),
+                      // const SizedBox(
+                      //   width: 30,
+                      // ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  tableSite(),
+                ],
               ),
             ),
           ),
@@ -394,8 +385,8 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                               sites: state.sites, ref: ref, context: context);
                           filterData = state.sites;
                           return PaginatedDataTable(
+                            headingRowHeight: 36,
                             source: data,
-                            header: const Text('Site'),
                             columns: [
                               DataColumn(
                                 label: const Text('ID'),
@@ -450,7 +441,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                               const DataColumn(label: Text('Latitude')),
                               const DataColumn(label: Text('Action')),
                             ],
-                            horizontalMargin: 10,
+                            horizontalMargin: 20,
                             rowsPerPage: 10,
                             showCheckboxColumn: false,
                           );
@@ -489,7 +480,11 @@ class SiteData extends DataTableSource {
       DataCell(Text(sites[index].towerHeight!.toString())),
       DataCell(Text(sites[index].fabricator!.toString())),
       DataCell(Text(sites[index].tenants!.toString())),
-      DataCell(Text(sites[index].address!.toString())),
+      DataCell(ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 200),
+        child: Text(sites[index].address!.toString(),
+            overflow: TextOverflow.ellipsis),
+      )),
       DataCell(Text(sites[index].region!.toString())),
       DataCell(Text(sites[index].province!.toString())),
       DataCell(Text(sites[index].longitude!.toString())),

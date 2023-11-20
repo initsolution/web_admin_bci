@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
-import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_color_scheme.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
@@ -37,7 +36,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     final appColorScheme = Theme.of(context).extension<AppColorScheme>()!;
     final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
     final size = MediaQuery.of(context).size;
-    var value = ref.watch(userDataProvider.select((value) => value.username));
 
     final summaryCardCrossAxisCount = (size.width >= kScreenWidthLg ? 4 : 2);
 
@@ -45,11 +43,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
-            title: 'Dashboard',
-            subMenu: 'submenu dashboard',
-            userName: value,
-          ),
+          const Header(title: 'Dashboard', subMenu: 'submenu dashboard'),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kDefaultPadding),
             child: LayoutBuilder(
@@ -209,7 +203,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             onPressed: () {
               GoRouter.of(context).go(RouteUri.detailDashboard);
             },
-            child: Text('Tekann'),
+            child: const Text('Tekann'),
           )
         ],
       ),

@@ -181,7 +181,6 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
   @override
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(employeeNotifierProvider, (previous, next) {
       if (next is EmployeeErrorServer) {
         if (next.statusCode == 401) {
@@ -200,11 +199,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
-            title: 'Employee',
-            subMenu: 'submenu employee',
-            userName: value,
-          ),
+          const Header(title: 'Employee', subMenu: 'submenu employee'),
           const SizedBox(
             height: 20,
           ),

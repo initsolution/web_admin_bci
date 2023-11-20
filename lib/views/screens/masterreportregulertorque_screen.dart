@@ -237,7 +237,6 @@ class _MasterReportRegulerTorqueScreenState
   @override
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(masterReportRegulerTorqueNotifierProvider, (previous, next) {
       if (next is MasterReportRegulerTorqueErrorServer) {
         if (next.statusCode == 401) {
@@ -258,10 +257,9 @@ class _MasterReportRegulerTorqueScreenState
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
+          const Header(
             title: 'Master Report Reguler Torque',
             subMenu: 'submenu master torque',
-            userName: value,
           ),
           const SizedBox(
             height: 20,

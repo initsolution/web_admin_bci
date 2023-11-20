@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
-import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_color_scheme.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
@@ -37,7 +36,6 @@ class _DashboardDetailScreenState extends ConsumerState<DashboardDetailScreen> {
     final appColorScheme = Theme.of(context).extension<AppColorScheme>()!;
     final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
     final size = MediaQuery.of(context).size;
-    var value = ref.watch(userDataProvider.select((value) => value.username));
 
     return PortalMasterLayout(
       selectedMenuUri: RouteUri.dashboard,
@@ -46,8 +44,7 @@ class _DashboardDetailScreenState extends ConsumerState<DashboardDetailScreen> {
         children: [
           Header(
             title: 'Dashboard',
-            subMenu: 'submenu dashboard',
-            userName: value,
+            subMenu: 'submenu dashboard'
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: kDefaultPadding),

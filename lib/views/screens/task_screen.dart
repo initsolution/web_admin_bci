@@ -68,7 +68,6 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(taskNotifierProvider, (previous, next) {
       if (next is TaskErrorServer) {
         if (next.statusCode == 401) {
@@ -88,10 +87,9 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
+          const Header(
             title: 'Data Task',
             subMenu: 'All',
-            userName: value,
           ),
           const SizedBox(
             height: 20,

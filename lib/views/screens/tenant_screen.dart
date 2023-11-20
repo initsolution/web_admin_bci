@@ -143,7 +143,6 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
   @override
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(tenantNotifierProvider, (previous, next) {
       if (next is TenantErrorServer) {
         if (next.statusCode == 401) {
@@ -163,10 +162,9 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
+          const Header(
             title: 'Tenant',
             subMenu: 'submenu tenant',
-            userName: value,
           ),
           const SizedBox(
             height: 20,

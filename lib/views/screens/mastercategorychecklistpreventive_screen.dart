@@ -133,7 +133,6 @@ class _MasterCategoryChecklistPreventiveScreenState
   @override
   Widget build(BuildContext context) {
     // final themeData = Theme.of(context);
-    var value = ref.watch(userDataProvider.select((value) => value.username));
     ref.listen(masterCategoryChecklistPreventivNotifierProvider,
         (previous, next) {
       if (next is MasterCategoryChecklistPreventiveErrorServer) {
@@ -159,11 +158,9 @@ class _MasterCategoryChecklistPreventiveScreenState
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
-            title: 'Master Category Checklist Preventive',
-            subMenu: 'submenu master category checklist preventive',
-            userName: value,
-          ),
+          const Header(
+              title: 'Master Category Checklist Preventive',
+              subMenu: 'submenu master category checklist preventive'),
           const SizedBox(
             height: 20,
           ),

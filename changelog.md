@@ -57,3 +57,6 @@
 
 > 13/11/2023
 > 1. Modif tampilan tabel semua screen
+
+> 20/11/2023
+> 1. Update UI header, dan tabel 

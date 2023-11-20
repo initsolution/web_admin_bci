@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/master_layout_config.dart';
-// import 'package:flutter_web_ptb/providers/app_preferences_provider.dart';
-// import 'package:flutter_web_ptb/theme/theme_extensions/app_color_scheme.dart';
+import 'package:flutter_web_ptb/views/widgets/portal_master_layout/profile_card.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/sidebar.dart';
 import 'package:go_router/go_router.dart';
-// import 'package:provider/provider.dart';
 
 class LocaleMenuConfig {
   final String languageCode;
@@ -48,7 +46,9 @@ class PortalMasterLayout extends StatelessWidget {
     final drawer = _sidebar(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: const [ProfileCard()],
+      ),
       drawer: drawer,
       drawerEnableOpenDragGesture: false,
       onDrawerChanged: onDrawerChanged,
