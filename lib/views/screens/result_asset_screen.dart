@@ -470,6 +470,25 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                                             child: Image.network(
                                               '$urlRepo/asset/getImage/${item.id}',
                                               fit: BoxFit.contain,
+                                              loadingBuilder: (context, child,
+                                                  loadingProgress) {
+                                                if (loadingProgress == null) {
+                                                  return child;
+                                                }
+                                                return Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    value: loadingProgress
+                                                                .expectedTotalBytes !=
+                                                            null
+                                                        ? loadingProgress
+                                                                .cumulativeBytesLoaded /
+                                                            loadingProgress
+                                                                .expectedTotalBytes!
+                                                        : null,
+                                                  ),
+                                                );
+                                              },
                                             ),
                                           ),
                                         ),

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_ptb/model/categorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/model/pointchecklistpreventive.dart';
+import 'package:pdf/pdf.dart';
 
 import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
@@ -28,45 +29,48 @@ class ReportPreventiveWidget extends StatelessWidget {
   }
 
   createPDF() async {
-    pdf.addPage(pw.Page(
+    pdf.addPage(pw.MultiPage(
+      pageFormat: PdfPageFormat.a4,
       build: (pw.Context context) {
-        return pw.Table(
-            columnWidths: const {
-              0: pw.FlexColumnWidth(1),
-              1: pw.FlexColumnWidth(6),
-              2: pw.FlexColumnWidth(6),
-              3: pw.FlexColumnWidth(1),
-              4: pw.FlexColumnWidth(1),
-              5: pw.FlexColumnWidth(1),
-              6: pw.FlexColumnWidth(4),
-            },
-            border: pw.TableBorder.all(),
-            children: [
-              pw.TableRow(children: [
-                pw.Text('No',
-                    style: const pw.TextStyle(fontSize: 8),
-                    textAlign: pw.TextAlign.center),
-                pw.Text('Uraian',
-                    style: const pw.TextStyle(fontSize: 8),
-                    textAlign: pw.TextAlign.center),
-                pw.Text('Kriteria',
-                    style: const pw.TextStyle(fontSize: 8),
-                    textAlign: pw.TextAlign.center),
-                pw.Text('OK',
-                    style: const pw.TextStyle(fontSize: 8),
-                    textAlign: pw.TextAlign.center),
-                pw.Text('NOK',
-                    style: const pw.TextStyle(fontSize: 8),
-                    textAlign: pw.TextAlign.center),
-                pw.Text('NA',
-                    style: const pw.TextStyle(fontSize: 8),
-                    textAlign: pw.TextAlign.center),
-                pw.Text('Keterangan / Temuan',
-                    style: const pw.TextStyle(fontSize: 8),
-                    textAlign: pw.TextAlign.center),
-              ]),
-              ...tableRenderPDF(),
-            ]);
+        return [
+          pw.Table(
+              columnWidths: const {
+                0: pw.FlexColumnWidth(1),
+                1: pw.FlexColumnWidth(6),
+                2: pw.FlexColumnWidth(6),
+                3: pw.FlexColumnWidth(1),
+                4: pw.FlexColumnWidth(1),
+                5: pw.FlexColumnWidth(1),
+                6: pw.FlexColumnWidth(4),
+              },
+              border: pw.TableBorder.all(),
+              children: [
+                pw.TableRow(children: [
+                  pw.Text('No',
+                      style: const pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.center),
+                  pw.Text('Uraian',
+                      style: const pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.center),
+                  pw.Text('Kriteria',
+                      style: const pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.center),
+                  pw.Text('OK',
+                      style: const pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.center),
+                  pw.Text('NOK',
+                      style: const pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.center),
+                  pw.Text('NA',
+                      style: const pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.center),
+                  pw.Text('Keterangan / Temuan',
+                      style: const pw.TextStyle(fontSize: 8),
+                      textAlign: pw.TextAlign.center),
+                ]),
+                ...tableRenderPDF(),
+              ])
+        ];
       },
     ));
     savePDF(pdf);
@@ -116,22 +120,26 @@ class ReportPreventiveWidget extends StatelessWidget {
         PointChecklistPreventive pointChecklistPreventive = dataPoint[j];
         pw.TableRow pointCheck = pw.TableRow(children: [
           pw.Container(
-            child: pw.Text('${pointChecklistPreventive.orderIndex}'),
+            child: pw.Center(child: pw.Text('${j + 1}')),
           ),
-          pw.Container(child: pw.Text('${pointChecklistPreventive.uraian}')),
-          pw.Container(child: pw.Text('${pointChecklistPreventive.kriteria}')),
+          pw.Container(
+              child: pw.Center(
+                  child: pw.Text('${pointChecklistPreventive.uraian}'))),
+          pw.Container(
+              child: pw.Center(
+                  child: pw.Text('${pointChecklistPreventive.kriteria}'))),
           pw.Container(
               child: pointChecklistPreventive.hasil!.toUpperCase() != 'OK'
                   ? pw.Container()
-                  : pw.Icon(Icons.done as pw.IconData)),
+                  : pw.Center(child: pw.Text('v'))),
           pw.Container(
               child: pointChecklistPreventive.hasil!.toUpperCase() != 'NOK'
                   ? pw.Container()
-                  : pw.Icon(Icons.done as pw.IconData)),
+                  : pw.Center(child: pw.Text('v'))),
           pw.Container(
               child: pointChecklistPreventive.hasil!.toUpperCase() != 'NA'
                   ? pw.Container()
-                  : pw.Icon(Icons.done as pw.IconData)),
+                  : pw.Center(child: pw.Text('v'))),
           pw.Container(
               child: pw.Text(pointChecklistPreventive.keterangan != null
                   ? '${pointChecklistPreventive.keterangan}'

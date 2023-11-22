@@ -148,7 +148,10 @@ class DialogProfileEmployee extends ConsumerWidget {
                         nameController: nameController,
                         emailController: emailController,
                         phoneController: phoneController,
-                        passwordController: passwordController),
+                        passwordController:
+                            passwordController.value.toString().isNotEmpty
+                                ? passwordController
+                                : null),
                     Navigator.pop(context),
                   },
                   child: const Text('Edit'),
@@ -164,17 +167,17 @@ class DialogProfileEmployee extends ConsumerWidget {
       required TextEditingController nameController,
       required TextEditingController emailController,
       required TextEditingController phoneController,
-      required TextEditingController passwordController}) {
+      TextEditingController? passwordController}) {
     Employee employee = Employee(
       nik: nikController.text,
       name: nameController.text,
       email: emailController.text,
       hp: phoneController.text,
-      password: passwordController.text,
+      password: passwordController!.text == '' ? null : passwordController.text,
     );
-    ref
-        .read(employeeNotifierProvider.notifier)
-        .updateEmployee(employee, result!.files.first.bytes);
+    debugPrint(employee.toString());
+    ref.read(employeeNotifierProvider.notifier).updateEmployeeWithFile(
+        employee: employee, file: result!.files.first.bytes);
   }
 
   void pickFile() async {

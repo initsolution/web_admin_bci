@@ -88,7 +88,7 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
     }
   }
 
-  updateEmployee(Employee employee, List<int>? file) async {
+  updateEmployeeWithFile({required employee, List<int>? file}) async {
     if (file != null) {
       if (file.isNotEmpty) {
         state = EmployeeLoading();
