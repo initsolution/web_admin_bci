@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages, avoid_web_libraries_in_flutter
+
 import 'dart:async';
 import 'dart:typed_data';
 
@@ -49,6 +51,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   }
 
   getTaskWithFilter() async {
+    debugPrint('getTaskWithFilter');
     params = {
       "join": [
         'site',
@@ -228,8 +231,10 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
         child: Consumer(
           builder: (context, ref, child) {
             var state = ref.watch(taskNotifierProvider);
+            // debugPrint('reload state task : $state');
             // if (DEBUG) debugPrint('state : $state');
             if (state is TaskLoaded) {
+              debugPrint('TaskLoaded 2');
               DataTableSource data =
                   TaskData(tasks: state.tasks, context: context, ref: ref);
               return Theme(
@@ -248,18 +253,21 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                     DataColumn(label: Text('Status')),
                     DataColumn(label: Text('Type')),
                     DataColumn(label: Text('Created Date')),
+                    DataColumn(label: Text('Detail')),
                     DataColumn(label: Text('Verifikasi')),
                     DataColumn(label: Text('Print')),
                   ],
-                  columnSpacing: 100,
+                  columnSpacing: 50,
                   horizontalMargin: 10,
                   rowsPerPage: 10,
                   showCheckboxColumn: false,
                 ),
               );
             } else if (state is TaskLoading) {
+              debugPrint('TaskLoading');
               return const CircularProgressIndicator();
             }
+            debugPrint(state.toString());
             return Container();
           },
         ));
@@ -269,7 +277,16 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
     List<String> dataStatus = ['All', 'Todo', 'Review', 'Verified'];
     final String status = ref.watch(statusTaskProvider);
     return Consumer(builder: (_, WidgetRef ref, __) {
-      return DropdownButton(
+      return DropdownButtonFormField(
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          // enabledBorder: OutlineInputBorder(
+          //   borderRadius: BorderRadius.circular(40),
+          // ),
+          // focusedBorder: OutlineInputBorder(
+          //   borderRadius: BorderRadius.circular(40),
+          // ),
+        ),
         value: status.isNotEmpty ? status : null,
         onChanged: (value) {
           ref.read(taskNotifierProvider.notifier).filterStatus(value!);
@@ -295,7 +312,7 @@ class TaskData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     Task task = tasks[index];
-    debugPrint(task.toString());
+    // debugPrint(task.site?.name.toString());
     return DataRow(cells: [
       DataCell(Text(task.id!.toString())),
       DataCell(Text(task.site!.name!)),
@@ -304,6 +321,21 @@ class TaskData extends DataTableSource {
       DataCell(Text(task.status!)),
       DataCell(Text(task.type!)),
       DataCell(Text(task.createdDate!)),
+      DataCell(TextButton(
+        child: const Text('Detail'),
+        onPressed: () {
+          Map<String, dynamic> header = {
+            'filter': 'task.id||eq||${task.id}',
+            "join": [
+              "task",
+            ],
+            'sort': 'orderIndex,ASC'
+          };
+          ref.read(assetNotifierProvider.notifier).getAllAsset(header);
+
+          GoRouter.of(context).go(RouteUri.resultAsset, extra: task);
+        },
+      )),
       DataCell(task.status == 'todo'
           ? Container()
           : IconButton(

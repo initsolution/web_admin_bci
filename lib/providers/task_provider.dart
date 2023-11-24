@@ -14,13 +14,13 @@ String statusTask = 'All';
 final statusTaskProvider = StateProvider<String>((ref) => statusTask);
 final typeTaskProvider = StateProvider<String>((ref) => typeTask);
 
-final taskNotifierProvider = NotifierProvider<TaskNotifier, TaskState>(
+final taskNotifierProvider = AutoDisposeNotifierProvider<TaskNotifier, TaskState>(
   () {
     return TaskNotifier(taskRepo: TaskRepo(Dio()));
   },
 );
 
-class TaskNotifier extends Notifier<TaskState> {
+class TaskNotifier extends AutoDisposeNotifier<TaskState> {
   final TaskRepo taskRepo;
 
   TaskNotifier({required this.taskRepo});
@@ -32,6 +32,7 @@ class TaskNotifier extends Notifier<TaskState> {
   }
 
   getAllTask(Map<String, dynamic> params) async {
+    debugPrint('getAllTask');
     state = TaskLoading();
     Map<String, dynamic> header = params;
     final sharedPref = await SharedPreferences.getInstance();
