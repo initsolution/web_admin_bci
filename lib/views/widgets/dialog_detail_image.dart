@@ -12,11 +12,9 @@ class DialogDetailImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Image image = Image.network('$urlRepo/asset/getImage/$id');
     return AlertDialog(
-      content: SizedBox(
-          width: MediaQuery.of(context).size.width / 0.5,
-          height: MediaQuery.of(context).size.height / 0.2,
-          child: Image.network('$urlRepo/asset/getImage/$id')),
+      content: SizedBox(width: image.width, height: image.height, child: image),
     );
   }
 }

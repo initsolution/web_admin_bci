@@ -192,7 +192,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
             subMenu: 'All',
           ),
           const SizedBox(
-            height: 10,
+            height: 20,
           ),
           Card(
             shape: const RoundedRectangleBorder(
@@ -207,6 +207,25 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        width: 400,
+                        height: 40,
+                        child: TextField(
+                          onChanged: (value) => Future(() => ref
+                              .read(siteNotifierProvider.notifier)
+                              .searchSite(
+                                  value)), // onChanged return the value of the field
+                          decoration: InputDecoration(
+                              labelText: "Search ...",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              )),
+                        ),
+                      ),
+                      const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.add),
                         onPressed: () {
@@ -249,24 +268,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                       const SizedBox(
                         width: 30,
                       ),
-                      SizedBox(
-                        width: 100,
-                        height: 40,
-                        child: TextField(
-                          onChanged: (value) => Future(() => ref
-                              .read(siteNotifierProvider.notifier)
-                              .searchSite(
-                                  value)), // onChanged return the value of the field
-                          decoration: InputDecoration(
-                              labelText: "Search ...",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              )),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
+
                       // IconButton(
                       //   icon: const Icon(Icons.more_vert),
                       //   onPressed: () {},
@@ -403,61 +405,75 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                               sites: state.sites, ref: ref, context: context);
                           filterData = state.sites;
                           return PaginatedDataTable(
-                            headingRowHeight: 36,
+                            headingRowHeight: 50,
+                            columnSpacing: 0,
                             source: data,
                             columns: [
                               DataColumn(
                                 label: const Text('ID'),
+                                tooltip: "SITE ID",
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
                               ),
                               DataColumn(
-                                label: const Text('Name'),
+                                label: const Text('NAME'),
+                                tooltip: "SITE NAME",
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
                               ),
                               DataColumn(
-                                label: const Text('Tower Type'),
+                                label: const Text('TYPE'),
+                                tooltip: "TOWER TYPE",
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
                               ),
                               DataColumn(
-                                label: const Text('Tower Height'),
+                                label: const Text('HEIGHT'),
+                                tooltip: "TOWER HEIGHT",
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
                               ),
                               DataColumn(
-                                label: const Text('Fabricator'),
+                                label: const Text('FABRICATOR'),
+                                tooltip: "FABRICATOR",
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
                               ),
-                              const DataColumn(label: Text('Tenants')),
-                              DataColumn(
-                                label: const Text('Address'),
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
+                              const DataColumn(
+                                label: Text('TENANTS'),
+                                tooltip: "TENANTS",
                               ),
                               DataColumn(
-                                label: const Text('Regional'),
+                                label: const Text('ADDRESS'),
+                                tooltip: "SITE ADDRESS",
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
                               ),
                               DataColumn(
-                                label: const Text('Province'),
+                                label: const Text('REGION'),
+                                tooltip: "SITE REGION",
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
                               ),
-                              const DataColumn(label: Text('Longtitude')),
-                              const DataColumn(label: Text('Latitude')),
-                              const DataColumn(label: Text('Action')),
+                              DataColumn(
+                                label: const Text('PROVINCE'),
+                                tooltip: "SITE PROVINCE",
+                                onSort: (columnIndex, _) {
+                                  sort(columnIndex);
+                                },
+                              ),
+                              const DataColumn(
+                                  label: Text('LONG'), tooltip: "LONGITUDE"),
+                              const DataColumn(
+                                  label: Text('LAT'), tooltip: "LATITUDE"),
+                              const DataColumn(label: Text('ACTION')),
                             ],
                             horizontalMargin: 20,
                             rowsPerPage: 10,
@@ -496,7 +512,9 @@ class SiteData extends DataTableSource {
       DataCell(Text(sites[index].name!)),
       DataCell(Text(sites[index].towerType!)),
       DataCell(Text(sites[index].towerHeight!.toString())),
-      DataCell(Text(sites[index].fabricator!.toString())),
+      DataCell(ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 80),
+          child: Text(sites[index].fabricator!.toString()))),
       DataCell(Text(sites[index].tenants!.toString())),
       DataCell(ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 200),

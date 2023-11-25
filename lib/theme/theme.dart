@@ -27,6 +27,10 @@ class AppThemeData {
 
   ThemeData light() {
     final themeData = ThemeData(
+      checkboxTheme: const CheckboxThemeData(
+        checkColor: MaterialStatePropertyAll(Colors.white),
+        fillColor: MaterialStatePropertyAll(Colors.lightBlue)
+      ),
       appBarTheme: const AppBarTheme(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: kPrimaryColor,
