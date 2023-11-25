@@ -1,3 +1,5 @@
+import 'dart:js';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,58 +31,63 @@ class DialogAddTask extends ConsumerWidget {
       child: AlertDialog(
         content: SizedBox(
           width: MediaQuery.of(context).size.width / 2.5,
+          height: MediaQuery.of(context).size.height / 1.4,
           child: Scaffold(
             backgroundColor: Colors.white,
             body: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'New Task',
-                        style: TextStyle(fontSize: 30),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  const Text('Site'),
-                  LoadSite(stateSite),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text('Maker'),
-                  LoadMakerEmployee(stateMaker),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text('Verifikator'),
-                  LoadVerifikatorEmployee(stateVerifikator),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text('Type Task'),
-                  getDropDownTypeTask(),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    child: ElevatedButton(
-                      onPressed: () => {saveTask(ref), Navigator.pop(context)},
-                      child: const Text('SAVE'),
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'New Task',
+                          style: TextStyle(fontSize: 30),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Text('Site'),
+                    LoadSite(stateSite),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('Maker'),
+                    LoadMakerEmployee(stateMaker),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('Verifikator'),
+                    LoadVerifikatorEmployee(stateVerifikator),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('Type Task'),
+                    getDropDownTypeTask(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      child: ElevatedButton(
+                        onPressed: () =>
+                            {saveTask(ref), Navigator.pop(context)},
+                        child: const Text('SAVE'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -130,19 +137,26 @@ class DialogAddTask extends ConsumerWidget {
         onChanged: (value) {
           selectedSite = value!;
         },
-        // dropdownDecoratorProps: const DropDownDecoratorProps(
-        //   dropdownSearchDecoration: InputDecoration(
-        //     labelText: "Pilih Site",
-        //     hintText: "Ketik nama site",
-        //     filled: true,
-        //   ),
-        // ),
-        popupProps: PopupPropsMultiSelection.bottomSheet(
-            showSearchBox: true,
-            itemBuilder: _customPopupItemBuilderSite,
-            bottomSheetProps: const BottomSheetProps(elevation: 5)),
-
-        // dropdownBuilder: _customPopupItemBuilderExample,
+        popupProps: PopupPropsMultiSelection.dialog(
+          showSearchBox: true,
+          itemBuilder: _customPopupItemBuilderSite,
+          // bottomSheetProps: const BottomSheetProps(elevation: 5),
+          containerBuilder: (context, popupWidget) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Pilih Site'),
+                Flexible(
+                  child: Container(
+                    child: popupWidget,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       );
     } else if (stateSite is SiteLoading) {
       return const CircularProgressIndicator();
@@ -179,22 +193,80 @@ class DialogAddTask extends ConsumerWidget {
     );
   }
 
+  Widget _customPopupItemBuilderMaker(
+      BuildContext context, Employee item, bool isSelected) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: !isSelected
+          ? null
+          : BoxDecoration(
+              border: Border.all(color: Theme.of(context).primaryColor),
+              borderRadius: BorderRadius.circular(5),
+              color: Colors.white,
+            ),
+      child: ListTile(
+        selected: isSelected,
+        title: Text(
+          item.name!,
+          style: const TextStyle(fontSize: 14),
+        ),
+        // leading: CircleAvatar(
+        //   backgroundImage: NetworkImage(item.avatar),
+        // ),
+      ),
+    );
+  }
+
   Widget LoadMakerEmployee(var stateMaker) {
     if (stateMaker is EmployeeLoaded) {
       List<Employee> listMaker = [];
       for (var maker in stateMaker.employees) {
         if (maker.role == 'Maker') {
           listMaker.add(maker);
+          // if (listMaker.length < 1) {
+          //   listMaker.add(maker);
+          // }
         }
+      }
+      double width = 500;
+      double height = 500;
+      if (listMaker.length == 1) {
+        height = 160;
+      } else if (listMaker.length == 2) {
+        height = 210;
+      } else if (listMaker.length >= 3 && listMaker.length <= 7) {
+        height = ((listMaker.length - 2) * 50) + 200;
       }
       return DropdownSearch<Employee>(
         items: listMaker,
         itemAsString: (item) => item.name!,
+        compareFn: (item1, item2) => item1.name == item2.name,
         onChanged: (value) {
           selectedMaker = value!;
         },
-        popupProps: const PopupPropsMultiSelection.bottomSheet(
-            bottomSheetProps: BottomSheetProps(elevation: 5)),
+        popupProps: PopupPropsMultiSelection.dialog(
+          showSearchBox: true,
+          constraints: BoxConstraints.tight(
+            Size(width, height),
+          ),
+          itemBuilder: _customPopupItemBuilderMaker,
+          // bottomSheetProps: const BottomSheetProps(elevation: 5),
+          containerBuilder: (context, popupWidget) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Pilih Maker'),
+                Flexible(
+                  child: Container(
+                    child: popupWidget,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
 
         // dropdownBuilder: _customPopupItemBuilderExample,
       );
@@ -213,14 +285,45 @@ class DialogAddTask extends ConsumerWidget {
           listMaker.add(maker);
         }
       }
+      double width = 500;
+      double height = 500;
+      if (listMaker.length == 1) {
+        height = 160;
+      } else if (listMaker.length == 2) {
+        height = 210;
+      } else if (listMaker.length >= 3 && listMaker.length <= 7) {
+        height = ((listMaker.length - 2) * 50) + 200;
+      }
       return DropdownSearch<Employee>(
         items: listMaker,
         itemAsString: (item) => item.name!,
+        compareFn: (item1, item2) => item1.name == item2.name,
         onChanged: (value) {
           selectedVerifier = value!;
         },
-        popupProps: const PopupPropsMultiSelection.bottomSheet(
-            bottomSheetProps: BottomSheetProps(elevation: 5)),
+        popupProps: PopupPropsMultiSelection.dialog(
+          showSearchBox: true,
+          constraints: BoxConstraints.tight(
+            Size(width, height),
+          ),
+          itemBuilder: _customPopupItemBuilderMaker,
+          // bottomSheetProps: const BottomSheetProps(elevation: 5),
+          containerBuilder: (context, popupWidget) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Pilih Verifikator'),
+                Flexible(
+                  child: Container(
+                    child: popupWidget,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
 
         // dropdownBuilder: _customPopupItemBuilderExample,
       );
