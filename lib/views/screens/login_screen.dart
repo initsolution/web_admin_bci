@@ -54,11 +54,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         debugPrint('decode token : $decodedToken');
       }
       var email = decodedToken['email'];
-      await ref.read(userDataProvider.notifier).setUserDataAsync(
-            username: email,
-            token: message,
-          );
-      onSuccess.call();
+      var role = decodedToken['role'];
+      if (role == "Maker") {
+        onError.call("Maaf, Maker tidak bisa login! Mohon hubungi Admin");
+      } else {
+        await ref.read(userDataProvider.notifier).setUserDataAsync(
+              username: email,
+              token: message,
+            );
+        onSuccess.call();
+      }
     } else {
       onError.call(message);
     }

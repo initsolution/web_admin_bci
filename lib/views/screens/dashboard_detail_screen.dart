@@ -33,16 +33,16 @@ class _DashboardDetailScreenState extends ConsumerState<DashboardDetailScreen> {
   Widget build(BuildContext context) {
     // final lang = Lang.of(context);
     final themeData = Theme.of(context);
-    final appColorScheme = Theme.of(context).extension<AppColorScheme>()!;
+    // final appColorScheme = Theme.of(context).extension<AppColorScheme>()!;
     final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
 
     return PortalMasterLayout(
       selectedMenuUri: RouteUri.dashboard,
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          Header(
+          const Header(
             title: 'Dashboard',
             subMenu: 'submenu dashboard'
           ),

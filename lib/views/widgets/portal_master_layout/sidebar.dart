@@ -135,7 +135,6 @@ class _SidebarState extends ConsumerState<Sidebar> {
   }
 
   Widget _sidebarMenuList(BuildContext context) {
-    debugPrint("_sidebarMenuList : ${widget.role}");
     final sidebarTheme = Theme.of(context).extension<AppSidebarTheme>()!;
 
     var currentLocation = widget.selectedMenuUri ?? '';

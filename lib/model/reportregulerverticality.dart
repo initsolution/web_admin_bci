@@ -66,7 +66,7 @@ class ReportRegulerVerticality {
       'theodolite2': theodolite2,
       'alatUkur': alatUkur,
       'toleransiKetegakan': toleransiKetegakan,
-      'valueVerticality': valueVerticality?.map((x) => x?.toMap()).toList(),
+      'valueVerticality': valueVerticality?.map((x) => x.toMap()).toList(),
     };
   }
 

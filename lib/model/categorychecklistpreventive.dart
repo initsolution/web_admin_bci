@@ -45,7 +45,7 @@ class CategoryChecklistPreventive {
       'keterangan': keterangan,
       'orderIndex': orderIndex,
       'pointChecklistPreventive':
-          pointChecklistPreventive?.map((x) => x?.toMap()).toList(),
+          pointChecklistPreventive?.map((x) => x.toMap()).toList(),
     };
   }
 

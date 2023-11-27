@@ -89,9 +89,9 @@ class Task {
       'verifierEmployee': verifierEmployee?.toMap(),
       'site': site?.toMap(),
       'categorychecklistprev':
-          categorychecklistprev?.map((x) => x?.toMap()).toList(),
+          categorychecklistprev?.map((x) => x.toMap()).toList(),
       'reportRegulerTorque':
-          reportRegulerTorque?.map((x) => x?.toMap()).toList(),
+          reportRegulerTorque?.map((x) => x.toMap()).toList(),
       'reportRegulerVerticality': reportRegulerVerticality?.toMap(),
     };
   }
