@@ -55,6 +55,29 @@ final sidebarMenuConfigs = [
   ),
 ];
 
+final sideBarMenuConfigs_Admin = [
+  SidebarMenuConfig(
+    uri: RouteUri.site,
+    icon: Icons.cell_tower,
+    title: (context) => 'Site',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.employee,
+    icon: Icons.people,
+    title: (context) => 'Employee',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.tenant,
+    icon: Icons.signal_cellular_alt,
+    title: (context) => 'Tenant',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.task,
+    icon: Icons.task,
+    title: (context) => 'Task',
+  ),
+];
+
 final sideBarMenuConfigs_Verifikator = [
   SidebarMenuConfig(
     uri: RouteUri.dashboard,
@@ -62,9 +85,9 @@ final sideBarMenuConfigs_Verifikator = [
     title: (context) => 'Dashboard',
   ),
   SidebarMenuConfig(
-    uri: RouteUri.task,
-    icon: Icons.task,
-    title: (context) => 'Task',
+    uri: RouteUri.asset,
+    icon: Icons.verified_user_rounded,
+    title: (context) => 'Verifikasi',
   ),
 ];
 

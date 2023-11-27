@@ -21,6 +21,7 @@ class MasterAssetNotifier extends Notifier<MasterAssetState> {
 
   MasterAssetNotifier({required this.masterAssetRepo});
 
+  List<MasterAsset>? masterAssets;
   @override
   MasterAssetState build() {
     return MasterAssetInitial();
@@ -36,12 +37,12 @@ class MasterAssetNotifier extends Notifier<MasterAssetState> {
           await masterAssetRepo.getAllMasterAsset('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
-        List<MasterAsset> masterAssets =
+        masterAssets =
             (data.data as List).map((e) => MasterAsset.fromJson(e)).toList();
-        if (masterAssets.isEmpty) {
+        if (masterAssets!.isEmpty) {
           state = MasterAssetLoadedEmpty();
         } else {
-          state = MasterAssetLoaded(masterAssets: masterAssets);
+          state = MasterAssetLoaded(masterAssets: masterAssets!);
         }
       }
     } on DioException catch (error) {
@@ -64,5 +65,14 @@ class MasterAssetNotifier extends Notifier<MasterAssetState> {
     if (httpResponse.response.statusCode == 201) {
       state = MasterAssetDataChangeSuccess();
     }
+  }
+
+  searchMasterAsset(String search) async {
+    state = MasterAssetLoading();
+    List<MasterAsset> searchMasterAsset = masterAssets!
+        .where((masterAsset) =>
+            masterAsset.taskType!.toLowerCase().contains(search.toLowerCase()))
+        .toList();
+    state = MasterAssetLoaded(masterAssets: searchMasterAsset);
   }
 }

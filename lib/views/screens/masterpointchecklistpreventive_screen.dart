@@ -235,6 +235,27 @@ class _MasterPointChecklistPreventiveScreenState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        width: 400,
+                        height: 40,
+                        child: TextField(
+                          onChanged: (value) => Future(() => ref
+                              .read(
+                                  masterPointChecklistPreventiveNotifierProvider
+                                      .notifier)
+                              .searchMasterPointChecklistPrev(
+                                  value)), // onChanged return the value of the field
+                          decoration: InputDecoration(
+                              labelText: "Search Uraian",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              )),
+                        ),
+                      ),
+                      const Spacer(),
                       Consumer(builder: ((context, ref, child) {
                         late List<MasterCategoryChecklistPreventive>
                             dataCategoryChecklistPreventive;
@@ -284,13 +305,6 @@ class _MasterPointChecklistPreventiveScreenState
                       ),
                       IconButton(
                         icon: const Icon(Icons.filter_list),
-                        onPressed: () {},
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.search),
                         onPressed: () {},
                       ),
                       const SizedBox(

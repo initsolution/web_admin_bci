@@ -28,6 +28,8 @@ class MasterCategoryChecklistPreventiveNotifier
   MasterCategoryChecklistPreventiveNotifier(
       {required this.masterCategoryPrevRepo});
 
+  List<MasterCategoryChecklistPreventive>? masterCategoryPrev;
+
   @override
   MasterCategoryChecklistPreventiveState build() {
     return MasterCategoryChecklistPreventiveInitial();
@@ -43,15 +45,14 @@ class MasterCategoryChecklistPreventiveNotifier
           .getAllMasterCategoryChecklistPreventive('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
-        List<MasterCategoryChecklistPreventive> masterCategoryPrev =
-            (data.data as List)
-                .map((e) => MasterCategoryChecklistPreventive.fromJson(e))
-                .toList();
-        if (masterCategoryPrev.isEmpty) {
+        masterCategoryPrev = (data.data as List)
+            .map((e) => MasterCategoryChecklistPreventive.fromJson(e))
+            .toList();
+        if (masterCategoryPrev!.isEmpty) {
           state = MasterCategoryChecklistPreventiveLoadedEmpty();
         } else {
           state = MasterCategoryChecklistPreventiveLoaded(
-              masterCategoryPrev: masterCategoryPrev);
+              masterCategoryPrev: masterCategoryPrev!);
         }
       }
     } on DioException catch (error) {
@@ -77,5 +78,16 @@ class MasterCategoryChecklistPreventiveNotifier
     if (httpResponse.response.statusCode == 201) {
       state = MasterCategoryChecklistPreventiveDataChangeSuccess();
     }
+  }
+
+  searchCategoryChecklistPrev(String search) async {
+    state = MasterCategoryChecklistPreventiveLoading();
+    List<MasterCategoryChecklistPreventive> searchCategoryChecklistPrev =
+        masterCategoryPrev!
+            .where((e) =>
+                e.categoryName!.toLowerCase().contains(search.toLowerCase()))
+            .toList();
+    state = MasterCategoryChecklistPreventiveLoaded(
+        masterCategoryPrev: searchCategoryChecklistPrev);
   }
 }

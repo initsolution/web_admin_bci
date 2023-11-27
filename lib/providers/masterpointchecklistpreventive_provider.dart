@@ -29,6 +29,8 @@ class MasterPointChecklistPreventiveNotifier
   MasterPointChecklistPreventiveNotifier(
       {required this.masterPointChecklistPreventiveRepo});
 
+  List<MasterPointChecklistPreventive>? masterPointChecklistPreventives;
+
   @override
   MasterPointChecklistPreventiveState build() {
     return MasterPointChecklistPreventiveInitial();
@@ -44,15 +46,14 @@ class MasterPointChecklistPreventiveNotifier
       final HttpResponse data = await masterPointChecklistPreventiveRepo
           .getAllMasterPointChecklistPreventive('Bearer $token', header);
       if (data.response.statusCode == 200) {
-        List<MasterPointChecklistPreventive> masterPointChecklistPreventives =
-            (data.data as List)
-                .map((e) => MasterPointChecklistPreventive.fromJson(e))
-                .toList();
-        if (masterPointChecklistPreventives.isEmpty) {
+        masterPointChecklistPreventives = (data.data as List)
+            .map((e) => MasterPointChecklistPreventive.fromJson(e))
+            .toList();
+        if (masterPointChecklistPreventives!.isEmpty) {
           state = MasterPointChecklistPreventiveLoadedEmpty();
         } else {
           state = MasterPointChecklistPreventiveLoaded(
-              masterPointChecklistPreventive: masterPointChecklistPreventives);
+              masterPointChecklistPreventive: masterPointChecklistPreventives!);
         }
       }
     } on DioException catch (error) {
@@ -76,5 +77,16 @@ class MasterPointChecklistPreventiveNotifier
     if (httpResponse.response.statusCode == 201) {
       state = MasterPointChecklistPreventiveDataChangeSuccess();
     }
+  }
+
+  searchMasterPointChecklistPrev(String search) async {
+    state = MasterPointChecklistPreventiveLoading();
+    List<MasterPointChecklistPreventive> searchMasterPointChecklistPrev =
+        masterPointChecklistPreventives!
+            .where(
+                (e) => e.uraian!.toLowerCase().contains(search.toLowerCase()))
+            .toList();
+    state = MasterPointChecklistPreventiveLoaded(
+        masterPointChecklistPreventive: searchMasterPointChecklistPrev);
   }
 }

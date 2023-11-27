@@ -182,6 +182,25 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        SizedBox(
+                          width: 400,
+                          height: 40,
+                          child: TextField(
+                            onChanged: (value) => Future(() => ref
+                                .read(masterAssetNotifierProvider.notifier)
+                                .searchMasterAsset(
+                                    value)), // onChanged return the value of the field
+                            decoration: InputDecoration(
+                                labelText: "Search Task Type",
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                )),
+                          ),
+                        ),
+                        const Spacer(),
                         IconButton(
                           icon: const Icon(Icons.add),
                           onPressed: () => {
@@ -209,13 +228,6 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.filter_list),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.search),
                           onPressed: () {},
                         ),
                         const SizedBox(

@@ -24,6 +24,7 @@ class MasterReportRegulerTorqueNotifier
   MasterReportRegulerTorqueNotifier(
       {required this.masterReportRegulerTorqueRepo});
 
+  List<MasterReportRegulerTorque>? masterReportRegulerTorque;
   @override
   MasterReportRegulerTorqueState build() {
     return MasterReportRegulerTorqueStateInitial();
@@ -39,15 +40,14 @@ class MasterReportRegulerTorqueNotifier
           .getAllMasterReportRegulerTorqueRepo('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
-        List<MasterReportRegulerTorque> masterReportRegulerTorque =
-            (data.data as List)
-                .map((e) => MasterReportRegulerTorque.fromJson(e))
-                .toList();
-        if (masterReportRegulerTorque.isEmpty) {
+        masterReportRegulerTorque = (data.data as List)
+            .map((e) => MasterReportRegulerTorque.fromJson(e))
+            .toList();
+        if (masterReportRegulerTorque!.isEmpty) {
           state = MasterReportRegulerTorqueLoadedEmpty();
         } else {
           state = MasterReportRegulerTorqueStateLoaded(
-              masterReportRegulerTorque: masterReportRegulerTorque);
+              masterReportRegulerTorque: masterReportRegulerTorque!);
         }
       }
     } on DioException catch (error) {
@@ -72,5 +72,16 @@ class MasterReportRegulerTorqueNotifier
     if (httpResponse.response.statusCode == 201) {
       state = MasterReportRegulerTorqueDataChangeSuccess();
     }
+  }
+
+  searchMasterReportRegulerTorque(String search) async {
+    state = MasterReportRegulerTorqueStateLoading();
+    List<MasterReportRegulerTorque> searchMasterReportRegulerTorque =
+        masterReportRegulerTorque!
+            .where((e) =>
+                e.fabricator!.toLowerCase().contains(search.toLowerCase()))
+            .toList();
+    state = MasterReportRegulerTorqueStateLoaded(
+        masterReportRegulerTorque: searchMasterReportRegulerTorque);
   }
 }

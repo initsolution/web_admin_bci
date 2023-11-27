@@ -38,6 +38,7 @@ class Sidebar extends ConsumerStatefulWidget {
   final void Function() onAccountButtonPressed;
   final void Function() onLogoutButtonPressed;
   final List<SidebarMenuConfig> sidebarConfigs;
+  final String? role;
 
   const Sidebar({
     Key? key,
@@ -46,6 +47,7 @@ class Sidebar extends ConsumerStatefulWidget {
     required this.onAccountButtonPressed,
     required this.onLogoutButtonPressed,
     required this.sidebarConfigs,
+    required this.role,
   }) : super(key: key);
 
   @override
@@ -133,6 +135,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
   }
 
   Widget _sidebarMenuList(BuildContext context) {
+    debugPrint("_sidebarMenuList : ${widget.role}");
     final sidebarTheme = Theme.of(context).extension<AppSidebarTheme>()!;
 
     var currentLocation = widget.selectedMenuUri ?? '';
@@ -140,8 +143,16 @@ class _SidebarState extends ConsumerState<Sidebar> {
     if (currentLocation.isEmpty && widget.autoSelectMenu) {
       currentLocation = GoRouter.of(context).location;
     }
+    var sideBar = [];
+    if (widget.role == "SuperAdmin") {
+      sideBar = sidebarMenuConfigs;
+    } else if (widget.role == "Admin") {
+      sideBar = sideBarMenuConfigs_Admin;
+    } else if (widget.role == "Verify") {
+      sideBar = sideBarMenuConfigs_Verifikator;
+    }
     return Column(
-      children: sidebarMenuConfigs.map<Widget>((menu) {
+      children: sideBar.map<Widget>((menu) {
         if (menu.children.isEmpty) {
           return _sidebarMenu(
             context,

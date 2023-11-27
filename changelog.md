@@ -77,3 +77,7 @@
 
 > 22/11/2023
 > 1. trial make 1 pdf
+
+> 27/11/2023
+> Add Search setiap Screen
+> Login by role (SuperAdmin, Admin dan Verify)

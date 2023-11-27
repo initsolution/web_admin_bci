@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/master_layout_config.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/profile_card.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/sidebar.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class LocaleMenuConfig {
   final String languageCode;
@@ -18,7 +21,7 @@ class LocaleMenuConfig {
   });
 }
 
-class PortalMasterLayout extends StatelessWidget {
+class PortalMasterLayout extends ConsumerWidget {
   final Widget body;
   final bool autoSelectMenu;
   final String? selectedMenuUri;
@@ -41,9 +44,16 @@ class PortalMasterLayout extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // final themeData = Theme.of(context);
-    final drawer = _sidebar(context);
+    var token = ref.watch(userDataProvider.select((value) => value.token));
+    var role = "";
+    if (token != null) {
+      Map<String, dynamic> decodedToken = JwtDecoder.decode(token)['employee'];
+      role = decodedToken['role'];
+      debugPrint('role : $role');
+    }
+    final drawer = _sidebar(context, role);
 
     return Scaffold(
       appBar: AppBar(
@@ -77,7 +87,7 @@ class PortalMasterLayout extends StatelessWidget {
     }
   }
 
-  Widget _sidebar(BuildContext context) {
+  Widget _sidebar(BuildContext context, role) {
     final goRouter = GoRouter.of(context);
 
     return Sidebar(
@@ -86,6 +96,7 @@ class PortalMasterLayout extends StatelessWidget {
       onAccountButtonPressed: () => goRouter.go(RouteUri.myProfile),
       onLogoutButtonPressed: () => goRouter.go(RouteUri.logout),
       sidebarConfigs: sidebarMenuConfigs,
+      role: role,
     );
   }
 

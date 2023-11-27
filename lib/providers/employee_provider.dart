@@ -33,6 +33,7 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
 
   EmployeeNotifier({required this.employeeRepo});
 
+  List<Employee>? employees;
   @override
   EmployeeState build() {
     return EmployeeInitial();
@@ -53,12 +54,12 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
           await employeeRepo.getAllEmployee('Bearer $token', header);
       if (data.response.statusCode == 200) {
         // debugPrint('data emp : ${httpResponse.data}');
-        List<Employee> employees =
+        employees =
             (data.data as List).map((e) => Employee.fromJson(e)).toList();
-        if (employees.isEmpty) {
+        if (employees!.isEmpty) {
           state = EmployeeLoadedEmpty();
         } else {
-          state = EmployeeLoaded(employees: employees);
+          state = EmployeeLoaded(employees: employees!);
         }
       }
     } on DioException catch (error) {
@@ -113,5 +114,14 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
         state = EmployeeDataChangeSuccess();
       }
     }
+  }
+
+  searchEmployee(String search) async {
+    state = EmployeeLoading();
+    List<Employee> searchEmployee = employees!
+        .where((employee) =>
+            employee.name!.toLowerCase().contains(search.toLowerCase()))
+        .toList();
+    state = EmployeeLoaded(employees: searchEmployee);
   }
 }
