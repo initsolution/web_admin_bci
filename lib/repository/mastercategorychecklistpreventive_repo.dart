@@ -21,6 +21,12 @@ abstract class MasterCategoryChecklistPreventiveRepo {
       @Header('Authorization') String token);
 
   @PATCH('/mastercategorychecklistpreventive/{id}')
-  Future<HttpResponse> updateMasterCategoryChecklistPreventive(@Path() int id,
-      @Body() MasterCategoryChecklistPreventive masterCategoryPrev);
+  Future<HttpResponse> updateMasterCategoryChecklistPreventive(
+      @Path() int id,
+      @Body() MasterCategoryChecklistPreventive masterCategoryPrev,
+      @Header('Authorization') String token);
+
+  @DELETE('/mastercategorychecklistpreventive/{id}')
+  Future<HttpResponse> deleteMasterCategoryChecklistPreventive(
+      @Path() int id, @Header('Authorization') String token);
 }

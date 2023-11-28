@@ -65,17 +65,36 @@ class MasterCategoryChecklistPreventiveNotifier
     }
   }
 
-  createMasterCategoryChecklistPreventive(
-      MasterCategoryChecklistPreventive masterCategoryPrev) async {
+  createOrEditMasterCategoryChecklistPreventive(
+      MasterCategoryChecklistPreventive masterCategoryPrev, bool isEdit) async {
     state = MasterCategoryChecklistPreventiveLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse =
-        await masterCategoryPrevRepo.createMasterCategoryChecklistPreventive(
-            masterCategoryPrev, 'Bearer $token');
-    if (DEBUG) debugPrint(httpResponse.data.toString());
-    if (DEBUG) debugPrint(httpResponse.response.statusCode.toString());
-    if (httpResponse.response.statusCode == 201) {
+    HttpResponse httpResponse;
+    if (isEdit) {
+      httpResponse =
+          await masterCategoryPrevRepo.updateMasterCategoryChecklistPreventive(
+              masterCategoryPrev.id!, masterCategoryPrev, 'Bearer $token');
+    } else {
+      httpResponse =
+          await masterCategoryPrevRepo.createMasterCategoryChecklistPreventive(
+              masterCategoryPrev, 'Bearer $token');
+    }
+
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
+      state = MasterCategoryChecklistPreventiveDataChangeSuccess();
+    }
+  }
+
+  deleteMasterCategoryChecklistPreventive(int id) async {
+    state = MasterCategoryChecklistPreventiveLoading();
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    HttpResponse httpResponse = await masterCategoryPrevRepo
+        .deleteMasterCategoryChecklistPreventive(id, token);
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
       state = MasterCategoryChecklistPreventiveDataChangeSuccess();
     }
   }

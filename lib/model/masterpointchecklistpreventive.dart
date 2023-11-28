@@ -19,7 +19,7 @@ class MasterPointChecklistPreventive {
 
   @override
   String toString() {
-    return 'MasterPointChecklistPreventive(id: $id, uraian: $uraian, kriteria: $kriteria, mcategorychecklistpreventive: $mcategorychecklistpreventive)';
+    return 'MasterPointChecklistPreventive(id: $id, uraian: $uraian, isChecklist : $isChecklist, kriteria: $kriteria, mcategorychecklistpreventive: $mcategorychecklistpreventive)';
   }
 
   factory MasterPointChecklistPreventive.fromJson(Map<String, dynamic> json) =>

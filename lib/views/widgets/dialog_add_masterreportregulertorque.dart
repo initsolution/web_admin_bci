@@ -6,7 +6,10 @@ import 'package:flutter_web_ptb/providers/masterreportregulertorque_provider.dar
 
 // ignore: must_be_immutable
 class DialogAddMasterReportRegulerTorque extends ConsumerWidget {
-  DialogAddMasterReportRegulerTorque({super.key});
+  final bool isEdit;
+  MasterReportRegulerTorque? editMasterReportRegulerTorque;
+  DialogAddMasterReportRegulerTorque(
+      {super.key, this.isEdit = false, this.editMasterReportRegulerTorque});
   TextEditingController fabricatorController = TextEditingController();
   TextEditingController towerHeightController = TextEditingController();
   TextEditingController towerSegmentController = TextEditingController();
@@ -17,6 +20,23 @@ class DialogAddMasterReportRegulerTorque extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (isEdit) {
+      if (editMasterReportRegulerTorque != null) {
+        fabricatorController.text =
+            editMasterReportRegulerTorque!.fabricator ?? '';
+        towerHeightController.text =
+            editMasterReportRegulerTorque!.towerHeight.toString();
+        towerSegmentController.text =
+            editMasterReportRegulerTorque!.towerSegment ?? '';
+        elevasiController.text =
+            editMasterReportRegulerTorque!.elevasi.toString();
+        boltSizeController.text = editMasterReportRegulerTorque!.boltSize ?? '';
+        minimumTorqueController.text =
+            editMasterReportRegulerTorque!.minimumTorque.toString();
+        qtyBoltController.text =
+            editMasterReportRegulerTorque!.qtyBolt.toString();
+      }
+    }
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
@@ -27,9 +47,9 @@ class DialogAddMasterReportRegulerTorque extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'New Master Report Regular Torque',
-                    style: TextStyle(fontSize: 30),
+                  Text(
+                    '${isEdit ? 'Edit' : 'Add'} Master Report Regular Torque',
+                    style: const TextStyle(fontSize: 30),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -160,12 +180,12 @@ class DialogAddMasterReportRegulerTorque extends ConsumerWidget {
         boltSize: boltSizeController.text,
         minimumTorque: int.parse(minimumTorqueController.text),
         qtyBolt: int.parse(qtyBoltController.text));
-    if (DEBUG) {
-      debugPrint('site : $masterTorque.toString()');
+    if (isEdit) {
+      masterTorque.id = editMasterReportRegulerTorque!.id;
     }
     ref
         .read(masterReportRegulerTorqueNotifierProvider.notifier)
-        .createMasterReportRegulerTorqueRepo(masterTorque);
+        .createOrUpdateMasterReportRegulerTorqueRepo(masterTorque, isEdit);
   }
 
   // Widget getDropdownRole() {

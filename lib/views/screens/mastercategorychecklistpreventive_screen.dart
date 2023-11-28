@@ -80,7 +80,9 @@ class _MasterCategoryChecklistPreventiveScreenState
                               DataTableSource data =
                                   MasterCategoryChecklistPreventivetData(
                                       masterCategoryPrev:
-                                          state.masterCategoryPrev);
+                                          state.masterCategoryPrev,
+                                      ref: ref,
+                                      context: context);
                               filterData = state.masterCategoryPrev;
                               return PaginatedDataTable(
                                 source: data,
@@ -93,6 +95,7 @@ class _MasterCategoryChecklistPreventiveScreenState
                                       sort(columnIndex);
                                     },
                                   ),
+                                  const DataColumn(label: Text('Actions')),
                                 ],
                                 horizontalMargin: 25,
                                 rowsPerPage: 10,
@@ -262,12 +265,77 @@ class _MasterCategoryChecklistPreventiveScreenState
 
 class MasterCategoryChecklistPreventivetData extends DataTableSource {
   final List<MasterCategoryChecklistPreventive> masterCategoryPrev;
-  MasterCategoryChecklistPreventivetData({required this.masterCategoryPrev});
+  final BuildContext context;
+  final WidgetRef ref;
+  MasterCategoryChecklistPreventivetData(
+      {required this.masterCategoryPrev,
+      required this.context,
+      required this.ref});
 
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
       DataCell(Text(masterCategoryPrev[index].categoryName!)),
+      DataCell(Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return SizedBox(
+                      child: DialogAddMasterCategoryChecklistPreventive(
+                    isEdit: true,
+                    editMasterCategoryChecklistPreventive:
+                        masterCategoryPrev[index],
+                  ));
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text(
+                        'Delete Master Category Checklist Preventive'),
+                    content: Text(
+                        'Do you want to delete ${masterCategoryPrev[index].categoryName}?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            ref
+                                .read(
+                                    masterCategoryChecklistPreventivNotifierProvider
+                                        .notifier)
+                                .deleteMasterCategoryChecklistPreventive(
+                                    masterCategoryPrev[index].id!);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(color: Colors.green),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'No',
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
+                  );
+                },
+              );
+            },
+          )
+        ],
+      ))
     ]);
   }
 

@@ -65,16 +65,40 @@ class MasterPointChecklistPreventiveNotifier
     }
   }
 
-  createMasterPointChecklistPreventive(
-      MasterPointChecklistPreventive masterPointChecklistPreventive) async {
+  createOrEditMasterPointChecklistPreventive(
+      MasterPointChecklistPreventive masterPointChecklistPreventive,
+      bool isEdit) async {
     state = MasterPointChecklistPreventiveLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse = await masterPointChecklistPreventiveRepo
-        .createMasterPointChecklistPreventive(
-            masterPointChecklistPreventive, 'Bearer $token');
-    if (DEBUG) debugPrint(httpResponse.data.toString());
-    if (httpResponse.response.statusCode == 201) {
+    HttpResponse httpResponse;
+    if (isEdit) {
+      httpResponse = await masterPointChecklistPreventiveRepo
+          .updateMasterPointChecklistPreventive(
+              masterPointChecklistPreventive.id!,
+              masterPointChecklistPreventive,
+              'Bearer $token');
+    } else {
+      httpResponse = await masterPointChecklistPreventiveRepo
+          .createMasterPointChecklistPreventive(
+              masterPointChecklistPreventive, 'Bearer $token');
+    }
+
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
+      state = MasterPointChecklistPreventiveDataChangeSuccess();
+    }
+  }
+
+  deleteMasterPointChecklistPreventive(int id) async {
+    state = MasterPointChecklistPreventiveLoading();
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    HttpResponse httpResponse = await masterPointChecklistPreventiveRepo
+        .deleteMasterPointChecklistPreventive(id, token);
+
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
       state = MasterPointChecklistPreventiveDataChangeSuccess();
     }
   }

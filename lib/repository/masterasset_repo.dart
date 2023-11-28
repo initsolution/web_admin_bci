@@ -19,6 +19,10 @@ abstract class MasterAssetRepo {
       @Body() MasterAsset asset, @Header('Authorization') String token);
 
   @PATCH('/masterasset/{id}')
-  Future<HttpResponse> updateMasterAsset(
-      @Path() int id, @Body() MasterAsset asset);
+  Future<HttpResponse> updateMasterAsset(@Path() int id,
+      @Body() MasterAsset asset, @Header('Authorization') String token);
+
+  @DELETE('/masterasset/{id}')
+  Future<HttpResponse> deleteMasterAsset(
+      @Path() int id, @Header('Authorization') String token);
 }
