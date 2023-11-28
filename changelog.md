@@ -83,3 +83,6 @@
 > Login by role (SuperAdmin, Admin dan Verify)
 > Block Maker supaya tidak bisa login di Web 
 > Remove unused import
+
+> 28/11/2023
+> update ui/ux verificator

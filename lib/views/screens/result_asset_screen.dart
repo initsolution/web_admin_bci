@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages, avoid_web_libraries_in_flutter
 
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,24 +13,15 @@ import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
 import 'package:flutter_web_ptb/providers/asset_state.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_web_ptb/providers/pdf_provider.dart';
-import 'package:flutter_web_ptb/providers/pdf_state.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_choose_image.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_detail_image.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
-import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
-import 'package:flutter_web_ptb/views/widgets/report_reguler_torque_widget.dart';
-import 'package:flutter_web_ptb/views/widgets/report_reguler_verticality.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pdf/pdf.dart';
 
-import 'package:pdf/widgets.dart' as pw;
-import 'dart:html' as html;
-
-import 'package:http/http.dart' as http;
 import 'package:progressive_image/progressive_image.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ResultAssetScreen extends ConsumerStatefulWidget {
   final Task task;
@@ -49,17 +39,17 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
   @override
   Widget build(BuildContext context) {
     // var value = ref.watch(userDataProvider.select((value) => value.username));
-    ref.listen(
-      assetNotifierProvider,
-      (previous, next) {
-        if (next is AssetLoaded) {
-          debugPrint('pass pdf');
-          List<Asset> assets = next.assets;
-          var groupedItems = groupBy(assets, (e) => e.category);
-          ref.read(asyncPdfProvider.notifier).createPDF(groupedItems);
-        }
-      },
-    );
+    // ref.listen(
+    //   assetNotifierProvider,
+    //   (previous, next) {
+    // if (next is AssetLoaded) {
+    //   debugPrint('pass pdf');
+    // List<Asset> assets = next.assets;
+    // var groupedItems = groupBy(assets, (e) => e.category);
+    // ref.read(asyncPdfProvider.notifier).createPDF(groupedItems);
+    // }
+    //   },
+    // );
     return Consumer(
       builder: (context, ref, child) {
         var state = ref.watch(assetNotifierProvider);
@@ -537,28 +527,28 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Consumer(
-                builder: (context, ref, child) {
-                  final asyncPdf = ref.watch(asyncPdfProvider);
-                  return asyncPdf.when(
-                    data: (data) {
-                      debugPrint('data: ${data.toString()}');
-                      // if (data is PdfReady) {
-                        return IconButton(
-                            onPressed: () {
-                              ref.read(asyncPdfProvider.notifier).anchorClick();
-                            },
-                            icon: const Icon(Icons.picture_as_pdf_rounded));
-                      // } else {
-                      //   return const Icon(Icons.picture_as_pdf_outlined);
-                      // }
-                    },
-                    error: (error, stackTrace) =>
-                        const Icon(Icons.picture_as_pdf_outlined),
-                    loading: () => const CircularProgressIndicator(),
-                  );
-                },
-              ),
+              // Consumer(
+              //   builder: (context, ref, child) {
+              //     final asyncPdf = ref.watch(asyncPdfProvider);
+              //     return asyncPdf.when(
+              //       data: (data) {
+              //         debugPrint('data: ${data.toString()}');
+              //         // if (data is PdfReady) {
+              //           return IconButton(
+              //               onPressed: () {
+              //                 ref.read(asyncPdfProvider.notifier).anchorClick();
+              //               },
+              //               icon: const Icon(Icons.picture_as_pdf_rounded));
+              //         // } else {
+              //         //   return const Icon(Icons.picture_as_pdf_outlined);
+              //         // }
+              //       },
+              //       error: (error, stackTrace) =>
+              //           const Icon(Icons.picture_as_pdf_outlined),
+              //       loading: () => const CircularProgressIndicator(),
+              //     );
+              //   },
+              // ),
 
               // IconButton(
               //   icon: const Icon(Icons.picture_as_pdf_rounded),
@@ -566,6 +556,12 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
               //     // anchor.click();
               //   },
               // ),
+
+              IconButton(
+                  onPressed: () async {
+                    await launchUrlString('http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}', mode: LaunchMode.platformDefault);
+                  },
+                  icon: const Icon(Icons.print)),
               const SizedBox(
                 width: 30,
               ),

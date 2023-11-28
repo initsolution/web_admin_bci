@@ -17,6 +17,7 @@ import 'package:flutter_web_ptb/providers/asset_provider.dart';
 import 'package:flutter_web_ptb/providers/asset_state.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
+import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +29,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
 import 'package:http/http.dart' as http;
 import 'package:collection/collection.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class AssetScreen extends ConsumerStatefulWidget {
   const AssetScreen({super.key});
@@ -42,6 +44,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   String token = '';
   late Employee employee;
   late DateTimeRange dateRange;
+
   getDataToken() async {
     final sharedPref = await SharedPreferences.getInstance();
     token = sharedPref.getString(StorageKeys.token) ?? '';
@@ -114,16 +117,15 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
               ),
               clipBehavior: Clip.antiAlias,
               child: Container(
-                margin: const EdgeInsets.only(top: 15),
+                margin: const EdgeInsets.only(top: kDefaultPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const SizedBox(
-                          width: 30,
+                          width: 20,
                         ),
                         SizedBox(
                           width: 150,
@@ -226,25 +228,26 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   }
 
   Widget tableTask() {
-    return Container(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: Consumer(
-          builder: (context, ref, child) {
-            var state = ref.watch(taskNotifierProvider);
-            // debugPrint('reload state task : $state');
-            // if (DEBUG) debugPrint('state : $state');
-            if (state is TaskLoaded) {
-              debugPrint('TaskLoaded 2');
-              DataTableSource data =
-                  TaskData(tasks: state.tasks, context: context, ref: ref);
-              return Theme(
-                data: ThemeData(
-                    cardColor: Theme.of(context).cardColor,
-                    textTheme: const TextTheme(
-                        titleLarge: TextStyle(color: Colors.blue))),
-                child: PaginatedDataTable(
+    final themeData = Theme.of(context);
+    final appDataTableTheme = Theme.of(context).extension<AppDataTableTheme>()!;
+    return Theme(
+      data: themeData.copyWith(
+        cardTheme: appDataTableTheme.cardTheme,
+        dataTableTheme: appDataTableTheme.dataTableThemeData,
+      ),
+      child: SizedBox(
+          width: double.infinity,
+          child: Consumer(
+            builder: (context, ref, child) {
+              var state = ref.watch(taskNotifierProvider);
+              // debugPrint('reload state task : $state');
+              // if (DEBUG) debugPrint('state : $state');
+              if (state is TaskLoaded) {
+                debugPrint('TaskLoaded 2');
+                DataTableSource data =
+                    TaskData(tasks: state.tasks, context: context, ref: ref);
+                return PaginatedDataTable(
                   source: data,
-                  header: const Text('Data Task'),
                   columns: const [
                     DataColumn(label: Text('ID')),
                     DataColumn(label: Text('Site')),
@@ -257,20 +260,25 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                     DataColumn(label: Text('Verifikasi')),
                     DataColumn(label: Text('Print')),
                   ],
-                  columnSpacing: 50,
-                  horizontalMargin: 10,
+                  columnSpacing: 70,
+                  horizontalMargin: 20,
                   rowsPerPage: 10,
                   showCheckboxColumn: false,
-                ),
-              );
-            } else if (state is TaskLoading) {
-              debugPrint('TaskLoading');
-              return const CircularProgressIndicator();
-            }
-            debugPrint(state.toString());
-            return Container();
-          },
-        ));
+                );
+              } else if (state is TaskLoading) {
+                debugPrint('TaskLoading');
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              debugPrint(state.toString());
+              return Container();
+            },
+          )),
+    );
   }
 
   Widget getDropdownStatus() {
@@ -318,28 +326,28 @@ class TaskData extends DataTableSource {
       DataCell(Text(task.site!.name!)),
       DataCell(Text(task.makerEmployee!.name!)),
       DataCell(Text(task.verifierEmployee!.name!)),
-      DataCell(Text(task.status!)),
+      DataCell(Container(
+          width: 80,
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            color: getColorIcon(task.status),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
+          child: Text(
+            task.status!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white),
+          ))),
       DataCell(Text(task.type!)),
       DataCell(Text(task.createdDate!)),
-      DataCell(TextButton(
-        child: const Text('Detail'),
-        onPressed: () {
-          Map<String, dynamic> header = {
-            'filter': 'task.id||eq||${task.id}',
-            "join": [
-              "task",
-            ],
-            'sort': 'orderIndex,ASC'
-          };
-          ref.read(assetNotifierProvider.notifier).getAllAsset(header);
-
-          GoRouter.of(context).go(RouteUri.resultAsset, extra: task);
-        },
-      )),
-      DataCell(task.status == 'todo'
-          ? Container()
-          : IconButton(
-              icon: const Icon(Icons.verified_outlined),
+      DataCell(task.status != 'todo'
+          ? TextButton(
+              style: TextButton.styleFrom(
+                  backgroundColor: Colors.lightBlue,
+                  foregroundColor: Colors.white),
+              child: const Text('Detail'),
               onPressed: () {
                 Map<String, dynamic> header = {
                   'filter': 'task.id||eq||${task.id}',
@@ -352,20 +360,27 @@ class TaskData extends DataTableSource {
 
                 GoRouter.of(context).go(RouteUri.resultAsset, extra: task);
               },
-            )),
+            )
+          : Container()),
+      DataCell(task.status == 'verified'
+          ? const Icon(Icons.verified_outlined)
+          : Container()),
       DataCell(task.status != 'verified'
           ? const Icon(Icons.print_disabled)
           : IconButton(
-              onPressed: () {
-                Map<String, dynamic> header = {
-                  'filter': 'task.id||eq||${task.id}',
-                  "join": [
-                    "task",
-                  ],
-                  'sort': 'orderIndex,ASC'
-                };
-                ref.read(assetNotifierProvider.notifier).getAllAsset(header);
-                downloadPDF(task);
+              onPressed: () async {
+                await launchUrlString(
+                    'http://103.82.241.80:3000/task/downloadPdf/${task.id}',
+                    mode: LaunchMode.platformDefault);
+                // Map<String, dynamic> header = {
+                //   'filter': 'task.id||eq||${task.id}',
+                //   "join": [
+                //     "task",
+                //   ],
+                //   'sort': 'orderIndex,ASC'
+                // };
+                // ref.read(assetNotifierProvider.notifier).getAllAsset(header);
+                // downloadPDF(task);
               },
               icon: const Icon(Icons.print)))
     ]);
@@ -598,5 +613,20 @@ class TaskData extends DataTableSource {
     }
 
     return dataRender;
+  }
+
+  getColorIcon(String? status) {
+    switch (status) {
+      case 'todo':
+        return Colors.blue;
+      case 'review':
+        return Colors.amber;
+      case 'verified':
+        return Colors.green;
+      case 'notverified':
+        return Colors.red;
+      default:
+        return Colors.red;
+    }
   }
 }

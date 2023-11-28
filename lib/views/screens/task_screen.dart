@@ -102,7 +102,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
               ),
               clipBehavior: Clip.antiAlias,
               child: Container(
-                margin: const EdgeInsets.only(top: 15),
+                margin: const EdgeInsets.only(top: kDefaultPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -200,7 +200,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
             ),
             clipBehavior: Clip.antiAlias,
             child: Container(
-              margin: const EdgeInsets.only(top: 16),
+              margin: const EdgeInsets.only(top: kDefaultPadding),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

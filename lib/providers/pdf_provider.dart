@@ -12,10 +12,10 @@ import 'package:pdf/widgets.dart' as pw;
 import 'dart:html' as html;
 import 'package:http/http.dart' as http;
 
-final asyncPdfProvider =
-    AutoDisposeAsyncNotifierProvider<PdfProvider, PdfState>(
-  () => PdfProvider(),
-);
+// final asyncPdfProvider =
+//     AutoDisposeAsyncNotifierProvider<PdfProvider, PdfState>(
+//   () => PdfProvider(),
+// );
 
 class PdfProvider extends AutoDisposeAsyncNotifier<PdfState> {
   final pdf = pw.Document();
