@@ -55,14 +55,34 @@ class MasterAssetNotifier extends Notifier<MasterAssetState> {
     }
   }
 
-  createMasterAsset(MasterAsset masterAsset) async {
+  createOrEditMasterAsset(MasterAsset masterAsset, bool isEdit) async {
     state = MasterAssetLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse =
-        await masterAssetRepo.createMasterAsset(masterAsset, 'Bearer $token');
-    if (DEBUG) debugPrint(httpResponse.data.toString());
-    if (httpResponse.response.statusCode == 201) {
+    HttpResponse httpResponse;
+    if (isEdit) {
+      httpResponse = await masterAssetRepo.updateMasterAsset(
+          masterAsset.id!, masterAsset, 'Bearer $token');
+    } else {
+      httpResponse =
+          await masterAssetRepo.createMasterAsset(masterAsset, 'Bearer $token');
+    }
+
+    // if (DEBUG) debugPrint(httpResponse.response.statusCode.toString());
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
+      state = MasterAssetDataChangeSuccess();
+    }
+  }
+
+  deleteMasterAsset(int id) async {
+    state = MasterAssetLoading();
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    HttpResponse httpResponse =
+        await masterAssetRepo.deleteMasterAsset(id, token);
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
       state = MasterAssetDataChangeSuccess();
     }
   }

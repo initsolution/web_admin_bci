@@ -60,16 +60,35 @@ class MasterReportRegulerTorqueNotifier
     }
   }
 
-  createMasterReportRegulerTorqueRepo(
-      MasterReportRegulerTorque masterReportRegulerTorque) async {
+  createOrUpdateMasterReportRegulerTorqueRepo(
+      MasterReportRegulerTorque masterReportRegulerTorque, bool isEdit) async {
     state = MasterReportRegulerTorqueStateLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse =
-        await masterReportRegulerTorqueRepo.createMasterReportRegulerTorqueRepo(
-            masterReportRegulerTorque, 'Bearer $token');
-    if (DEBUG) debugPrint(httpResponse.data.toString());
-    if (httpResponse.response.statusCode == 201) {
+    HttpResponse httpResponse;
+    if (isEdit) {
+      httpResponse = await masterReportRegulerTorqueRepo
+          .updateMasterReportRegulerTorqueRepo(masterReportRegulerTorque.id!,
+              masterReportRegulerTorque, 'Bearer $token');
+    } else {
+      httpResponse = await masterReportRegulerTorqueRepo
+          .createMasterReportRegulerTorqueRepo(
+              masterReportRegulerTorque, 'Bearer $token');
+    }
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
+      state = MasterReportRegulerTorqueDataChangeSuccess();
+    }
+  }
+
+  deleteMasterReportRegulerTorque(int id) async {
+    state = MasterReportRegulerTorqueStateLoading();
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    HttpResponse httpResponse = await masterReportRegulerTorqueRepo
+        .deleteMasterReportRegulerTorqueRepo(id, token);
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
       state = MasterReportRegulerTorqueDataChangeSuccess();
     }
   }

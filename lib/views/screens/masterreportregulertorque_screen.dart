@@ -147,6 +147,8 @@ class _MasterReportRegulerTorqueScreenState
                             .watch(masterReportRegulerTorqueNotifierProvider);
                         if (state is MasterReportRegulerTorqueStateLoaded) {
                           DataTableSource data = MasterReportRegulerTorqueData(
+                              ref: ref,
+                              context: context,
                               masterTorque: state.masterReportRegulerTorque);
                           filterData = state.masterReportRegulerTorque;
                           return PaginatedDataTable(
@@ -195,6 +197,7 @@ class _MasterReportRegulerTorqueScreenState
                                   sort(columnIndex);
                                 },
                               ),
+                              const DataColumn(label: Text('Actions')),
                             ],
                             horizontalMargin: 10,
                             rowsPerPage: 10,
@@ -360,7 +363,10 @@ class _MasterReportRegulerTorqueScreenState
 
 class MasterReportRegulerTorqueData extends DataTableSource {
   final List<MasterReportRegulerTorque> masterTorque;
-  MasterReportRegulerTorqueData({required this.masterTorque});
+  final BuildContext context;
+  final WidgetRef ref;
+  MasterReportRegulerTorqueData(
+      {required this.masterTorque, required this.ref, required this.context});
 
   @override
   DataRow? getRow(int index) {
@@ -372,6 +378,64 @@ class MasterReportRegulerTorqueData extends DataTableSource {
       DataCell(Text(masterTorque[index].boltSize!)),
       DataCell(Text(masterTorque[index].minimumTorque!.toString())),
       DataCell(Text(masterTorque[index].qtyBolt!.toString())),
+      DataCell(Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    // debugPrint(masterAssets[index].toString());
+                    return SizedBox(
+                      child: DialogAddMasterReportRegulerTorque(
+                        isEdit: true,
+                        editMasterReportRegulerTorque: masterTorque[index],
+                      ),
+                    );
+                  });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Delete Master Reguler Torque'),
+                    content: Text(
+                        'Do you want to delete ${masterTorque[index].fabricator} - ${masterTorque[index].towerHeight}?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            ref
+                                .read(masterReportRegulerTorqueNotifierProvider
+                                    .notifier)
+                                .deleteMasterReportRegulerTorque(
+                                    masterTorque[index].id!);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(color: Colors.green),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'No',
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
+                  );
+                },
+              );
+            },
+          )
+        ],
+      ))
     ]);
   }
 

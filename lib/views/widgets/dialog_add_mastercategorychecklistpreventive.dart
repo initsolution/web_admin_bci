@@ -6,11 +6,22 @@ import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_prov
 
 // ignore: must_be_immutable
 class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
-  DialogAddMasterCategoryChecklistPreventive({super.key});
+  final bool isEdit;
+  MasterCategoryChecklistPreventive? editMasterCategoryChecklistPreventive;
+  DialogAddMasterCategoryChecklistPreventive(
+      {super.key,
+      this.isEdit = false,
+      this.editMasterCategoryChecklistPreventive});
   TextEditingController nameCategoryController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (isEdit) {
+      if (editMasterCategoryChecklistPreventive != null) {
+        nameCategoryController.text =
+            editMasterCategoryChecklistPreventive!.categoryName ?? '';
+      }
+    }
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2,
@@ -21,9 +32,9 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'New Master Category Checklist Preventive',
-                    style: TextStyle(fontSize: 30),
+                  Text(
+                    '${isEdit ? 'Edit' : 'New'} Master Category Checklist Preventive',
+                    style: const TextStyle(fontSize: 30),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -56,7 +67,7 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
                     saveMasterCategoryChecklistPreventive(ref),
                     Navigator.pop(context),
                   },
-                  child: const Text('SAVE'),
+                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
                 ),
               ),
             ],
@@ -69,13 +80,19 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
 
   void saveMasterCategoryChecklistPreventive(WidgetRef ref) {
     MasterCategoryChecklistPreventive masterCategoryChecklistPreventive =
-        MasterCategoryChecklistPreventive(categoryName: nameCategoryController.text);
+        MasterCategoryChecklistPreventive(
+            categoryName: nameCategoryController.text);
+    if (isEdit) {
+      masterCategoryChecklistPreventive.id =
+          editMasterCategoryChecklistPreventive!.id;
+    }
     if (DEBUG) {
       debugPrint('site : $masterCategoryChecklistPreventive.toString()');
     }
     ref
         .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
-        .createMasterCategoryChecklistPreventive(masterCategoryChecklistPreventive);
+        .createOrEditMasterCategoryChecklistPreventive(
+            masterCategoryChecklistPreventive, isEdit);
   }
 
   // Widget getDropdownRole() {

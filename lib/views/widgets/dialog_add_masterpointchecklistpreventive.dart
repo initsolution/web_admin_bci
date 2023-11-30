@@ -4,19 +4,39 @@ import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/model/mastercategorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/model/masterpointchecklistpreventive.dart';
 import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_provider.dart';
+import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_state.dart';
 import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_provider.dart';
 
 // ignore: must_be_immutable
 class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
-  final List<MasterCategoryChecklistPreventive> dataCategoryChecklistPreventive;
+  // final List<MasterCategoryChecklistPreventive> dataCategoryChecklistPreventive;
+  final bool isEdit;
+  MasterPointChecklistPreventive? editMasterPointChecklistPreventive;
   DialogAddmasterPointChecklistPreventive(
-      {super.key, required this.dataCategoryChecklistPreventive});
+      {super.key,
+      // required this.dataCategoryChecklistPreventive,
+      this.isEdit = false,
+      this.editMasterPointChecklistPreventive});
   TextEditingController kriteriaController = TextEditingController();
   TextEditingController uraianController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
+    if (isEdit) {
+      if (editMasterPointChecklistPreventive != null) {
+        debugPrint('awalan ${editMasterPointChecklistPreventive.toString()}');
+        kriteriaController.text =
+            editMasterPointChecklistPreventive!.kriteria ?? '';
+        uraianController.text =
+            editMasterPointChecklistPreventive!.uraian ?? '';
+        Future(() {
+          ref.read(selectedCategoryChecklistPreventive.notifier).state =
+              editMasterPointChecklistPreventive!.mcategorychecklistpreventive!;
+          ref.read(isChecklistMasterPointChecklist.notifier).state =
+              editMasterPointChecklistPreventive!.isChecklist ?? false;
+        });
+      }
+    }
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2,
@@ -27,9 +47,9 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'New Master Point Checklist Preventive',
-                  style: TextStyle(fontSize: 30),
+                Text(
+                  '${isEdit ? 'Edit' : 'New'} Master Point Checklist Preventive',
+                  style: const TextStyle(fontSize: 30),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -43,7 +63,23 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
               height: 15,
             ),
             const Text('Category Checklist Preventive'),
-            getDropdownCategory(dataCategoryChecklistPreventive),
+            Consumer(builder: ((context, ref, child) {
+              late List<MasterCategoryChecklistPreventive>
+                  dataCategoryChecklistPreventive;
+              var stateCategoryChecklistPreventive =
+                  ref.watch(masterCategoryChecklistPreventivNotifierProvider);
+              if (stateCategoryChecklistPreventive
+                  is MasterCategoryChecklistPreventiveLoaded) {
+                dataCategoryChecklistPreventive =
+                    stateCategoryChecklistPreventive.masterCategoryPrev;
+                if (!isEdit) {
+                  Future(() => ref
+                      .read(selectedCategoryChecklistPreventive.notifier)
+                      .state = dataCategoryChecklistPreventive[0]);
+                }
+              }
+              return getDropdownCategory(dataCategoryChecklistPreventive);
+            })),
             const SizedBox(
               height: 15,
             ),
@@ -83,13 +119,9 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
               child: ElevatedButton(
                 onPressed: () => {
                   saveMasterPointChecklistPreventive(ref),
-                  ref
-                      .read(masterPointChecklistPreventiveNotifierProvider
-                          .notifier)
-                      .getAllMasterPointChecklistPreventive(),
                   Navigator.pop(context),
                 },
-                child: const Text('SAVE'),
+                child: Text(isEdit ? 'EDIT' : 'SAVE'),
               ),
             ),
           ],
@@ -114,6 +146,8 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
         selectedMasterCategoryChecklistPreventive =
         ref.watch(selectedCategoryChecklistPreventive);
     final isChecklist = ref.watch(isChecklistMasterPointChecklist);
+
+    debugPrint('is checklist : $isChecklist');
     MasterPointChecklistPreventive masterPointChecklistPreventive =
         MasterPointChecklistPreventive(
             uraian: uraianController.text,
@@ -121,12 +155,15 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
             isChecklist: isChecklist,
             mcategorychecklistpreventive: MasterCategoryChecklistPreventive(
                 id: selectedMasterCategoryChecklistPreventive.id));
-    if (DEBUG) {
-      debugPrint('site : $masterPointChecklistPreventive.toString()');
+    if (isEdit) {
+      masterPointChecklistPreventive.id =
+          editMasterPointChecklistPreventive!.id;
     }
+    debugPrint(masterPointChecklistPreventive.toString());
     ref
         .read(masterPointChecklistPreventiveNotifierProvider.notifier)
-        .createMasterPointChecklistPreventive(masterPointChecklistPreventive);
+        .createOrEditMasterPointChecklistPreventive(
+            masterPointChecklistPreventive, isEdit);
   }
 
   // nanti di set value saat klik tombols

@@ -19,7 +19,11 @@ import 'package:go_router/go_router.dart';
 
 class MasterPointChecklistPreventivetData extends DataTableSource {
   final List<MasterPointChecklistPreventive> masterData;
-  MasterPointChecklistPreventivetData({required this.masterData});
+  final BuildContext context;
+  final WidgetRef ref;
+
+  MasterPointChecklistPreventivetData(
+      {required this.masterData, required this.context, required this.ref});
 
   @override
   DataRow? getRow(int index) {
@@ -28,6 +32,65 @@ class MasterPointChecklistPreventivetData extends DataTableSource {
           Text(masterData[index].mcategorychecklistpreventive!.categoryName!)),
       DataCell(Text(masterData[index].uraian!)),
       DataCell(Text(masterData[index].kriteria!)),
+      DataCell(Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return SizedBox(
+                      child: DialogAddmasterPointChecklistPreventive(
+                    isEdit: true,
+                    editMasterPointChecklistPreventive: masterData[index],
+                  ));
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title:
+                        const Text('Delete Master Point Checklist Preventive'),
+                    content: Text(
+                        'Do you want to delete ${masterData[index].kriteria}?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            ref
+                                .read(
+                                    masterPointChecklistPreventiveNotifierProvider
+                                        .notifier)
+                                .deleteMasterPointChecklistPreventive(
+                                    masterData[index].id!);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(color: Colors.green),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'No',
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
+                  );
+                },
+              );
+            },
+          )
+        ],
+      ))
     ]);
   }
 
@@ -59,9 +122,14 @@ class _MasterPointChecklistPreventiveScreenState
 
   @override
   void initState() {
-    Future(() => ref
-        .read(masterPointChecklistPreventiveNotifierProvider.notifier)
-        .getAllMasterPointChecklistPreventive());
+    Future(() {
+      ref
+          .read(masterPointChecklistPreventiveNotifierProvider.notifier)
+          .getAllMasterPointChecklistPreventive();
+      ref
+          .read(masterCategoryChecklistPreventivNotifierProvider.notifier)
+          .getAllMasterCategoryChecklistPreventive();
+    });
     super.initState();
   }
 
@@ -138,6 +206,8 @@ class _MasterPointChecklistPreventiveScreenState
                         if (state is MasterPointChecklistPreventiveLoaded) {
                           DataTableSource data =
                               MasterPointChecklistPreventivetData(
+                                  ref: ref,
+                                  context: context,
                                   masterData:
                                       state.masterPointChecklistPreventive);
                           filterData = state.masterPointChecklistPreventive;
@@ -161,6 +231,7 @@ class _MasterPointChecklistPreventiveScreenState
                                   sort(columnIndex);
                                 },
                               ),
+                              const DataColumn(label: Text('Actions')),
                             ],
                             source: data,
                             header:
@@ -256,37 +327,19 @@ class _MasterPointChecklistPreventiveScreenState
                         ),
                       ),
                       const Spacer(),
-                      Consumer(builder: ((context, ref, child) {
-                        late List<MasterCategoryChecklistPreventive>
-                            dataCategoryChecklistPreventive;
-                        var stateCategoryChecklistPreventive = ref.watch(
-                            masterCategoryChecklistPreventivNotifierProvider);
-                        if (stateCategoryChecklistPreventive
-                            is MasterCategoryChecklistPreventiveLoaded) {
-                          dataCategoryChecklistPreventive =
-                              stateCategoryChecklistPreventive
-                                  .masterCategoryPrev;
-                        }
-                        return IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            ref
-                                .read(selectedCategoryChecklistPreventive
-                                    .notifier)
-                                .state = dataCategoryChecklistPreventive[0];
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return SizedBox(
-                                    child:
-                                        DialogAddmasterPointChecklistPreventive(
-                                            dataCategoryChecklistPreventive:
-                                                dataCategoryChecklistPreventive));
-                              },
-                            );
-                          },
-                        );
-                      })),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                  child:
+                                      DialogAddmasterPointChecklistPreventive());
+                            },
+                          );
+                        },
+                      ),
                       const SizedBox(
                         width: 30,
                       ),

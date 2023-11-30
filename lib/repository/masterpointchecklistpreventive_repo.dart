@@ -21,9 +21,13 @@ abstract class MasterPointChecklistPreventiveRepo {
       @Body() MasterPointChecklistPreventive masterPointChecklistPreventive,
       @Header('Authorization') String token);
 
-  @PATCH(urlLocal)
+  @PATCH('$urlLocal/{id}')
   Future<HttpResponse> updateMasterPointChecklistPreventive(
       @Path() int id,
       @Body() MasterPointChecklistPreventive masterPointChecklistPreventive,
       @Header('Authorization') String token);
+
+  @DELETE('$urlLocal/{id}')
+  Future<HttpResponse> deleteMasterPointChecklistPreventive(
+      @Path() int id, @Header('Authorization') String token);
 }

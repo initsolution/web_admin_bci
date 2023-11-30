@@ -44,9 +44,9 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
   //   return EmployeeInitial();
   // }
 
-  getAllEmployee() async {
+  getAllEmployee({Map<String, dynamic>? header}) async {
     state = EmployeeLoading();
-    Map<String, dynamic> header = {};
+    // Map<String, dynamic> header = {};
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
@@ -85,6 +85,17 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
     final httpResponse = await employeeRepo.createEmployee(employee);
     debugPrint('${httpResponse.response.statusCode}');
     if (httpResponse.response.statusCode == 201) {
+      state = EmployeeDataChangeSuccess();
+    }
+  }
+
+  deleteEmployee(String nik) async {
+    state = EmployeeLoading();
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    HttpResponse httpResponse = await employeeRepo.deleteEmployee(nik, token);
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
       state = EmployeeDataChangeSuccess();
     }
   }

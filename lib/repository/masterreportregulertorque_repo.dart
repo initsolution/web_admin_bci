@@ -21,6 +21,12 @@ abstract class MasterReportRegulerTorqueRepo {
       @Header('Authorization') String token);
 
   @PATCH('/masterreportregulertorque/{id}')
-  Future<HttpResponse> updateMasterReportRegulerTorqueRepo(@Path() int id,
-      @Body() MasterReportRegulerTorque masterReportRegulerTorque);
+  Future<HttpResponse> updateMasterReportRegulerTorqueRepo(
+      @Path() int id,
+      @Body() MasterReportRegulerTorque masterReportRegulerTorque,
+      @Header('Authorization') String token);
+
+  @DELETE('/masterreportregulertorque/{id}')
+  Future<HttpResponse> deleteMasterReportRegulerTorqueRepo(
+      @Path() int id, @Header('Authorization') String token);
 }

@@ -36,4 +36,8 @@ abstract class EmployeeRepo {
     @Part(contentType: 'image/png', fileName: 'esign', name: 'file')
     List<int> file,
   );
+
+  @DELETE('/employee/{nik}')
+  Future<HttpResponse> deleteEmployee(
+      @Path() String nik, @Header('Authorization') String token);
 }

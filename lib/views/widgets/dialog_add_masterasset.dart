@@ -5,8 +5,11 @@ import 'package:flutter_web_ptb/model/masterasset.dart';
 import 'package:flutter_web_ptb/providers/masterasset_provider.dart';
 
 // ignore: must_be_immutable
-class DialogAddMasterAsset extends ConsumerWidget {
-  DialogAddMasterAsset({super.key});
+class DialogAddOrEditMasterAsset extends ConsumerWidget {
+  final bool isEdit;
+  MasterAsset? masterAsset;
+  DialogAddOrEditMasterAsset(
+      {super.key, this.isEdit = false, this.masterAsset});
   TextEditingController taskTypeController = TextEditingController();
   TextEditingController sectionController = TextEditingController();
   TextEditingController fabricatorController = TextEditingController();
@@ -16,6 +19,16 @@ class DialogAddMasterAsset extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (isEdit) {
+      if (masterAsset != null) {
+        taskTypeController.text = masterAsset!.taskType ?? '';
+        sectionController.text = masterAsset!.section ?? '';
+        fabricatorController.text = masterAsset!.fabricator ?? '';
+        towerHeightController.text = masterAsset!.towerHeight.toString();
+        categoryController.text = masterAsset!.category ?? '';
+        descriptionController.text = masterAsset!.description ?? '';
+      }
+    }
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
@@ -26,9 +39,9 @@ class DialogAddMasterAsset extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'New Master Asset',
-                    style: TextStyle(fontSize: 30),
+                  Text(
+                    '${(isEdit ? 'Edit' : 'New')} Master Asset',
+                    style: const TextStyle(fontSize: 30),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -126,7 +139,7 @@ class DialogAddMasterAsset extends ConsumerWidget {
                     saveMasterAsset(ref),
                     Navigator.pop(context),
                   },
-                  child: const Text('SAVE'),
+                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
                 ),
               ),
             ],
@@ -138,7 +151,7 @@ class DialogAddMasterAsset extends ConsumerWidget {
   }
 
   void saveMasterAsset(WidgetRef ref) {
-    MasterAsset masterAsset = MasterAsset(
+    MasterAsset masterAssetSaveEdit = MasterAsset(
       taskType: taskTypeController.text,
       section: sectionController.text,
       fabricator: fabricatorController.text,
@@ -146,12 +159,13 @@ class DialogAddMasterAsset extends ConsumerWidget {
       towerHeight: int.parse(towerHeightController.text),
       description: descriptionController.text,
     );
-    if (DEBUG) {
-      debugPrint('site : $masterAsset.toString()');
+    if (isEdit) {
+      masterAssetSaveEdit.id = masterAsset!.id;
     }
+    // debugPrint('before sent ${masterAssetSaveEdit.toString()}');
     ref
         .read(masterAssetNotifierProvider.notifier)
-        .createMasterAsset(masterAsset);
+        .createOrEditMasterAsset(masterAssetSaveEdit, isEdit);
   }
 
   // Widget getDropdownRole() {

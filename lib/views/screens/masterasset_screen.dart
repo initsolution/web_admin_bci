@@ -82,6 +82,8 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                           var state = ref.watch(masterAssetNotifierProvider);
                           if (state is MasterAssetLoaded) {
                             DataTableSource data = MasterAssetData(
+                                ref: ref,
+                                context: context,
                                 masterAssets: state.masterAssets);
                             filterData = state.masterAssets;
                             return PaginatedDataTable(
@@ -106,6 +108,7 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                                 const DataColumn(label: Text('Tower Height')),
                                 const DataColumn(label: Text('Category')),
                                 const DataColumn(label: Text('Description')),
+                                const DataColumn(label: Text('Actions')),
                               ],
                               horizontalMargin: 10,
                               rowsPerPage: 10,
@@ -207,7 +210,8 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                             showDialog(
                               context: context,
                               builder: (context) {
-                                return SizedBox(child: DialogAddMasterAsset());
+                                return SizedBox(
+                                    child: DialogAddOrEditMasterAsset());
                               },
                             ),
                           },
@@ -259,7 +263,10 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
 
 class MasterAssetData extends DataTableSource {
   final List<MasterAsset> masterAssets;
-  MasterAssetData({required this.masterAssets});
+  final BuildContext context;
+  final WidgetRef ref;
+  MasterAssetData(
+      {required this.masterAssets, required this.context, required this.ref});
 
   @override
   DataRow? getRow(int index) {
@@ -270,6 +277,62 @@ class MasterAssetData extends DataTableSource {
       DataCell(Text(masterAssets[index].towerHeight!.toString())),
       DataCell(Text(masterAssets[index].category!)),
       DataCell(Text(masterAssets[index].description!)),
+      DataCell(Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    // debugPrint(masterAssets[index].toString());
+                    return SizedBox(
+                      child: DialogAddOrEditMasterAsset(
+                        isEdit: true,
+                        masterAsset: masterAssets[index],
+                      ),
+                    );
+                  });
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Delete Master Asset'),
+                    content: Text(
+                        'Do you want to delete ${masterAssets[index].section}?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            ref
+                                .read(masterAssetNotifierProvider.notifier)
+                                .deleteMasterAsset(masterAssets[index].id!);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(color: Colors.green),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'No',
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
+                  );
+                },
+              );
+            },
+          )
+        ],
+      ))
     ]);
   }
 
