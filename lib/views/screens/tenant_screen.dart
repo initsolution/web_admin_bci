@@ -86,10 +86,12 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                           filterData = state.tenants;
                           return PaginatedDataTable(
                             source: data,
-                            header: const Text('Tenant'),
                             columns: [
                               DataColumn(
-                                label: const Text('Kode'),
+                                label: const Padding(
+                                  padding: EdgeInsets.only(left: 30),
+                                  child: Text('Kode'),
+                                ),
                                 onSort: (columnIndex, _) {
                                   sort(columnIndex);
                                 },
@@ -255,7 +257,10 @@ class TenantData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(tenants[index].kodeTenant!)),
+      DataCell(Padding(
+        padding: const EdgeInsets.only(left: 30),
+        child: Text(tenants[index].kodeTenant!),
+      )),
       DataCell(Text(tenants[index].name!)),
       DataCell(Text(tenants[index].isActive == true ? 'Active' : 'Deactive')),
     ]);

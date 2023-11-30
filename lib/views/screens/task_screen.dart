@@ -217,9 +217,12 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                               TaskData(tasks: state.tasks, context: context);
                           return PaginatedDataTable(
                             source: data,
-                            header: const Text('Task'),
                             columns: const [
-                              DataColumn(label: Text('Site')),
+                              DataColumn(
+                                  label: Padding(
+                                padding: EdgeInsets.only(left: 30),
+                                child: Text('Site'),
+                              )),
                               DataColumn(label: Text('Maker')),
                               DataColumn(label: Text('Verifier')),
                               DataColumn(label: Text('Status')),
@@ -227,7 +230,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                               DataColumn(label: Text('Created Date')),
                               DataColumn(label: Text('Delete')),
                             ],
-                            columnSpacing: 100,
+                            columnSpacing: 50,
                             horizontalMargin: 10,
                             rowsPerPage: 10,
                             showCheckboxColumn: false,
@@ -260,10 +263,26 @@ class TaskData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(tasks[index].site!.name!)),
+      DataCell(Padding(
+          padding: const EdgeInsets.only(left: 30),
+          child: Text(tasks[index].site!.name!))),
       DataCell(Text(tasks[index].makerEmployee!.name!)),
       DataCell(Text(tasks[index].verifierEmployee!.name!)),
-      DataCell(Text(tasks[index].status!)),
+      DataCell(Container(
+          width: 80,
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          decoration: BoxDecoration(
+            color: getColorIcon(tasks[index].status!),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
+          child: Text(
+            tasks[index].status!,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white),
+          ))),
+      // DataCell(Text(tasks[index].status!)),
       DataCell(Text(tasks[index].type!)),
       DataCell(Text(tasks[index].createdDate!)),
       DataCell(IconButton(
@@ -291,4 +310,19 @@ class TaskData extends DataTableSource {
 
   @override
   int get selectedRowCount => 0;
+
+  getColorIcon(String? status) {
+    switch (status) {
+      case 'todo':
+        return Colors.blue;
+      case 'review':
+        return Colors.amber;
+      case 'verified':
+        return Colors.green;
+      case 'notverified':
+        return Colors.red;
+      default:
+        return Colors.red;
+    }
+  }
 }

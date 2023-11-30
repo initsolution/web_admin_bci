@@ -18,8 +18,11 @@ import 'package:flutter_web_ptb/views/widgets/dialog_choose_image.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_detail_image.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
+import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
+import 'package:flutter_web_ptb/views/widgets/report_reguler_torque_widget.dart';
+import 'package:flutter_web_ptb/views/widgets/report_reguler_verticality.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:progressive_image/progressive_image.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -69,7 +72,28 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
             body: ListView(
               padding: const EdgeInsets.all(kDefaultPadding * 2),
               children: [
-                Header(title: 'Data Task', subMenu: '${widget.task.status}'),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Header(
+                        title: 'Data Task', subMenu: '${widget.task.status}'),
+                    const SizedBox(width: 30),
+                    Container(
+                      width: 100,
+                      padding: const EdgeInsets.all(kDefaultPadding / 2),
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Center(
+                        child: Text('${widget.task.type}',
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 20),
                 Card(
                   shape: const RoundedRectangleBorder(
@@ -355,166 +379,6 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
     );
   }
 
-  // savePDF(var pdf) async {
-  //   debugPrint('start save');
-  //   Uint8List pdfInBytes = await pdf.save();
-  //   final blob = html.Blob([pdfInBytes], 'application/pdf');
-  //   final url = html.Url.createObjectUrlFromBlob(blob);
-  //   anchor = html.document.createElement('a') as html.AnchorElement
-  //     ..href = url
-  //     ..style.display = 'none'
-  //     ..download = 'report_asset.pdf';
-  //   html.document.body!.children.add(anchor);
-  // }
-
-  // createPDF(var groupedItems) async {
-  //   debugPrint('create pdf');
-  //   var asset = await tableRender(groupedItems);
-  //   // List<pw.Widget> widgets = [];
-  //   // widgets.add(pw.Table(border: pw.TableBorder.all(), children: [...asset]));
-  //   // pdf.addPage(
-  //   //   pw.MultiPage(
-  //   //     pageFormat: PdfPageFormat.a4,
-  //   //     build: (context) {
-  //   //       // nanti di cari
-  //   //       return [
-  //   //         pw.Table(border: pw.TableBorder.all(), children: [...asset])
-  //   //       ];
-  //   //     },
-  //   //   ),
-  //   // );
-
-  //   pdf.addPage(
-  //     pw.MultiPage(
-  //       pageFormat: PdfPageFormat.a4,
-  //       build: (pw.Context context) {
-  //         return [
-  //           pw.Table(border: pw.TableBorder.all(), children: [...asset])
-  //         ];
-  //       },
-  //     ),
-  //   );
-  //   debugPrint('save to pdf');
-  //   savePDF(pdf);
-  // }
-
-  // FutureOr<List<pw.TableRow>> tableRender(var groupedItems) async {
-  //   List<pw.TableRow> dataRender = [];
-  //   // debugPrint('table render : ${assets.length}');
-  //   for (int i = 0; i < groupedItems.length; i++) {
-  //     String? category = groupedItems.keys.elementAt(i);
-  //     List itemsInCategory = groupedItems[category]!;
-  //     // Asset item = assets[i];
-  //     dataRender.add(pw.TableRow(children: [
-  //       pw.Column(children: [pw.Text('$category')])
-  //     ]));
-  //     for (int j = 0; j < itemsInCategory.length; j += 2) {
-  //       var response = await http.get(Uri.http(
-  //           '103.82.241.80:3000', '/asset/getImage/${itemsInCategory[j].id}'));
-  //       var gambarAsset = response.bodyBytes;
-  //       dataRender.add(
-  //         pw.TableRow(
-  //           children: [
-  //             pw.Column(children: [
-  //               pw.SizedBox(
-  //                 height: 144,
-  //                 width: 192,
-  //                 child: pw.Image(
-  //                   pw.MemoryImage(gambarAsset.buffer.asUint8List()),
-  //                   fit: pw.BoxFit.contain,
-  //                 ),
-  //               ),
-  //               pw.Text(itemsInCategory[j].description!)
-  //             ]),
-  //             if (j + 1 < itemsInCategory.length)
-  //               pw.Column(children: [
-  //                 pw.SizedBox(
-  //                   height: 144,
-  //                   width: 192,
-  //                   child: pw.Image(
-  //                     pw.MemoryImage(gambarAsset.buffer.asUint8List()),
-  //                     fit: pw.BoxFit.contain,
-  //                   ),
-  //                 ),
-  //                 pw.Text(itemsInCategory[j + 1].description!)
-  //               ])
-  //           ],
-  //         ),
-  //       );
-  //     }
-  //   }
-  //   return dataRender;
-  // }
-
-  // FutureOr<List<pw.TableRow>> tableRender(
-  //     var groupedItems, List<Asset> assets) async {
-  //   List<pw.TableRow> dataRender = [];
-  //   for (int i = 0; i < groupedItems.length; i++) {
-  //     String? category = groupedItems.keys.elementAt(i);
-  //     debugPrint('table render $category');
-  //     List itemsInCategory = groupedItems[category]!;
-  //     pw.TableRow tableRow = pw.TableRow(children: [
-  //       pw.Container(
-  //           child:
-  //               pw.Text(category ?? '', style: const pw.TextStyle(fontSize: 8)),
-  //           padding: const pw.EdgeInsets.symmetric(vertical: 3, horizontal: 3)),
-  //       pw.Container(
-  //           child: pw.Text('', style: const pw.TextStyle(fontSize: 8)),
-  //           padding: const pw.EdgeInsets.symmetric(vertical: 3, horizontal: 3)),
-  //     ]);
-  //     dataRender.add(tableRow);
-  //     debugPrint('in i : $i length ${dataRender.length}');
-  //     int temp = 1;
-  //     for (int j = 0; j < itemsInCategory.length; j++) {
-  //       pw.TableRow tableRowIsi;
-  //       Asset item = itemsInCategory[j];
-  //       List<pw.Container> dataGambar = [];
-  //       debugPrint('temp : $temp');
-  //       if (temp > 2) {
-  //         tableRowIsi = pw.TableRow(children: [...dataGambar]);
-  //         dataRender.add(tableRowIsi);
-  //         debugPrint('in i : $i in j: $j length ${dataRender.length}');
-  //         if (j < itemsInCategory.length) {
-  //           debugPrint(item.description!);
-  //           dataGambar.add(pw.Container(
-  //               child: pw.Column(children: [
-  //             // pw.SizedBox(
-  //             //   height: 30 * 0.75,
-  //             //   width: 30 * 0.55,
-  //             //   child: pw.Image(
-  //             //     pw.MemoryImage(gambarAsset.buffer.asUint8List()),
-  //             //     fit: pw.BoxFit.contain,
-  //             //   ),
-  //             // ),
-  //             pw.Text(item.description!)
-  //           ])));
-  //         }
-  //         temp = 1;
-  //       } else {
-  //         debugPrint(item.description!);
-  //         // var response = await http.get(
-  //         //     Uri.http('103.82.241.80:3000', '/asset/getImage/${item.id}'));
-  //         // var gambarAsset = response.bodyBytes;
-
-  //         dataGambar.add(pw.Container(
-  //             child: pw.Column(children: [
-  //           // pw.SizedBox(
-  //           //   height: 30 * 0.75,
-  //           //   width: 30 * 0.55,
-  //           //   child: pw.Image(
-  //           //     pw.MemoryImage(gambarAsset.buffer.asUint8List()),
-  //           //     fit: pw.BoxFit.contain,
-  //           //   ),
-  //           // ),
-  //           pw.Text(item.description!)
-  //         ])));
-  //         temp++;
-  //       }
-  //     }
-  //   }
-  //   return dataRender;
-  // }
-
   Widget formAsset(var groupedItems, List<Asset> assets) {
     final themeData = Theme.of(context);
 
@@ -527,39 +391,39 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // Consumer(
-              //   builder: (context, ref, child) {
-              //     final asyncPdf = ref.watch(asyncPdfProvider);
-              //     return asyncPdf.when(
-              //       data: (data) {
-              //         debugPrint('data: ${data.toString()}');
-              //         // if (data is PdfReady) {
-              //           return IconButton(
-              //               onPressed: () {
-              //                 ref.read(asyncPdfProvider.notifier).anchorClick();
-              //               },
-              //               icon: const Icon(Icons.picture_as_pdf_rounded));
-              //         // } else {
-              //         //   return const Icon(Icons.picture_as_pdf_outlined);
-              //         // }
-              //       },
-              //       error: (error, stackTrace) =>
-              //           const Icon(Icons.picture_as_pdf_outlined),
-              //       loading: () => const CircularProgressIndicator(),
+              // GestureDetector(
+              //   onTap: () {
+              //     GoRouter.of(context).go(
+              //       RouteUri.reportChecklist,
+              //       extra: widget.task.categorychecklistprev!,
               //     );
               //   },
+              //   child: Container(
+              //     width: 200,
+              //     padding: const EdgeInsets.all(kDefaultPadding / 2),
+              //     decoration: BoxDecoration(
+              //       color: Colors.blue[900],
+              //       borderRadius: BorderRadius.circular(10),
+              //     ),
+              //     child: Row(
+              //       children: [
+              //         SvgPicture.asset('assets/icons/ic_report_checklist.svg',
+              //             width: 24, height: 24),
+              //         const SizedBox(width: 20),
+              //         const Text('REPORT CHECKLIST',
+              //             style: TextStyle(
+              //                 color: Colors.white,
+              //                 fontWeight: FontWeight.bold)),
+              //       ],
+              //     ),
+              //   ),
               // ),
-
-              // IconButton(
-              //   icon: const Icon(Icons.picture_as_pdf_rounded),
-              //   onPressed: () {
-              //     // anchor.click();
-              //   },
-              // ),
-
+              // const Spacer(),
               IconButton(
                   onPressed: () async {
-                    await launchUrlString('http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}', mode: LaunchMode.platformDefault);
+                    await launchUrlString(
+                        'http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}',
+                        mode: LaunchMode.platformDefault);
                   },
                   icon: const Icon(Icons.print)),
               const SizedBox(
@@ -595,6 +459,10 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
               ),
             ],
           ),
+          const SizedBox(
+            height: 10,
+          ),
+          _buildReport(widget.task.type?.toLowerCase() ?? 'unknown'),
           const SizedBox(
             height: 10,
           ),
@@ -743,6 +611,91 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
         ],
       ),
     );
+  }
+
+  Widget _buildReport(String type) {
+    if (type == 'preventive') {
+      return ExpansionTile(
+        collapsedShape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            side: BorderSide(width: 1, color: Color.fromRGBO(13, 71, 161, 1))),
+        collapsedBackgroundColor: Colors.blue[900],
+        backgroundColor: Colors.blue[900],
+        textColor: Colors.white,
+        collapsedTextColor: Colors.white,
+        maintainState: true,
+        iconColor: Colors.white,
+        collapsedIconColor: Colors.white,
+        trailing: const Icon(Icons.arrow_drop_down),
+        leading: SvgPicture.asset('assets/icons/ic_report_checklist.svg',
+            width: 32, height: 32),
+        title: const Text('Report Checklist'),
+        children: [
+          ReportPreventiveWidget(
+            categoryChecklistPreventives: widget.task.categorychecklistprev!,
+          ),
+        ],
+      );
+    } else if (type == 'reguler') {
+      return Column(
+        children: [
+          ExpansionTile(
+            collapsedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                side: BorderSide(width: 1, color: Colors.blue)),
+            collapsedBackgroundColor: Colors.blue,
+            backgroundColor: Colors.blue,
+            textColor: Colors.white,
+            collapsedTextColor: Colors.white,
+            maintainState: true,
+            iconColor: Colors.white,
+            collapsedIconColor: Colors.white,
+            trailing: const Icon(Icons.arrow_drop_down),
+            leading: SvgPicture.asset('assets/icons/ic_report_torque.svg',
+                width: 32, height: 32),
+            title: const Text('Report Bolt Tightening Torque'),
+            children: [
+              ReportRegulerTorqueWidget(
+                reportRegulerTorque: reportRegulerTorque!,
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          ExpansionTile(
+            collapsedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                side: BorderSide(width: 1, color: Colors.pink)),
+            collapsedBackgroundColor: Colors.pink,
+            backgroundColor: Colors.pink,
+            textColor: Colors.white,
+            collapsedTextColor: Colors.white,
+            maintainState: true,
+            iconColor: Colors.white,
+            collapsedIconColor: Colors.white,
+            trailing: const Icon(Icons.arrow_drop_down),
+            leading: SvgPicture.asset('assets/icons/ic_report_verticality.svg',
+                width: 32, height: 32),
+            title: const Text('Report Verticality'),
+            children: [
+              ReportRegulerVerticalityWidget(
+                  reportRegulerVerticality:
+                      widget.task.reportRegulerVerticality!),
+            ],
+          ),
+        ],
+      );
+    } else {
+      return Container();
+    }
   }
 }
 

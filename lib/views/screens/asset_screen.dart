@@ -124,41 +124,10 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const SizedBox(
-                          width: 20,
-                        ),
+                        const SizedBox(width: 20),
                         SizedBox(
-                          width: 150,
-                          // height: 40,
-                          child: getDropdownStatus(),
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        datePick(),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.refresh),
-                          onPressed: () {
-                            ref
-                                .read(taskNotifierProvider.notifier)
-                                .getAllTask(params);
-                          },
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        SizedBox(
-                          width: 100,
-                          // height: 40,
+                          width: 400,
+                          height: 40,
                           child: TextField(
                             onChanged: (value) => Future(() => ref
                                 .read(taskNotifierProvider.notifier)
@@ -171,9 +140,26 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                                 )),
                           ),
                         ),
-                        const SizedBox(
-                          width: 30,
+                        const Spacer(),
+                        const Text('Status : '),
+                        const SizedBox(width: 10),
+                        SizedBox(
+                          width: 150,
+                          // height: 40,
+                          child: getDropdownStatus(),
                         ),
+                        const SizedBox(width: 30),
+                        datePick(),
+                        const SizedBox(width: 30),
+                        IconButton(
+                          icon: const Icon(Icons.refresh),
+                          onPressed: () {
+                            ref
+                                .read(taskNotifierProvider.notifier)
+                                .getAllTask(params);
+                          },
+                        ),
+                        const SizedBox(width: 30),
                       ],
                     ),
                     const SizedBox(
@@ -193,9 +179,9 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   Widget datePick() {
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         side: const BorderSide(color: Color.fromARGB(255, 187, 201, 230)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         foregroundColor: Colors.white,
         elevation: 0,
         shadowColor: Colors.transparent,
@@ -249,7 +235,11 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                 return PaginatedDataTable(
                   source: data,
                   columns: const [
-                    DataColumn(label: Text('ID')),
+                    DataColumn(
+                        label: Padding(
+                      padding: EdgeInsets.only(left: 30),
+                      child: Text('ID'),
+                    )),
                     DataColumn(label: Text('Site')),
                     DataColumn(label: Text('Maker')),
                     DataColumn(label: Text('Verifier')),
@@ -287,7 +277,8 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
     return Consumer(builder: (_, WidgetRef ref, __) {
       return DropdownButtonFormField(
         decoration: InputDecoration(
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
           // enabledBorder: OutlineInputBorder(
           //   borderRadius: BorderRadius.circular(40),
           // ),
@@ -322,7 +313,10 @@ class TaskData extends DataTableSource {
     Task task = tasks[index];
     // debugPrint(task.site?.name.toString());
     return DataRow(cells: [
-      DataCell(Text(task.id!.toString())),
+      DataCell(Padding(
+        padding: const EdgeInsets.only(left: 30),
+        child: Text(task.id!.toString()),
+      )),
       DataCell(Text(task.site!.name!)),
       DataCell(Text(task.makerEmployee!.name!)),
       DataCell(Text(task.verifierEmployee!.name!)),
@@ -345,8 +339,7 @@ class TaskData extends DataTableSource {
       DataCell(task.status != 'todo'
           ? TextButton(
               style: TextButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
-                  foregroundColor: Colors.white),
+                  backgroundColor: Colors.black, foregroundColor: Colors.white),
               child: const Text('Detail'),
               onPressed: () {
                 Map<String, dynamic> header = {

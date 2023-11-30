@@ -86,3 +86,6 @@
 
 > 28/11/2023
 > update ui/ux verificator
+
+> 30/11/2023
+> update ui/ux verificator : add checklist, torque, verticality report

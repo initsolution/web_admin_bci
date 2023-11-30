@@ -108,10 +108,12 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                             return PaginatedDataTable(
                               // sortColumnIndex: 0,
                               source: data,
-                              header: const Text('Employee'),
                               columns: [
                                 DataColumn(
-                                  label: const Text('Nik'),
+                                  label: const Padding(
+                                    padding: EdgeInsets.only(left: 30),
+                                    child: Text('Nik'),
+                                  ),
                                   onSort: (columnIndex, _) {
                                     sort(columnIndex);
                                   },
@@ -357,7 +359,10 @@ class EmployeeData extends DataTableSource {
   @override
   DataRow? getRow(int index) {
     return DataRow(cells: [
-      DataCell(Text(employees[index].nik!)),
+      DataCell(Padding(
+        padding: const EdgeInsets.only(left: 30),
+        child: Text(employees[index].nik!),
+      )),
       DataCell(Text(employees[index].name!)),
       DataCell(Text(employees[index].email!)),
       DataCell(Text(employees[index].hp!)),

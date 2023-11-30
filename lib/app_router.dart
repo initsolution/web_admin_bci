@@ -1,3 +1,4 @@
+import 'package:flutter_web_ptb/model/categorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/views/screens/asset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_detail_screen.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_web_ptb/views/screens/result_asset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/site_screen.dart';
 import 'package:flutter_web_ptb/views/screens/task_screen.dart';
 import 'package:flutter_web_ptb/views/screens/tenant_screen.dart';
+import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class RouteUri {
@@ -36,6 +38,9 @@ class RouteUri {
       '/masterPointChecklistPreventive';
   static const String asset = '/asset';
   static const String resultAsset = '/result-asset';
+  static const String reportChecklist = '/report-checklist';
+  static const String reportTorque = '/report-torque';
+  static const String reportVerticality = '/report-verticality';
   // static const String form = '/form';
   // static const String generalUi = '/general-ui';
   // static const String colors = '/colors';
@@ -172,6 +177,17 @@ GoRouter appRouter(bool isUserLoggedIn) {
               child: ResultAssetScreen(
                 task: task,
               ));
+        },
+      ),
+      GoRoute(
+        path: RouteUri.reportChecklist,
+        pageBuilder: (context, state) {
+          List<CategoryChecklistPreventive> report =
+              state.extra as List<CategoryChecklistPreventive>;
+          return NoTransitionPage<void>(
+              key: state.pageKey,
+              child:
+                  ReportPreventiveWidget(categoryChecklistPreventives: report));
         },
       ),
     ],
