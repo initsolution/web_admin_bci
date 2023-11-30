@@ -5,7 +5,9 @@ import 'package:flutter_web_ptb/providers/employee_provider.dart';
 
 // ignore: must_be_immutable
 class DialogAddEmployee extends ConsumerWidget {
-  DialogAddEmployee({super.key});
+  final bool isEdit;
+  Employee? editEmployee;
+  DialogAddEmployee({super.key, this.isEdit = false, this.editEmployee});
   TextEditingController nikController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -14,6 +16,23 @@ class DialogAddEmployee extends ConsumerWidget {
   TextEditingController instansiController = TextEditingController();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (isEdit) {
+      if (editEmployee != null) {
+        nikController.text = editEmployee!.nik ?? '';
+        nameController.text = editEmployee!.name ?? '';
+        emailController.text = editEmployee!.email ?? '';
+        phoneController.text = editEmployee!.hp ?? '';
+        instansiController.text = editEmployee!.instansi ?? '';
+        if (editEmployee!.role!.toLowerCase() != 'superadmin') {
+          Future(() => ref.read(employeeRoleProvider.notifier).state =
+              editEmployee!.role ?? '');
+        }
+        String isVendor =
+            editEmployee!.isVendor! == true ? 'Vendor' : 'Internal';
+        Future(
+            () => ref.read(employeeVendorProvider.notifier).state = isVendor);
+      }
+    }
     return AlertDialog(
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
@@ -24,9 +43,9 @@ class DialogAddEmployee extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'New Employee',
-                    style: TextStyle(fontSize: 30),
+                  Text(
+                    '${isEdit ? 'Edit' : 'New'} Employee',
+                    style: const TextStyle(fontSize: 30),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -43,6 +62,7 @@ class DialogAddEmployee extends ConsumerWidget {
               TextField(
                 controller: nikController,
                 keyboardType: TextInputType.text,
+                enabled: !isEdit,
                 obscureText: false,
                 decoration: const InputDecoration(
                   hintText: 'Please type your NIK',
@@ -140,7 +160,7 @@ class DialogAddEmployee extends ConsumerWidget {
                   saveEmployee(ref),
                   Navigator.pop(context),
                 },
-                child: const Text('SAVE'),
+                child: Text(isEdit ? 'EDIT' : 'SAVE'),
               ),
             ],
           ),
@@ -163,7 +183,13 @@ class DialogAddEmployee extends ConsumerWidget {
         isActive: true,
         isVendor: employeeVendor == 'Vendor' ? true : false,
         instansi: instansiController.text);
-    ref.read(employeeNotifierProvider.notifier).createEmployee(employee);
+    if (isEdit) {
+      ref
+          .read(employeeNotifierProvider.notifier)
+          .updateEmployeeWithFile(employee: employee, file: null);
+    } else {
+      ref.read(employeeNotifierProvider.notifier).createEmployee(employee);
+    }
   }
 
   Widget getDropdownRole() {

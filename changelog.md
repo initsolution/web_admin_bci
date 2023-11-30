@@ -90,3 +90,6 @@
 > 28/11/2023 (mip)
 > 1. Update all master
 > 2. Delete all master (jangan lupa drop dulu tabel master category dan tabel point category)
+
+> 30/11/2023 (mip)
+> 1. optimasi employee(update and filter)

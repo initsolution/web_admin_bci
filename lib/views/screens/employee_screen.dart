@@ -10,6 +10,7 @@ import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_employee.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_filter_employee.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -103,8 +104,10 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                           var state = ref.watch(employeeNotifierProvider);
                           if (state is EmployeeLoaded) {
                             filterData = state.employees;
-                            DataTableSource data =
-                                EmployeeData(employees: filterData);
+                            DataTableSource data = EmployeeData(
+                                employees: filterData,
+                                context: context,
+                                ref: ref);
                             return PaginatedDataTable(
                               // sortColumnIndex: 0,
                               source: data,
@@ -142,6 +145,9 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                                 ),
                                 const DataColumn(
                                   label: Text('Role'),
+                                ),
+                                const DataColumn(
+                                  label: Text('Action'),
                                 ),
                               ],
                               horizontalMargin: 10,
@@ -265,14 +271,12 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                         ),
                         IconButton(
                           icon: const Icon(Icons.filter_list),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) =>
+                                    const DialogFilterEmployee());
+                          },
                         ),
                         const SizedBox(
                           width: 30,
@@ -288,62 +292,6 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
               ),
             ),
           ),
-          // Table(
-          //   border: TableBorder.all(),
-          //   columnWidths: const <int, TableColumnWidth>{
-          //     0: FixedColumnWidth(50),
-          //     1: FlexColumnWidth(),
-          //     2: FixedColumnWidth(200),
-          //   },
-          //   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          //   children: <TableRow>[
-          //     const TableRow(
-          //       children: <Widget>[
-          //         SizedBox(
-          //           height: 25,
-          //           child: Center(
-          //             child: Text('No'),
-          //           ),
-          //         ),
-          //         SizedBox(
-          //           height: 25,
-          //           child: Center(
-          //             child: Text('Karyawan'),
-          //           ),
-          //         ),
-          //         SizedBox(
-          //           height: 25,
-          //           child: Center(
-          //             child: Text('Role'),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //     TableRow(
-          //       decoration: const BoxDecoration(
-          //         color: Colors.grey,
-          //       ),
-          //       children: <Widget>[
-          //         Container(
-          //           height: 64,
-          //           width: 128,
-          //           color: Colors.purple,
-          //         ),
-          //         Container(
-          //           height: 32,
-          //           color: Colors.yellow,
-          //         ),
-          //         Center(
-          //           child: Container(
-          //             height: 32,
-          //             width: 32,
-          //             color: Colors.orange,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
@@ -352,7 +300,10 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
 
 class EmployeeData extends DataTableSource {
   final List<Employee> employees;
-  EmployeeData({required this.employees});
+  final BuildContext context;
+  final WidgetRef ref;
+  EmployeeData(
+      {required this.employees, required this.context, required this.ref});
 
   @override
   DataRow? getRow(int index) {
@@ -364,6 +315,61 @@ class EmployeeData extends DataTableSource {
       DataCell(Text(employees[index].isActive == true ? 'Active' : 'Deactive')),
       DataCell(Text(employees[index].isVendor == true ? 'Vendor' : 'Internal')),
       DataCell(Text(employees[index].role!)),
+      DataCell(Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return SizedBox(
+                      child: DialogAddEmployee(
+                    isEdit: true,
+                    editEmployee: employees[index],
+                  ));
+                },
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Delete Employee'),
+                    content:
+                        Text('Do you want to delete ${employees[index].name}?'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            ref
+                                .read(employeeNotifierProvider.notifier)
+                                .deleteEmployee(employees[index].nik!);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(color: Colors.green),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            'No',
+                            style: TextStyle(color: Colors.red),
+                          ))
+                    ],
+                  );
+                },
+              );
+            },
+          )
+        ],
+      ))
     ]);
   }
 

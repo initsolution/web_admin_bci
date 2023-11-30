@@ -151,7 +151,8 @@ class DialogProfileEmployee extends ConsumerWidget {
                         passwordController:
                             passwordController.value.toString().isNotEmpty
                                 ? passwordController
-                                : null),
+                                : null,
+                        employeeOri: employee),
                     Navigator.pop(context),
                   },
                   child: const Text('Edit'),
@@ -167,17 +168,28 @@ class DialogProfileEmployee extends ConsumerWidget {
       required TextEditingController nameController,
       required TextEditingController emailController,
       required TextEditingController phoneController,
-      TextEditingController? passwordController}) {
+      TextEditingController? passwordController,
+      required Employee employeeOri}) {
+    debugPrint('ori : ${employeeOri.toString()}');
     Employee employee = Employee(
-      nik: nikController.text,
-      name: nameController.text,
-      email: emailController.text,
-      hp: phoneController.text,
-      password: passwordController!.text == '' ? null : passwordController.text,
-    );
+        nik: nikController.text,
+        name: nameController.text,
+        email: emailController.text,
+        hp: phoneController.text,
+        password: passwordController!.text == '' ? '' : passwordController.text,
+        instansi: employeeOri.instansi,
+        isActive: employeeOri.isActive,
+        role: employeeOri.role,
+        isVendor: employeeOri.isVendor);
     debugPrint(employee.toString());
-    ref.read(employeeNotifierProvider.notifier).updateEmployeeWithFile(
-        employee: employee, file: result!.files.first.bytes);
+    if (result != null) {
+      ref.read(employeeNotifierProvider.notifier).updateEmployeeWithFile(
+          employee: employee, file: result!.files.first.bytes);
+    } else {
+      ref
+          .read(employeeNotifierProvider.notifier)
+          .updateEmployeeWithFile(employee: employee, file: null);
+    }
   }
 
   void pickFile() async {
