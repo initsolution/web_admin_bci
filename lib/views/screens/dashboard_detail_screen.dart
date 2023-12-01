@@ -9,6 +9,7 @@ import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart
 import 'package:flutter_web_ptb/views/widgets/card_elements.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
+import 'package:intl/intl.dart';
 
 class DashboardDetailScreen extends ConsumerStatefulWidget {
   const DashboardDetailScreen({Key? key}) : super(key: key);
@@ -20,6 +21,11 @@ class DashboardDetailScreen extends ConsumerStatefulWidget {
 
 class _DashboardDetailScreenState extends ConsumerState<DashboardDetailScreen> {
   final _dataTableHorizontalScrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -41,10 +47,7 @@ class _DashboardDetailScreenState extends ConsumerState<DashboardDetailScreen> {
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
         children: [
-          const Header(
-            title: 'Dashboard',
-            subMenu: 'submenu dashboard'
-          ),
+          const Header(title: 'Dashboard', subMenu: 'submenu dashboard'),
           Padding(
             padding: const EdgeInsets.only(bottom: kDefaultPadding),
             child: Card(
@@ -146,12 +149,6 @@ class _DashboardDetailScreenState extends ConsumerState<DashboardDetailScreen> {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, RouteUri.employee);
-            },
-            child: Text('Tekann'),
-          )
         ],
       ),
     );
