@@ -46,28 +46,39 @@ class PortalMasterLayout extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final themeData = Theme.of(context);
-    var token = ref.watch(userDataProvider.select((value) => value.token));
-    var role = "";
-    if (token != null) {
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(token)['employee'];
-      role = decodedToken['role'];
-      debugPrint('role : $role');
-    }
-    final drawer = _sidebar(context, role);
+    // var token = ref.watch(userDataProvider.select((value) => value.token));
+    // var role = "";
+    // if (token != null) {
+    //   Map<String, dynamic> decodedToken = JwtDecoder.decode(token)['employee'];
+    //   role = decodedToken['role'];
+    //   debugPrint('role : $role');
+    // }
+    // final drawer = _sidebar(context, role);
 
-    return Scaffold(
-      appBar: AppBar(
-        actions: const [ProfileCard()],
-      ),
-      drawer: drawer,
-      drawerEnableOpenDragGesture: false,
-      onDrawerChanged: onDrawerChanged,
-      body: _responsiveBody(context),
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      floatingActionButtonAnimator: floatingActionButtonAnimator,
-      persistentFooterButtons: persistentFooterButtons,
-    );
+    return Consumer(builder: (context, snapshot, child) {
+      var token = ref.watch(userDataProvider.select((value) => value.token));
+      var role = "";
+      if (token != '') {
+        Map<String, dynamic> decodedToken =
+            JwtDecoder.decode(token)['employee'];
+        role = decodedToken['role'];
+        debugPrint('role : $role');
+      }
+      final drawer = _sidebar(context, role);
+      return Scaffold(
+        appBar: AppBar(
+          actions: const [ProfileCard()],
+        ),
+        drawer: drawer,
+        drawerEnableOpenDragGesture: false,
+        onDrawerChanged: onDrawerChanged,
+        body: _responsiveBody(context),
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        floatingActionButtonAnimator: floatingActionButtonAnimator,
+        persistentFooterButtons: persistentFooterButtons,
+      );
+    });
   }
 
   Widget _responsiveBody(BuildContext context) {

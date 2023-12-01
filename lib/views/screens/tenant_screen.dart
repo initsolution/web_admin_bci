@@ -212,27 +212,27 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                         const SizedBox(
                           width: 30,
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.filter_list),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.filter_list),
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(
+                        //   width: 30,
+                        // ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.search),
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(
+                        //   width: 30,
+                        // ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.more_vert),
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(
+                        //   width: 30,
+                        // ),
                       ],
                     ),
                     const SizedBox(

@@ -526,7 +526,7 @@ class SiteData extends DataTableSource {
       DataCell(Text(sites[index].longitude!.toString())),
       DataCell(Text(sites[index].latitude!.toString())),
       DataCell(IconButton(
-        icon: const Icon(Icons.settings),
+        icon: const Icon(Icons.edit),
         onPressed: () {
           Map<String, dynamic> header = {"filter": "isActive||eq||true"};
           ref.read(tenantNotifierProvider.notifier).getAllTenant(header);

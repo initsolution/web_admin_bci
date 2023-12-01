@@ -10,6 +10,7 @@ import 'package:flutter_web_ptb/model/tenant.dart';
 import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_web_ptb/providers/tenant_provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:multiselect/multiselect.dart';
 
 import '../../providers/tenant_state.dart';

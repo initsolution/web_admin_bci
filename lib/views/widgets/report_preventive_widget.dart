@@ -194,60 +194,103 @@ class ReportPreventiveWidget extends StatelessWidget {
         ..sort((a, b) => a.orderIndex!.compareTo(b.orderIndex!));
       for (int j = 0; j < dataPoint.length; j++) {
         PointChecklistPreventive pointChecklistPreventive = dataPoint[j];
-        TableRow pointCheck = TableRow(children: [
-          TableCell(
-            child: Padding(
+        TableRow pointCheck;
+        if (pointChecklistPreventive.isChecklist ?? false) {
+          pointCheck = TableRow(children: [
+            TableCell(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: kDefaultPadding / 2,
+                    bottom: kDefaultPadding / 2,
+                    left: 20,
+                    right: 20),
+                child:
+                    Text('${(pointChecklistPreventive.orderIndex ?? 0) + 1}'),
+              ),
+            ),
+            TableCell(
+                child: Padding(
               padding: const EdgeInsets.only(
                   top: kDefaultPadding / 2,
                   bottom: kDefaultPadding / 2,
                   left: 20,
                   right: 20),
-              child: Text('${(pointChecklistPreventive.orderIndex ?? 0) + 1}'),
-            ),
-          ),
-          TableCell(
-              child: Padding(
-            padding: const EdgeInsets.only(
-                top: kDefaultPadding / 2,
-                bottom: kDefaultPadding / 2,
-                left: 20,
-                right: 20),
-            child: Text('${pointChecklistPreventive.uraian}'),
-          )),
-          TableCell(
-              child: Padding(
-            padding: const EdgeInsets.only(
-                top: kDefaultPadding / 2,
-                bottom: kDefaultPadding / 2,
-                left: 20,
-                right: 20),
-            child: Text('${pointChecklistPreventive.kriteria}'),
-          )),
-          TableCell(
-              child: pointChecklistPreventive.hasil!.toUpperCase() != 'OK'
-                  ? Container()
-                  : const Icon(Icons.check)),
-          TableCell(
-              child: pointChecklistPreventive.hasil!.toUpperCase() != 'NOK'
-                  ? Container()
-                  : const Icon(Icons.check)),
-          TableCell(
-              child: pointChecklistPreventive.hasil!.toUpperCase() != 'NA'
-                  ? Container()
-                  : const Icon(Icons.check)),
-          TableCell(
-              child: Padding(
-            padding: const EdgeInsets.only(
-                top: kDefaultPadding / 2,
-                bottom: kDefaultPadding / 2,
-                left: 20,
-                right: 20),
-            child: Text(pointChecklistPreventive.keterangan != null
-                ? '${pointChecklistPreventive.keterangan}'
-                : ''),
-          ))
-        ]);
-
+              child: Text('${pointChecklistPreventive.uraian}'),
+            )),
+            TableCell(
+                child: Padding(
+              padding: const EdgeInsets.only(
+                  top: kDefaultPadding / 2,
+                  bottom: kDefaultPadding / 2,
+                  left: 20,
+                  right: 20),
+              child: Text('${pointChecklistPreventive.kriteria}'),
+            )),
+            TableCell(
+                child: pointChecklistPreventive.hasil!.toUpperCase() != 'OK'
+                    ? Container()
+                    : const Icon(Icons.check)),
+            TableCell(
+                child: pointChecklistPreventive.hasil!.toUpperCase() != 'NOTOK'
+                    ? Container()
+                    : const Icon(Icons.check)),
+            TableCell(
+                child: pointChecklistPreventive.hasil!.toUpperCase() != 'NA'
+                    ? Container()
+                    : const Icon(Icons.check)),
+            TableCell(
+                child: Padding(
+              padding: const EdgeInsets.only(
+                  top: kDefaultPadding / 2,
+                  bottom: kDefaultPadding / 2,
+                  left: 20,
+                  right: 20),
+              child: Text(pointChecklistPreventive.keterangan != null
+                  ? '${pointChecklistPreventive.keterangan}'
+                  : ''),
+            ))
+          ]);
+        } else {
+          pointCheck = TableRow(
+              decoration: BoxDecoration(color: Colors.grey[100]),
+              children: [
+                TableCell(child: Container()),
+                TableCell(
+                    child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: kDefaultPadding / 2,
+                      bottom: kDefaultPadding / 2,
+                      left: 20,
+                      right: 20),
+                  child: Text('${pointChecklistPreventive.uraian}',
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                TableCell(
+                    child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: kDefaultPadding / 2,
+                      bottom: kDefaultPadding / 2,
+                      left: 20,
+                      right: 20),
+                  child: Text('${pointChecklistPreventive.kriteria}',
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
+                )),
+                TableCell(child: Container()),
+                TableCell(child: Container()),
+                TableCell(child: Container()),
+                TableCell(
+                    child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: kDefaultPadding / 2,
+                      bottom: kDefaultPadding / 2,
+                      left: 20,
+                      right: 20),
+                  child: Text(pointChecklistPreventive.keterangan != null
+                      ? '${pointChecklistPreventive.keterangan}'
+                      : ''),
+                ))
+              ]);
+        }
         dataTableRowCategory.add(pointCheck);
       }
     }
@@ -321,7 +364,7 @@ class ReportPreventiveWidget extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: kDefaultPadding / 2),
                     child: Center(
-                        child: Text('NOK',
+                        child: Text('NOT OK',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold))),

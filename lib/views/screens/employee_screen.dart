@@ -323,7 +323,7 @@ class EmployeeData extends DataTableSource {
       DataCell(Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               showDialog(
                 context: context,

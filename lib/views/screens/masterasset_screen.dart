@@ -88,7 +88,7 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                             filterData = state.masterAssets;
                             return PaginatedDataTable(
                               source: data,
-                              header: const Text('Master Asset'),
+                              // header: const Text('Master Asset'),
                               columns: [
                                 DataColumn(
                                   label: const Text(
@@ -227,20 +227,20 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                                 .getAllMasterAsset();
                           },
                         ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.filter_list),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
-                        ),
+                        // const SizedBox(
+                        //   width: 30,
+                        // ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.filter_list),
+                        //   onPressed: () {},
+                        // ),
+                        // const SizedBox(
+                        //   width: 30,
+                        // ),
+                        // IconButton(
+                        //   icon: const Icon(Icons.more_vert),
+                        //   onPressed: () {},
+                        // ),
                         const SizedBox(
                           width: 30,
                         ),
@@ -280,7 +280,7 @@ class MasterAssetData extends DataTableSource {
       DataCell(Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               showDialog(
                   context: context,

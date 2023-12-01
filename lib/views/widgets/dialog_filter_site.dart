@@ -23,6 +23,10 @@ class DialogFilterSite extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  const Text(
+                    'Filter Site',
+                    style: TextStyle(fontSize: 30),
+                  ),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
@@ -31,28 +35,31 @@ class DialogFilterSite extends ConsumerWidget {
                       Navigator.pop(context);
                     },
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.done),
-                    onPressed: () {
-                      var kabupaten =
-                          ref.read(kabupatenNotifierProvider.notifier).state;
-                      debugPrint('province : $province kabupaten : $kabupaten');
-                      List<String> dataFilter = [];
-                      if (province.isNotEmpty) {
-                        dataFilter.add('province||eq||$province');
-                      }
-                      if (kabupaten.isNotEmpty) {
-                        dataFilter.add('region||eq||$kabupaten');
-                      }
-                      ref
-                          .read(siteNotifierProvider.notifier)
-                          .getAllSite({'filter': dataFilter});
-                      ref.invalidate(provinceNotifierProvider);
-                      ref.invalidate(kabupatenNotifierProvider);
-                      Navigator.pop(context);
-                    },
-                  )
+                  // IconButton(
+                  //   icon: const Icon(Icons.done),
+                  //   onPressed: () {
+                  //     var kabupaten =
+                  //         ref.read(kabupatenNotifierProvider.notifier).state;
+                  //     debugPrint('province : $province kabupaten : $kabupaten');
+                  //     List<String> dataFilter = [];
+                  //     if (province.isNotEmpty) {
+                  //       dataFilter.add('province||eq||$province');
+                  //     }
+                  //     if (kabupaten.isNotEmpty) {
+                  //       dataFilter.add('region||eq||$kabupaten');
+                  //     }
+                  //     ref
+                  //         .read(siteNotifierProvider.notifier)
+                  //         .getAllSite({'filter': dataFilter});
+                  //     ref.invalidate(provinceNotifierProvider);
+                  //     ref.invalidate(kabupatenNotifierProvider);
+                  //     Navigator.pop(context);
+                  //   },
+                  // )
                 ],
+              ),
+              const SizedBox(
+                height: 15,
               ),
               FutureBuilder<List<Province>>(
                   future: getProvinceData(),
@@ -63,67 +70,100 @@ class DialogFilterSite extends ConsumerWidget {
                           ref.watch(provinceNotifierProvider);
                       final String selectedKabupaten =
                           ref.watch(kabupatenNotifierProvider);
-                      return Row(
+                      return Column(
                         children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Province'),
-                                DropdownButton(
-                                  value: data[selectedProvince],
-                                  hint: const Text('Select a Province'),
-                                  items: data.map((value) {
-                                    return DropdownMenuItem<Province>(
-                                      value: value,
-                                      child: Text(value.province.toString()),
-                                    );
-                                  }).toList(),
-                                  onChanged: (Province? value) {
-                                    // debugPrint('value : ${data.indexOf(value!)}');
-                                    province = value!.province.toString();
-                                    int idx = data.indexOf(value);
-                                    ref
-                                        .read(provinceNotifierProvider.notifier)
-                                        .state = idx;
-                                    ref
-                                        .read(
-                                            kabupatenNotifierProvider.notifier)
-                                        .state = "";
-                                  },
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('Province'),
+                                    DropdownButton(
+                                      value: data[selectedProvince],
+                                      hint: const Text('Select a Province'),
+                                      items: data.map((value) {
+                                        return DropdownMenuItem<Province>(
+                                          value: value,
+                                          child:
+                                              Text(value.province.toString()),
+                                        );
+                                      }).toList(),
+                                      onChanged: (Province? value) {
+                                        // debugPrint('value : ${data.indexOf(value!)}');
+                                        province = value!.province.toString();
+                                        int idx = data.indexOf(value);
+                                        ref
+                                            .read(provinceNotifierProvider
+                                                .notifier)
+                                            .state = idx;
+                                        ref
+                                            .read(kabupatenNotifierProvider
+                                                .notifier)
+                                            .state = "";
+                                      },
+                                    ),
+                                    // getDropdownProvince(),
+                                  ],
                                 ),
-                                // getDropdownProvince(),
-                              ],
-                            ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text('Regional'),
+                                    DropdownButton(
+                                      value: selectedKabupaten.isNotEmpty
+                                          ? selectedKabupaten
+                                          : null,
+                                      hint: const Text('Select a City/Region'),
+                                      items: data[selectedProvince]
+                                          .kabupaten!
+                                          .map((value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value),
+                                        );
+                                      }).toList(),
+                                      onChanged: (String? value) {
+                                        debugPrint(value!);
+                                        ref
+                                            .read(kabupatenNotifierProvider
+                                                .notifier)
+                                            .state = value;
+                                      },
+                                    )
+                                    // getDropdownKabupaten(),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text('Regional'),
-                                DropdownButton(
-                                  value: selectedKabupaten.isNotEmpty
-                                      ? selectedKabupaten
-                                      : null,
-                                  hint: const Text('Select a City/Region'),
-                                  items: data[selectedProvince]
-                                      .kabupaten!
-                                      .map((value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? value) {
-                                    debugPrint(value!);
-                                    ref
-                                        .read(
-                                            kabupatenNotifierProvider.notifier)
-                                        .state = value;
-                                  },
-                                )
-                                // getDropdownKabupaten(),
-                              ],
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 2.5,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                var kabupaten = ref
+                                    .read(kabupatenNotifierProvider.notifier)
+                                    .state;
+                                debugPrint(
+                                    'province : $province kabupaten : $kabupaten');
+                                List<String> dataFilter = [];
+                                if (province.isNotEmpty) {
+                                  dataFilter.add('province||eq||$province');
+                                }
+                                if (kabupaten.isNotEmpty) {
+                                  dataFilter.add('region||eq||$kabupaten');
+                                }
+                                ref
+                                    .read(siteNotifierProvider.notifier)
+                                    .getAllSite({'filter': dataFilter});
+                                ref.invalidate(provinceNotifierProvider);
+                                ref.invalidate(kabupatenNotifierProvider);
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Filter'),
                             ),
                           ),
                         ],

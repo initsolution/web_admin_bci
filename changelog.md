@@ -99,3 +99,13 @@
 
 > 01/12/2023
 > Add Validasi form Add and form Edit 
+> 30/11/2023 (deddy)
+> update ui/ux verificator : add checklist, torque, verticality report
+
+> 01/12/2023
+> ganti dashboard menjadi total task
+
+> 01/12/2023 (deddy)
+> update dialog and screen ui/ux
+> update point checklist menambahkan sub category berdasarkan isChecklist
+> koreksi label Apakah dalam bentuk Checklist?

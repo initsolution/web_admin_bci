@@ -60,7 +60,7 @@ class DialogAddEmployee extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
                 const Text('NIK'),
                 TextFormField(
@@ -193,17 +193,20 @@ class DialogAddEmployee extends ConsumerWidget {
                   },
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
-                ElevatedButton(
-                  onPressed: () {
+                SizedBox(
+                width: MediaQuery.of(context).size.width / 2.5,
+                child: ElevatedButton(
+                    onPressed: () {
                     final isValid = _formKey.currentState!.validate();
                     if (isValid) {
-                      saveEmployee(ref);
-                      Navigator.pop(context);
+                        saveEmployee(ref);
+                        Navigator.pop(context);
                     }
-                  },
-                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
+                    },
+                    child: Text(isEdit ? 'EDIT' : 'SAVE'),
+                ),
                 ),
               ],
             ),
