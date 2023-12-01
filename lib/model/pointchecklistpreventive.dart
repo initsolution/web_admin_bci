@@ -1,4 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, depend_on_referenced_packages
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'pointchecklistpreventive.g.dart';
@@ -11,6 +12,8 @@ class PointChecklistPreventive {
   String? hasil;
   String? keterangan;
   int? orderIndex;
+  bool? isChecklist;
+
   PointChecklistPreventive({
     this.id,
     this.uraian,
@@ -18,6 +21,7 @@ class PointChecklistPreventive {
     this.hasil,
     this.keterangan,
     this.orderIndex,
+    this.isChecklist,
   });
 
   PointChecklistPreventive copyWith({
@@ -27,6 +31,7 @@ class PointChecklistPreventive {
     String? hasil,
     String? keterangan,
     int? orderIndex,
+    bool? isChecklist,
   }) {
     return PointChecklistPreventive(
       id: id ?? this.id,
@@ -35,6 +40,7 @@ class PointChecklistPreventive {
       hasil: hasil ?? this.hasil,
       keterangan: keterangan ?? this.keterangan,
       orderIndex: orderIndex ?? this.orderIndex,
+      isChecklist: isChecklist ?? this.isChecklist,
     );
   }
 
@@ -46,6 +52,7 @@ class PointChecklistPreventive {
       'hasil': hasil,
       'keterangan': keterangan,
       'orderIndex': orderIndex,
+      'isChecklist': isChecklist,
     };
   }
 
@@ -58,6 +65,8 @@ class PointChecklistPreventive {
       keterangan:
           map['keterangan'] != null ? map['keterangan'] as String : null,
       orderIndex: map['orderIndex'] != null ? map['orderIndex'] as int : null,
+      isChecklist:
+          map['isChecklist'] != null ? map['isChecklist'] as bool : null,
     );
   }
 
@@ -68,7 +77,7 @@ class PointChecklistPreventive {
 
   @override
   String toString() {
-    return 'PointChecklistPreventive(id: $id, uraian: $uraian, kriteria: $kriteria, hasil: $hasil, keterangan: $keterangan, orderIndex: $orderIndex)';
+    return 'PointChecklistPreventive(id: $id, uraian: $uraian, kriteria: $kriteria, hasil: $hasil, keterangan: $keterangan, orderIndex: $orderIndex, isChecklist: $isChecklist)';
   }
 
   @override
@@ -80,7 +89,8 @@ class PointChecklistPreventive {
         other.kriteria == kriteria &&
         other.hasil == hasil &&
         other.keterangan == keterangan &&
-        other.orderIndex == orderIndex;
+        other.orderIndex == orderIndex &&
+        other.isChecklist == isChecklist;
   }
 
   @override
@@ -90,6 +100,7 @@ class PointChecklistPreventive {
         kriteria.hashCode ^
         hasil.hashCode ^
         keterangan.hashCode ^
-        orderIndex.hashCode;
+        orderIndex.hashCode ^
+        isChecklist.hashCode;
   }
 }

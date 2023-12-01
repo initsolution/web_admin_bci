@@ -102,3 +102,4 @@
 
 > 01/12/2023 (deddy)
 > update dialog and screen ui/ux
+> update point checklist menambahkan sub category berdasarkan isChecklist
