@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/values.dart';
 import 'package:flutter_web_ptb/model/masterpointchecklistpreventive.dart';
 import 'package:flutter_web_ptb/providers/masterpointchecklistpreventive_state.dart';

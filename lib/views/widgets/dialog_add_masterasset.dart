@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/model/masterasset.dart';
 import 'package:flutter_web_ptb/providers/masterasset_provider.dart';
 
@@ -16,6 +15,7 @@ class DialogAddOrEditMasterAsset extends ConsumerWidget {
   TextEditingController towerHeightController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,116 +33,158 @@ class DialogAddOrEditMasterAsset extends ConsumerWidget {
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${(isEdit ? 'Edit' : 'New')} Master Asset',
-                    style: const TextStyle(fontSize: 30),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${(isEdit ? 'Edit' : 'New')} Master Asset',
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text('Task Type'),
+                TextFormField(
+                  controller: taskTypeController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Task Type',
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text('Task Type'),
-              TextField(
-                controller: taskTypeController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Task Type',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Section'),
-              TextField(
-                controller: sectionController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Section',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Fabricator'),
-              TextField(
-                controller: fabricatorController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Fabricator',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Tower Height'),
-              TextField(
-                controller: towerHeightController,
-                keyboardType: TextInputType.number,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Tower Height',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Category'),
-              TextField(
-                controller: categoryController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Category',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Description'),
-              TextField(
-                controller: descriptionController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Description',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2.5,
-                child: ElevatedButton(
-                  onPressed: () => {
-                    saveMasterAsset(ref),
-                    Navigator.pop(context),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Task Type";
+                    }
+                    return null;
                   },
-                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Section'),
+                TextFormField(
+                  controller: sectionController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Section',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Section";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Fabricator'),
+                TextFormField(
+                  controller: fabricatorController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Fabricator',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Fabricator";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Tower Height'),
+                TextFormField(
+                  controller: towerHeightController,
+                  keyboardType: TextInputType.number,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Tower Height',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Tower Height";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Category'),
+                TextFormField(
+                  controller: categoryController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Category',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Category";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Description'),
+                TextFormField(
+                  controller: descriptionController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Description',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Description";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2.5,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final isValid = _formKey.currentState!.validate();
+                      if (isValid) {
+                        saveMasterAsset(ref);
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: Text(isEdit ? 'EDIT' : 'SAVE'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

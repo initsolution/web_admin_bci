@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/model/mastercategorychecklistpreventive.dart';
 import 'package:flutter_web_ptb/model/masterpointchecklistpreventive.dart';
 import 'package:flutter_web_ptb/providers/mastercategorychecklistpreventive_provider.dart';
@@ -19,6 +18,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
       this.editMasterPointChecklistPreventive});
   TextEditingController kriteriaController = TextEditingController();
   TextEditingController uraianController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,90 +41,108 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2,
         child: SingleChildScrollView(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${isEdit ? 'Edit' : 'New'} Master Point Checklist Preventive',
-                  style: const TextStyle(fontSize: 30),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text('Category Checklist Preventive'),
-            Consumer(builder: ((context, ref, child) {
-              late List<MasterCategoryChecklistPreventive>
-                  dataCategoryChecklistPreventive;
-              var stateCategoryChecklistPreventive =
-                  ref.watch(masterCategoryChecklistPreventivNotifierProvider);
-              if (stateCategoryChecklistPreventive
-                  is MasterCategoryChecklistPreventiveLoaded) {
-                dataCategoryChecklistPreventive =
-                    stateCategoryChecklistPreventive.masterCategoryPrev;
-                if (!isEdit) {
-                  Future(() => ref
-                      .read(selectedCategoryChecklistPreventive.notifier)
-                      .state = dataCategoryChecklistPreventive[0]);
+            child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${isEdit ? 'Edit' : 'New'} Master Point Checklist Preventive',
+                    style: const TextStyle(fontSize: 30),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text('Category Checklist Preventive'),
+              Consumer(builder: ((context, ref, child) {
+                late List<MasterCategoryChecklistPreventive>
+                    dataCategoryChecklistPreventive;
+                var stateCategoryChecklistPreventive =
+                    ref.watch(masterCategoryChecklistPreventivNotifierProvider);
+                if (stateCategoryChecklistPreventive
+                    is MasterCategoryChecklistPreventiveLoaded) {
+                  dataCategoryChecklistPreventive =
+                      stateCategoryChecklistPreventive.masterCategoryPrev;
+                  if (!isEdit) {
+                    Future(() => ref
+                        .read(selectedCategoryChecklistPreventive.notifier)
+                        .state = dataCategoryChecklistPreventive[0]);
+                  }
                 }
-              }
-              return getDropdownCategory(dataCategoryChecklistPreventive);
-            })),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text('Uraian'),
-            TextField(
-              controller: uraianController,
-              keyboardType: TextInputType.text,
-              obscureText: false,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Please type uraian',
+                return getDropdownCategory(dataCategoryChecklistPreventive);
+              })),
+              const SizedBox(
+                height: 15,
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const SizedBox(
-              height: 15,
-            ),
-            const Text('Kriteria'),
-            TextField(
-              controller: kriteriaController,
-              keyboardType: TextInputType.text,
-              obscureText: false,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Please type kriteria',
-              ),
-            ),
-            const SizedBox(
-              height: 25,
-            ),
-            const Text('Apakah Bentuk Checklist'),
-            getChecklist(),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              child: ElevatedButton(
-                onPressed: () => {
-                  saveMasterPointChecklistPreventive(ref),
-                  Navigator.pop(context),
+              const Text('Uraian'),
+              TextFormField(
+                controller: uraianController,
+                keyboardType: TextInputType.text,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Please type uraian',
+                ),
+                validator: (input) {
+                  if (input!.isEmpty) {
+                    return "Please Input Uraian";
+                  }
+                  return null;
                 },
-                child: Text(isEdit ? 'EDIT' : 'SAVE'),
               ),
-            ),
-          ],
+              const SizedBox(
+                height: 10,
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              const Text('Kriteria'),
+              TextFormField(
+                controller: kriteriaController,
+                keyboardType: TextInputType.text,
+                obscureText: false,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Please type kriteria',
+                ),
+                validator: (input) {
+                  if (input!.isEmpty) {
+                    return "Please Input Kriteria";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              const Text('Apakah Bentuk Checklist'),
+              getChecklist(),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 2,
+                child: ElevatedButton(
+                  onPressed: () {
+                    final isValid = _formKey.currentState!.validate();
+                    if (isValid) {
+                      saveMasterPointChecklistPreventive(ref);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
+                ),
+              ),
+            ],
+          ),
         )),
       ),
     );

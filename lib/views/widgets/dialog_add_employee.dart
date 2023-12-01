@@ -14,6 +14,8 @@ class DialogAddEmployee extends ConsumerWidget {
   TextEditingController passwordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController instansiController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (isEdit) {
@@ -37,132 +39,174 @@ class DialogAddEmployee extends ConsumerWidget {
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${isEdit ? 'Edit' : 'New'} Employee',
-                    style: const TextStyle(fontSize: 30),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${isEdit ? 'Edit' : 'New'} Employee',
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('NIK'),
+                TextFormField(
+                  controller: nikController,
+                  keyboardType: TextInputType.text,
+                  enabled: !isEdit,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    hintText: 'Please type your NIK',
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input NIK";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('NAME'),
+                TextFormField(
+                  controller: nameController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    hintText: 'Please type your NAME',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input NAME";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('EMAIL'),
+                TextFormField(
+                  controller: emailController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    hintText: 'Please type your EMAIL',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input EMAIL";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Password'),
+                TextFormField(
+                  controller: passwordController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    hintText: 'Please type your Password',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Password";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Phone Number'),
+                TextFormField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    hintText: 'Please type your Phone Number',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Phone Number";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Role'),
+                          getDropdownRole(),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Vendor'),
+                          getDropdownVendor(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  controller: instansiController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    hintText: 'Instansi',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Instansi";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final isValid = _formKey.currentState!.validate();
+                    if (isValid) {
+                      saveEmployee(ref);
                       Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('NIK'),
-              TextField(
-                controller: nikController,
-                keyboardType: TextInputType.text,
-                enabled: !isEdit,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'Please type your NIK',
+                    }
+                  },
+                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('NAME'),
-              TextField(
-                controller: nameController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'Please type your NAME',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('EMAIL'),
-              TextField(
-                controller: emailController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'Please type your EMAIL',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Password'),
-              TextField(
-                controller: passwordController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'Please type your Password',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Phone Number'),
-              TextField(
-                controller: phoneController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'Please type your Phone Number',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Role'),
-                        getDropdownRole(),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('Vendor'),
-                        getDropdownVendor(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TextField(
-                controller: instansiController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  hintText: 'Instansi',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () => {
-                  saveEmployee(ref),
-                  Navigator.pop(context),
-                },
-                child: Text(isEdit ? 'EDIT' : 'SAVE'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -13,6 +13,7 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
       this.isEdit = false,
       this.editMasterCategoryChecklistPreventive});
   TextEditingController nameCategoryController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,51 +27,64 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${isEdit ? 'Edit' : 'New'} Master Category Checklist Preventive',
-                    style: const TextStyle(fontSize: 30),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${isEdit ? 'Edit' : 'New'} Master Category Checklist Preventive',
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text('Tower Category'),
+                TextFormField(
+                  controller: nameCategoryController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Name',
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text('Tower Category'),
-              TextField(
-                controller: nameCategoryController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Name',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2,
-                child: ElevatedButton(
-                  onPressed: () => {
-                    saveMasterCategoryChecklistPreventive(ref),
-                    Navigator.pop(context),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Tower Category";
+                    }
+                    return null;
                   },
-                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final isValid = _formKey.currentState!.validate();
+                      if (isValid) {
+                        saveMasterCategoryChecklistPreventive(ref);
+                        Navigator.pop(context);
+                      }
+                      //
+                    },
+                    child: Text(isEdit ? 'EDIT' : 'SAVE'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -9,6 +9,7 @@ class DialogAddTenant extends ConsumerWidget {
   DialogAddTenant({super.key});
   TextEditingController tenantKodeController = TextEditingController();
   TextEditingController tenantNameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,69 +17,87 @@ class DialogAddTenant extends ConsumerWidget {
       content: SizedBox(
         width: MediaQuery.of(context).size.width / 2.5,
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'New Tenant',
-                    style: TextStyle(fontSize: 30),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'New Tenant',
+                      style: TextStyle(fontSize: 30),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text('Kode'),
+                TextFormField(
+                  controller: tenantKodeController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Kode',
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              const Text('Kode'),
-              TextField(
-                controller: tenantKodeController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Kode',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('Name'),
-              TextField(
-                controller: tenantNameController,
-                keyboardType: TextInputType.text,
-                obscureText: false,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Please type your Name',
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text('isActive'),
-              isActiveTenant(),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 2.5,
-                child: ElevatedButton(
-                  onPressed: () => {
-                    saveTenant(ref),
-                    Navigator.pop(context),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Kode Tenant";
+                    }
+                    return null;
                   },
-                  child: const Text('SAVE'),
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Name'),
+                TextFormField(
+                  controller: tenantNameController,
+                  keyboardType: TextInputType.text,
+                  obscureText: false,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Please type your Name',
+                  ),
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return "Please Input Name";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('isActive'),
+                isActiveTenant(),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 2.5,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      final isValid = _formKey.currentState!.validate();
+                      if (isValid) {
+                        saveTenant(ref);
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text('SAVE'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

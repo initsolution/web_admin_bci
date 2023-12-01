@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +19,7 @@ class DialogAddTask extends ConsumerWidget {
   Site selectedSite = Site();
   Employee selectedMaker = Employee();
   Employee selectedVerifier = Employee();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,56 +36,65 @@ class DialogAddTask extends ConsumerWidget {
             body: SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'New Task',
-                          style: TextStyle(fontSize: 30),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    const Text('Site'),
-                    LoadSite(stateSite),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text('Maker'),
-                    LoadMakerEmployee(stateMaker),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text('Verifikator'),
-                    LoadVerifikatorEmployee(stateVerifikator),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text('Type Task'),
-                    getDropDownTypeTask(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width / 2.5,
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            {saveTask(ref), Navigator.pop(context)},
-                        child: const Text('SAVE'),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'New Task',
+                            style: TextStyle(fontSize: 30),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      const Text('Site'),
+                      LoadSite(stateSite),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text('Maker'),
+                      LoadMakerEmployee(stateMaker),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text('Verifikator'),
+                      LoadVerifikatorEmployee(stateVerifikator),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text('Type Task'),
+                      getDropDownTypeTask(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2.5,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final isValid = _formKey.currentState!.validate();
+                            debugPrint('isValid : $isValid');
+                            if (isValid) {
+                              saveTask(ref);
+                              Navigator.pop(context);
+                            }
+                          },
+                          child: const Text('SAVE'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -157,6 +165,12 @@ class DialogAddTask extends ConsumerWidget {
             );
           },
         ),
+        validator: (input) {
+          if (input == null) {
+            return "Please Select Site";
+          }
+          return null;
+        },
       );
     } else if (stateSite is SiteLoading) {
       return const CircularProgressIndicator();
@@ -267,7 +281,12 @@ class DialogAddTask extends ConsumerWidget {
             );
           },
         ),
-
+        validator: (input) {
+          if (input == null) {
+            return "Please Select Maker Employee";
+          }
+          return null;
+        },
         // dropdownBuilder: _customPopupItemBuilderExample,
       );
     } else if (stateMaker is EmployeeLoading) {
@@ -324,7 +343,12 @@ class DialogAddTask extends ConsumerWidget {
             );
           },
         ),
-
+        validator: (input) {
+          if (input == null) {
+            return "Please Select Verifikator Employee";
+          }
+          return null;
+        },
         // dropdownBuilder: _customPopupItemBuilderExample,
       );
     } else if (stateVerifikator is EmployeeLoading) {
