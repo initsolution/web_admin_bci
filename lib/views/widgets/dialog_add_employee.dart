@@ -56,7 +56,7 @@ class DialogAddEmployee extends ConsumerWidget {
                 ],
               ),
               const SizedBox(
-                height: 10,
+                height: 15,
               ),
               const Text('NIK'),
               TextField(
@@ -153,14 +153,17 @@ class DialogAddEmployee extends ConsumerWidget {
                 ),
               ),
               const SizedBox(
-                height: 10,
+                height: 20,
               ),
-              ElevatedButton(
-                onPressed: () => {
-                  saveEmployee(ref),
-                  Navigator.pop(context),
-                },
-                child: Text(isEdit ? 'EDIT' : 'SAVE'),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 2.5,
+                child: ElevatedButton(
+                  onPressed: () => {
+                    saveEmployee(ref),
+                    Navigator.pop(context),
+                  },
+                  child: Text(isEdit ? 'EDIT' : 'SAVE'),
+                ),
               ),
             ],
           ),

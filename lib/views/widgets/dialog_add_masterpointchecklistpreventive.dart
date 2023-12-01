@@ -88,6 +88,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
               controller: uraianController,
               keyboardType: TextInputType.text,
               obscureText: false,
+              maxLines: 3,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Please type uraian',
@@ -103,6 +104,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
             TextField(
               controller: kriteriaController,
               keyboardType: TextInputType.text,
+              maxLines: 3,
               obscureText: false,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
@@ -114,6 +116,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
             ),
             const Text('Apakah Bentuk Checklist'),
             getChecklist(),
+            const SizedBox(height: 20),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2,
               child: ElevatedButton(

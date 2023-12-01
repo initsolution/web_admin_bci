@@ -141,21 +141,24 @@ class DialogProfileEmployee extends ConsumerWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                ElevatedButton(
-                  onPressed: () => {
-                    editEmployee(ref,
-                        nikController: nikController,
-                        nameController: nameController,
-                        emailController: emailController,
-                        phoneController: phoneController,
-                        passwordController:
-                            passwordController.value.toString().isNotEmpty
-                                ? passwordController
-                                : null,
-                        employeeOri: employee),
-                    Navigator.pop(context),
-                  },
-                  child: const Text('Edit'),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.5,
+                  child: ElevatedButton(
+                    onPressed: () => {
+                      editEmployee(ref,
+                          nikController: nikController,
+                          nameController: nameController,
+                          emailController: emailController,
+                          phoneController: phoneController,
+                          passwordController:
+                              passwordController.value.toString().isNotEmpty
+                                  ? passwordController
+                                  : null,
+                          employeeOri: employee),
+                      Navigator.pop(context),
+                    },
+                    child: const Text('Edit'),
+                  ),
                 ),
               ],
             ),

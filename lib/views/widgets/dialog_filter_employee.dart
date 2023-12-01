@@ -9,7 +9,7 @@ class DialogFilterEmployee extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AlertDialog(
       content: SizedBox(
-        width: MediaQuery.of(context).size.width / 2.5,
+        width: MediaQuery.of(context).size.width / 3,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -17,6 +17,10 @@ class DialogFilterEmployee extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  const Text(
+                    'Filter Employee',
+                    style: TextStyle(fontSize: 30),
+                  ),
                   IconButton(
                     icon: const Icon(Icons.close),
                     onPressed: () {
@@ -24,35 +28,38 @@ class DialogFilterEmployee extends ConsumerWidget {
                       Navigator.pop(context);
                     },
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.done),
-                    onPressed: () {
-                      bool resVendor = ref
-                                  .read(employeeVendorProvider.notifier)
-                                  .state
-                                  .toLowerCase() ==
-                              'vendor'
-                          ? true
-                          : false;
-                      final String employeeRole =
-                          ref.watch(employeeRoleProvider);
-                      List<String> dataFilter = [];
-                      dataFilter.add('isVendor||eq||$resVendor');
-                      dataFilter.add('role||eq||$employeeRole');
-                      ref
-                          .read(employeeNotifierProvider.notifier)
-                          .getAllEmployee(header: {'filter': dataFilter});
-                      ref.invalidate(employeeVendorProvider);
-                      ref.invalidate(employeeNotifierProvider);
+                  // IconButton(
+                  //   icon: const Icon(Icons.done),
+                  //   onPressed: () {
+                  //     bool resVendor = ref
+                  //                 .read(employeeVendorProvider.notifier)
+                  //                 .state
+                  //                 .toLowerCase() ==
+                  //             'vendor'
+                  //         ? true
+                  //         : false;
+                  //     final String employeeRole =
+                  //         ref.watch(employeeRoleProvider);
+                  //     List<String> dataFilter = [];
+                  //     dataFilter.add('isVendor||eq||$resVendor');
+                  //     dataFilter.add('role||eq||$employeeRole');
+                  //     ref
+                  //         .read(employeeNotifierProvider.notifier)
+                  //         .getAllEmployee(header: {'filter': dataFilter});
+                  //     ref.invalidate(employeeVendorProvider);
+                  //     ref.invalidate(employeeNotifierProvider);
 
-                      Navigator.pop(context);
-                    },
-                  )
+                  //     Navigator.pop(context);
+                  //   },
+                  // )
                 ],
+              ),
+              const SizedBox(
+                height: 15,
               ),
               Row(
                 children: [
-                  const Text('Is Vendor ? '),
+                  const SizedBox(width: 200, child: Text('Is Vendor ? ')),
                   const SizedBox(
                     width: 10,
                   ),
@@ -61,13 +68,40 @@ class DialogFilterEmployee extends ConsumerWidget {
               ),
               Row(
                 children: [
-                  const Text('Role '),
+                  const SizedBox(width: 200, child: Text('Role ')),
                   const SizedBox(
                     width: 10,
                   ),
                   getDropdownRole(),
                 ],
-              )
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 3,
+                child: ElevatedButton(
+                  onPressed: () {
+                    bool resVendor = ref
+                                .read(employeeVendorProvider.notifier)
+                                .state
+                                .toLowerCase() ==
+                            'vendor'
+                        ? true
+                        : false;
+                    final String employeeRole = ref.watch(employeeRoleProvider);
+                    List<String> dataFilter = [];
+                    dataFilter.add('isVendor||eq||$resVendor');
+                    dataFilter.add('role||eq||$employeeRole');
+                    ref
+                        .read(employeeNotifierProvider.notifier)
+                        .getAllEmployee(header: {'filter': dataFilter});
+                    ref.invalidate(employeeVendorProvider);
+                    ref.invalidate(employeeNotifierProvider);
+
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Filter'),
+                ),
+              ),
             ],
           ),
         ),

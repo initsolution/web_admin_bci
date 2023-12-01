@@ -31,11 +31,16 @@ class MasterPointChecklistPreventivetData extends DataTableSource {
       DataCell(
           Text(masterData[index].mcategorychecklistpreventive!.categoryName!)),
       DataCell(Text(masterData[index].uraian!)),
-      DataCell(Text(masterData[index].kriteria!)),
+      // DataCell(Text(masterData[index].kriteria!)),
+      DataCell(ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 300),
+        child: Text(masterData[index].kriteria!,
+            overflow: TextOverflow.ellipsis),
+      )),
       DataCell(Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.settings),
+            icon: const Icon(Icons.edit),
             onPressed: () {
               showDialog(
                 context: context,
@@ -234,8 +239,8 @@ class _MasterPointChecklistPreventiveScreenState
                               const DataColumn(label: Text('Actions')),
                             ],
                             source: data,
-                            header:
-                                const Text('Master Point Checklist Preventive'),
+                            // header:
+                            //     const Text('Master Point Checklist Preventive'),
                             horizontalMargin: 10,
                             rowsPerPage: 10,
                             showCheckboxColumn: false,
@@ -356,20 +361,20 @@ class _MasterPointChecklistPreventiveScreenState
                       const SizedBox(
                         width: 30,
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.filter_list),
-                        onPressed: () {},
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {},
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
+                      // IconButton(
+                      //   icon: const Icon(Icons.filter_list),
+                      //   onPressed: () {},
+                      // ),
+                      // const SizedBox(
+                      //   width: 30,
+                      // ),
+                      // IconButton(
+                      //   icon: const Icon(Icons.more_vert),
+                      //   onPressed: () {},
+                      // ),
+                      // const SizedBox(
+                      //   width: 30,
+                      // ),
                     ],
                   ),
                   const SizedBox(

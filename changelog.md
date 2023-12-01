@@ -94,8 +94,11 @@
 > 30/11/2023 (mip)
 > 1. optimasi employee(update and filter)
 
-> 30/11/2023
+> 30/11/2023 (deddy)
 > update ui/ux verificator : add checklist, torque, verticality report
 
 > 01/12/2023
 > ganti dashboard menjadi total task
+
+> 01/12/2023 (deddy)
+> update dialog and screen ui/ux
