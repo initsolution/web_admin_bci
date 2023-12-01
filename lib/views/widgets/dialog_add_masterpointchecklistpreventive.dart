@@ -114,7 +114,7 @@ class DialogAddmasterPointChecklistPreventive extends ConsumerWidget {
             const SizedBox(
               height: 25,
             ),
-            const Text('Apakah Bentuk Checklist'),
+            const Text('Apakah Judul Sub Kateogri'),
             getChecklist(),
             const SizedBox(height: 20),
             SizedBox(
