@@ -109,3 +109,7 @@
 > update dialog and screen ui/ux
 > update point checklist menambahkan sub category berdasarkan isChecklist
 > koreksi label Apakah dalam bentuk Checklist?
+
+> 02/12/2023 (mip)
+> solve dashboard by verifikator
+> add ProgressiveImage in dialog choose

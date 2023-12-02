@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/constants/values.dart';
+import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
@@ -15,6 +17,8 @@ import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({Key? key}) : super(key: key);
@@ -27,12 +31,26 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final _dataTableHorizontalScrollController = ScrollController();
   Map<String, dynamic> params = {};
   late DateTimeRange dateRange;
+  String token = '';
+  late Employee employee;
 
-  @override
-  void initState() {
+  getInitialData() async {
     dateRange = DateTimeRange(
         start: DateTime.now().subtract(const Duration(days: 30)),
         end: DateTime.now());
+    final sharedPref = await SharedPreferences.getInstance();
+    token = sharedPref.getString(StorageKeys.token) ?? '';
+    employee = Employee.fromMap(JwtDecoder.decode(token)['employee']);
+    debugPrint(employee.toString());
+    await getTaskWithFilter();
+  }
+
+  getTaskWithFilter() async {
+    String filter = '';
+    debugPrint('get task filter ${employee.role}');
+    if (employee.role!.toLowerCase() == 'verify') {
+      filter = 'verifierEmployee.nik||eq||${employee.nik}';
+    }
     params = {
       "join": [
         'site',
@@ -46,12 +64,24 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       ],
       // 'filter': 'verifierEmployee.nik||eq||${employee.nik}',
       'sort': ['updated_at,DESC'],
-      'filter': [
-        'created_at||gte||${DateFormat('yyyy-MM-dd').format(dateRange.start)}',
-        'created_at||lte||${DateFormat('yyyy-MM-dd').format(dateRange.end.add(const Duration(days: 1)))}',
-      ]
+      'filter': filter != ''
+          ? [
+              'created_at||gte||${DateFormat('yyyy-MM-dd').format(dateRange.start)}',
+              'created_at||lte||${DateFormat('yyyy-MM-dd').format(dateRange.end.add(const Duration(days: 1)))}',
+              filter
+            ]
+          : [
+              'created_at||gte||${DateFormat('yyyy-MM-dd').format(dateRange.start)}',
+              'created_at||lte||${DateFormat('yyyy-MM-dd').format(dateRange.end.add(const Duration(days: 1)))}'
+            ]
     };
+    debugPrint(params.toString());
     Future(() => ref.read(taskNotifierProvider.notifier).getAllTask(params));
+  }
+
+  @override
+  void initState() {
+    getInitialData();
     super.initState();
   }
 

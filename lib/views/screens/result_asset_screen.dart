@@ -190,21 +190,30 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
           //         ),
           // );
         } else if (state is AssetChangeDataSuccess) {
-          Map<String, dynamic> params = {
+          // Map<String, dynamic> params = {
+          //   "join": [
+          //     "site",
+          //     "makerEmployee",
+          //     "verifierEmployee",
+          //     "categorychecklistprev",
+          //     "categorychecklistprev.pointChecklistPreventive",
+          //     "reportRegulerTorque",
+          //     "reportRegulerVerticality",
+          //     "reportRegulerVerticality.valueVerticality"
+          //   ]
+          // };
+          // Future(
+          //     () => ref.read(taskNotifierProvider.notifier).getAllTask(params));
+          // GoRouter.of(context).go(RouteUri.asset);
+          Map<String, dynamic> header = {
+            'filter': 'task.id||eq||${widget.task.id}',
             "join": [
-              "site",
-              "makerEmployee",
-              "verifierEmployee",
-              "categorychecklistprev",
-              "categorychecklistprev.pointChecklistPreventive",
-              "reportRegulerTorque",
-              "reportRegulerVerticality",
-              "reportRegulerVerticality.valueVerticality"
-            ]
+              "task",
+            ],
+            'sort': 'orderIndex,ASC'
           };
-          Future(
-              () => ref.read(taskNotifierProvider.notifier).getAllTask(params));
-          GoRouter.of(context).go(RouteUri.asset);
+          Future(() =>
+              ref.read(assetNotifierProvider.notifier).getAllAsset(header));
         }
         return const Center(
           child: CircularProgressIndicator(),

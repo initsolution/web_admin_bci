@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/model/asset.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
+import 'package:progressive_image/progressive_image.dart';
 
 class DialogChooseImage extends ConsumerWidget {
   final List<Asset> assets;
@@ -17,14 +18,29 @@ class DialogChooseImage extends ConsumerWidget {
     return AlertDialog(
       actions: [
         TextButton(
+            onPressed: idSelect == -1
+                ? null
+                : () {
+                    ref
+                        .read(assetNotifierProvider.notifier)
+                        .changeImage(idSource, idSelect);
+                    ref.invalidate(idSelectedAsset);
+                    Navigator.pop(context);
+                  },
+            child: Text(
+              'OK',
+              style:
+                  TextStyle(color: idSelect == -1 ? Colors.grey : Colors.green),
+            )),
+        TextButton(
             onPressed: () {
-              ref
-                  .read(assetNotifierProvider.notifier)
-                  .changeImage(idSource, idSelect);
+              ref.invalidate(idSelectedAsset);
               Navigator.pop(context);
-              PaintingBinding.instance.imageCache.clear();
             },
-            child: const Text('OK'))
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.red),
+            ))
       ],
       content: SizedBox(
           width: MediaQuery.of(context).size.width / 0.5,
@@ -53,8 +69,27 @@ class DialogChooseImage extends ConsumerWidget {
                             : null,
                         // generate blues with random shades
 
-                        child: Image.network(
-                            '$urlRepo/asset/getImage/${asset.id}'),
+                        child: Stack(children: [
+                          ProgressiveImage.assetNetwork(
+                            fit: BoxFit.contain,
+                            blur: 0,
+                            placeholder: 'assets/images/img_placeholder.jpg',
+                            thumbnail: 'assets/images/img_thumbnail.jpg',
+                            image: '$urlRepo/asset/getImage/${asset.id}',
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            width: MediaQuery.of(context).size.width * 0.3,
+                          ),
+                          Flexible(
+                            child: Container(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                asset.description!,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ),
+                            ),
+                          ),
+                        ]),
                       ),
                     );
                   },

@@ -14,7 +14,8 @@ String statusTask = 'All';
 final statusTaskProvider = StateProvider<String>((ref) => statusTask);
 final typeTaskProvider = StateProvider<String>((ref) => typeTask);
 
-final taskNotifierProvider = AutoDisposeNotifierProvider<TaskNotifier, TaskState>(
+final taskNotifierProvider =
+    AutoDisposeNotifierProvider<TaskNotifier, TaskState>(
   () {
     return TaskNotifier(taskRepo: TaskRepo(Dio()));
   },
@@ -50,7 +51,7 @@ class TaskNotifier extends AutoDisposeNotifier<TaskState> {
         }
       }
     } on DioException catch (error) {
-      // debugPrint(error.response!.statusCode.toString());
+      // debugPrint(error.response!.statusMessage);
       if (error.response!.statusCode == 401) {
         state = TaskErrorServer(
             message: error.response!.statusMessage,
