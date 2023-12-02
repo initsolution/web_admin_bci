@@ -67,6 +67,7 @@ class DialogChooseImage extends ConsumerWidget {
                                     BorderRadius.all(Radius.circular(10)),
                                 color: Colors.red)
                             : null,
+
                         // generate blues with random shades
 
                         child: Stack(children: [

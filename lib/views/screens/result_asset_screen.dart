@@ -539,7 +539,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                                       placeholder:
                                           'assets/images/img_placeholder.jpg',
                                       thumbnail:
-                                          'assets/images/img_thumbnail.jpg',
+                                          'assets/images/img_placeholder.jpg',
                                       image:
                                           '$urlRepo/asset/getImage/${item.id}',
                                       height:

@@ -113,3 +113,4 @@
 > 02/12/2023 (mip)
 > solve dashboard by verifikator
 > add ProgressiveImage in dialog choose
+> ganti placeholder 
