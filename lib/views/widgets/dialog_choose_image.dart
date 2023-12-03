@@ -71,15 +71,36 @@ class DialogChooseImage extends ConsumerWidget {
                         // generate blues with random shades
 
                         child: Stack(children: [
-                          ProgressiveImage.assetNetwork(
+                          Image.network(
+                            '$urlRepo/asset/getImage/${asset.id}',
                             fit: BoxFit.contain,
-                            blur: 0,
-                            placeholder: 'assets/images/img_placeholder.jpg',
-                            thumbnail: 'assets/images/img_thumbnail.jpg',
-                            image: '$urlRepo/asset/getImage/${asset.id}',
                             height: MediaQuery.of(context).size.height * 0.3,
                             width: MediaQuery.of(context).size.width * 0.3,
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
                           ),
+                          // ProgressiveImage.assetNetwork(
+                          //   fit: BoxFit.contain,
+                          //   blur: 0,
+                          //   placeholder: 'assets/images/img_placeholder.jpg',
+                          //   thumbnail: 'assets/images/img_thumbnail.jpg',
+                          //   image: '$urlRepo/asset/getImage/${asset.id}',
+                          //   height: MediaQuery.of(context).size.height * 0.3,
+                          //   width: MediaQuery.of(context).size.width * 0.3,
+                          // ),
                           Flexible(
                             child: Container(
                               padding: const EdgeInsets.all(8.0),

@@ -114,3 +114,7 @@
 > solve dashboard by verifikator
 > add ProgressiveImage in dialog choose
 > ganti placeholder 
+
+> 03/12/2023 (mip)
+> mengganti progresive image saat melihat asset dan ganti gambar. Untuk ganti gambar masih belum mau ke load gambar nya
+> login admin bisa master

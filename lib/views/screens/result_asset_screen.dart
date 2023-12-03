@@ -527,28 +527,57 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                               Stack(
                                 children: [
                                   GestureDetector(
-                                    onTap: () => showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                          return DialogDetailImage(
-                                              id: item.id!);
-                                        }),
-                                    child: ProgressiveImage.assetNetwork(
-                                      fit: BoxFit.contain,
-                                      blur: 0,
-                                      placeholder:
-                                          'assets/images/img_placeholder.jpg',
-                                      thumbnail:
-                                          'assets/images/img_placeholder.jpg',
-                                      image:
-                                          '$urlRepo/asset/getImage/${item.id}',
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.3,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.3,
-                                    ),
-                                  ),
+                                      onTap: () => showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return DialogDetailImage(
+                                                id: item.id!);
+                                          }),
+                                      child: Image.network(
+                                        '$urlRepo/asset/getImage/${item.id}',
+                                        fit: BoxFit.contain,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.3,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.3,
+                                        loadingBuilder: (BuildContext context,
+                                            Widget child,
+                                            ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              value: loadingProgress
+                                                          .expectedTotalBytes !=
+                                                      null
+                                                  ? loadingProgress
+                                                          .cumulativeBytesLoaded /
+                                                      loadingProgress
+                                                          .expectedTotalBytes!
+                                                  : null,
+                                            ),
+                                          );
+                                        },
+                                      )
+                                      // ProgressiveImage.assetNetwork(
+                                      //   fit: BoxFit.contain,
+                                      //   blur: 0,
+                                      //   placeholder:
+                                      //       'assets/images/img_placeholder.jpg',
+                                      //   thumbnail:
+                                      //       'assets/images/img_placeholder.jpg',
+                                      //   image:
+                                      //       '$urlRepo/asset/getImage/${item.id}',
+                                      //   height:
+                                      //       MediaQuery.of(context).size.height *
+                                      //           0.3,
+                                      //   width: MediaQuery.of(context).size.width *
+                                      //       0.3,
+                                      // ),
+                                      ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Align(

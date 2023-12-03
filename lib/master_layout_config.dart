@@ -76,6 +76,26 @@ final sideBarMenuConfigs_Admin = [
     icon: Icons.task,
     title: (context) => 'Task',
   ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterAsset,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Asset',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterReportRegulerTorque,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Report Reguler Torque',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterCategoryChecklistPreventive,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Category Check Preventive',
+  ),
+  SidebarMenuConfig(
+    uri: RouteUri.masterPointChecklistPreventive,
+    icon: Icons.storage_outlined,
+    title: (context) => 'Master Point Check Preventive',
+  ),
 ];
 
 final sideBarMenuConfigs_Verifikator = [
