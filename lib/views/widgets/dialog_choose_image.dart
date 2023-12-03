@@ -52,7 +52,7 @@ class DialogChooseImage extends ConsumerWidget {
                   crossAxisCount: 3,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  childAspectRatio: 2.0,
+                  childAspectRatio: 1.0,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {
@@ -70,7 +70,7 @@ class DialogChooseImage extends ConsumerWidget {
 
                         // generate blues with random shades
 
-                        child: Stack(children: [
+                        child: Column(children: [
                           Image.network(
                             '$urlRepo/asset/getImage/${asset.id}',
                             fit: BoxFit.contain,
