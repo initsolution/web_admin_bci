@@ -1,188 +1,159 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
-import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/model/site.dart';
 import 'package:flutter_web_ptb/model/task.dart';
-import 'package:flutter_web_ptb/providers/employee_provider.dart';
-import 'package:flutter_web_ptb/providers/site_provider.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
-import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_task.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_delete_task.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
-import 'package:go_router/go_router.dart';
 
-class TaskScreen extends ConsumerStatefulWidget {
-  const TaskScreen({super.key});
+import '../../constants/dimens.dart';
+
+class SiteTaskRegulerScreen extends ConsumerStatefulWidget {
+  final Site site;
+  const SiteTaskRegulerScreen({super.key, required this.site});
 
   @override
-  ConsumerState<TaskScreen> createState() => _TaskScreenState();
+  ConsumerState<SiteTaskRegulerScreen> createState() =>
+      _SiteTaskRegulerScreenState();
 }
 
-class _TaskScreenState extends ConsumerState<TaskScreen> {
+class _SiteTaskRegulerScreenState extends ConsumerState<SiteTaskRegulerScreen> {
+  late Map<String, dynamic> params;
   final _dataTableHorizontalScrollController = ScrollController();
-  Map<String, dynamic> params = {
-    "join": [
-      "site",
-      "makerEmployee",
-      "verifierEmployee",
-      "categorychecklistprev",
-      "categorychecklistprev.pointChecklistPreventive",
-      "reportRegulerTorque",
-      "reportRegulerVerticality",
-      "reportRegulerVerticality.valueVerticality"
-    ]
-  };
+
   @override
   void initState() {
-    // Map<String, dynamic> params = {};
-    // params = {
-    //   "join": [
-    //     "site",
-    //     "makerEmployee",
-    //     "verifierEmployee",
-    //     "categorychecklistprev",
-    //     "categorychecklistprev.pointChecklistPreventive",
-    //     "reportRegulerTorque",
-    //     "reportRegulerVerticality",
-    //     "reportRegulerVerticality.valueVerticality"
-    //   ]
-    // };
+    params = {
+      "join": [
+        "site",
+        "makerEmployee",
+        "verifierEmployee",
+        "categorychecklistprev",
+        "categorychecklistprev.pointChecklistPreventive",
+        "reportRegulerTorque",
+        "reportRegulerVerticality",
+        "reportRegulerVerticality.valueVerticality"
+      ],
+      "filter": ["site.id||eq||${widget.site.id}"]
+    };
     Future(() => ref.read(taskNotifierProvider.notifier).getAllTask(params));
-    Future(() => ref.read(employeeNotifierProvider.notifier).getAllEmployee());
-    Future(() => ref.read(siteNotifierProvider.notifier).getAllSite({}));
     super.initState();
   }
 
   @override
   void dispose() {
+    super.dispose();
     _dataTableHorizontalScrollController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(taskNotifierProvider, (previous, next) {
-      if (next is TaskErrorServer) {
-        if (next.statusCode == 401) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Please login again')),
-          );
-          // context.read<UserDataProvider>().clearUserDataAsync();
-          ref.read(userDataProvider.notifier).clearUserDataAsync();
-          GoRouter.of(context).go(RouteUri.login);
-        }
-      } else if (next is TaskDataChangeSuccess) {
-        Future(
-            () => ref.read(taskNotifierProvider.notifier).getAllTask(params));
-      }
-    });
     return PortalMasterLayout(
-      body: ListView(
-        padding: const EdgeInsets.all(kDefaultPadding),
-        children: [
-          const Header(
-            title: 'Data Task',
-            subMenu: 'All',
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: kDefaultPadding),
-            child: Card(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10)),
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: Container(
-                margin: const EdgeInsets.only(top: kDefaultPadding),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const SizedBox(
-                          width: 20,
+        body: ListView(
+      padding: const EdgeInsets.all(kDefaultPadding),
+      children: [
+        const Header(
+          title: 'Data Task',
+          subMenu: 'All',
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(bottom: kDefaultPadding),
+          child: Card(
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Container(
+              margin: const EdgeInsets.only(top: kDefaultPadding),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      SizedBox(
+                        width: 400,
+                        height: 40,
+                        child: TextField(
+                          onChanged: (value) => Future(() => ref
+                              .read(taskNotifierProvider.notifier)
+                              .searchTask(
+                                  value)), // onChanged return the value of the field
+                          decoration: InputDecoration(
+                              labelText: "Search ...",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              )),
                         ),
-                        SizedBox(
-                          width: 400,
-                          height: 40,
-                          child: TextField(
-                            onChanged: (value) => Future(() => ref
-                                .read(taskNotifierProvider.notifier)
-                                .searchTask(
-                                    value)), // onChanged return the value of the field
-                            decoration: InputDecoration(
-                                labelText: "Search ...",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                )),
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return SizedBox(child: DialogAddTask());
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.refresh),
-                          onPressed: () {
-                            ref
-                                .read(taskNotifierProvider.notifier)
-                                .getAllTask(params);
-                          },
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.filter_list),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                        const SizedBox(
-                          width: 30,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    tableTask(),
-                  ],
-                ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                  child: DialogAddTask(
+                                selectedSite: widget.site,
+                                isCanEditSite: false,
+                              ));
+                            },
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.refresh),
+                        onPressed: () {
+                          ref
+                              .read(taskNotifierProvider.notifier)
+                              .getAllTask(params);
+                        },
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.filter_list),
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                      const SizedBox(
+                        width: 30,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  tableTask(),
+                ],
               ),
             ),
           ),
-          // ElevatedButton(
-          //   onPressed: () async {
-          //     anchor.click();
-          //   },
-          //   child: const Text('click me'),
-          // ),
-        ],
-      ),
-    );
+        ),
+      ],
+    ));
   }
 
   Widget tableTask() {
@@ -213,8 +184,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                         var state = ref.watch(taskNotifierProvider);
                         if (DEBUG) debugPrint('state : $state');
                         if (state is TaskLoaded) {
-                          DataTableSource data =
-                              TaskData(tasks: state.tasks, context: context);
+                          DataTableSource data = SiteTaskData(
+                              tasks: state.tasks, context: context);
                           return PaginatedDataTable(
                             source: data,
                             columns: const [
@@ -255,10 +226,10 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
   }
 }
 
-class TaskData extends DataTableSource {
+class SiteTaskData extends DataTableSource {
   final List<Task> tasks;
   final BuildContext context;
-  TaskData({required this.tasks, required this.context});
+  SiteTaskData({required this.tasks, required this.context});
 
   @override
   DataRow? getRow(int index) {

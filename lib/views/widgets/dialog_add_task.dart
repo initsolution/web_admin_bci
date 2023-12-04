@@ -14,11 +14,12 @@ import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class DialogAddTask extends ConsumerWidget {
-  DialogAddTask({super.key});
+  final bool isCanEditSite;
+  DialogAddTask({super.key, this.selectedSite, this.isCanEditSite = true});
 
-  Site selectedSite = Site();
-  Employee selectedMaker = Employee();
-  Employee selectedVerifier = Employee();
+  Site? selectedSite;
+  Employee? selectedMaker;
+  Employee? selectedVerifier;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -60,17 +61,17 @@ class DialogAddTask extends ConsumerWidget {
                         height: 15,
                       ),
                       const Text('Site'),
-                      LoadSite(stateSite),
+                      loadSite(stateSite),
                       const SizedBox(
                         height: 10,
                       ),
                       const Text('Maker'),
-                      LoadMakerEmployee(stateMaker),
+                      loadMakerEmployee(stateMaker),
                       const SizedBox(
                         height: 10,
                       ),
                       const Text('Verifikator'),
-                      LoadVerifikatorEmployee(stateVerifikator),
+                      loadVerifikatorEmployee(stateVerifikator),
                       const SizedBox(
                         height: 10,
                       ),
@@ -106,6 +107,8 @@ class DialogAddTask extends ConsumerWidget {
   }
 
   void saveTask(WidgetRef ref) {
+    // if(selectedSite == null || selectedMaker == null || selectedVerifier == null)
+    // return
     final String typeTask = ref.watch(typeTaskProvider);
     String status = "todo";
     DateTime now = DateTime.now();
@@ -135,10 +138,11 @@ class DialogAddTask extends ConsumerWidget {
     ref.read(taskNotifierProvider.notifier).createTask(task);
   }
 
-  Widget LoadSite(var stateSite) {
+  Widget loadSite(var stateSite) {
     if (stateSite is SiteLoaded) {
       List<Site> listSite = stateSite.sites;
       return DropdownSearch<Site>(
+        enabled: isCanEditSite,
         items: listSite,
         itemAsString: (item) => item.name!,
         compareFn: (item1, item2) => item1.isEqual(item2),
@@ -231,7 +235,7 @@ class DialogAddTask extends ConsumerWidget {
     );
   }
 
-  Widget LoadMakerEmployee(var stateMaker) {
+  Widget loadMakerEmployee(var stateMaker) {
     if (stateMaker is EmployeeLoaded) {
       List<Employee> listMaker = [];
       for (var maker in stateMaker.employees) {
@@ -296,7 +300,7 @@ class DialogAddTask extends ConsumerWidget {
     }
   }
 
-  Widget LoadVerifikatorEmployee(var stateVerifikator) {
+  Widget loadVerifikatorEmployee(var stateVerifikator) {
     if (stateVerifikator is EmployeeLoaded) {
       List<Employee> listMaker = [];
       for (var maker in stateVerifikator.employees) {

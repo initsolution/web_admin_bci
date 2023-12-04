@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:flutter_web_ptb/model/employee.dart';

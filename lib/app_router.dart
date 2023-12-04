@@ -1,4 +1,5 @@
 import 'package:flutter_web_ptb/model/categorychecklistpreventive.dart';
+import 'package:flutter_web_ptb/model/site.dart';
 import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/views/screens/asset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/dashboard_detail_screen.dart';
@@ -13,6 +14,7 @@ import 'package:flutter_web_ptb/views/screens/masterpointchecklistpreventive_scr
 import 'package:flutter_web_ptb/views/screens/masterreportregulertorque_screen.dart';
 import 'package:flutter_web_ptb/views/screens/result_asset_screen.dart';
 import 'package:flutter_web_ptb/views/screens/site_screen.dart';
+import 'package:flutter_web_ptb/views/screens/site_task_reguler_screen.dart';
 import 'package:flutter_web_ptb/views/screens/task_screen.dart';
 import 'package:flutter_web_ptb/views/screens/tenant_screen.dart';
 import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
@@ -24,6 +26,7 @@ class RouteUri {
   static const String detailDashboard = '/detail-dashboard';
   static const String myProfile = '/my-profile';
   static const String site = '/site';
+  static const String siteTask = '/sitetask';
   static const String employee = '/employee';
   static const String tenant = '/tenant';
   static const String masterAsset = '/masterasset';
@@ -111,6 +114,16 @@ GoRouter appRouter(bool isUserLoggedIn) {
           key: state.pageKey,
           child: const SiteScreen(),
         ),
+      ),
+      GoRoute(
+        path: RouteUri.siteTask,
+        pageBuilder: (context, state) {
+          Site site = state.extra as Site;
+          return NoTransitionPage<void>(
+            key: state.pageKey,
+            child: SiteTaskRegulerScreen(site: site),
+          );
+        },
       ),
       GoRoute(
         path: RouteUri.employee,

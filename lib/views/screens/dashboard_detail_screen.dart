@@ -9,7 +9,6 @@ import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart
 import 'package:flutter_web_ptb/views/widgets/card_elements.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
-import 'package:intl/intl.dart';
 
 class DashboardDetailScreen extends ConsumerStatefulWidget {
   const DashboardDetailScreen({Key? key}) : super(key: key);

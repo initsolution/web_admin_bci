@@ -1,21 +1,15 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/constants/values.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
-import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_color_scheme.dart';
-import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
-import 'package:flutter_web_ptb/views/widgets/card_elements.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';

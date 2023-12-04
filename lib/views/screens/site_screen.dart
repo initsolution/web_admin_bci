@@ -469,11 +469,12 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                                   sort(columnIndex);
                                 },
                               ),
-                              const DataColumn(
-                                  label: Text('LONG'), tooltip: "LONGITUDE"),
-                              const DataColumn(
-                                  label: Text('LAT'), tooltip: "LATITUDE"),
+                              // const DataColumn(
+                              //     label: Text('LONG'), tooltip: "LONGITUDE"),
+                              // const DataColumn(
+                              //     label: Text('LAT'), tooltip: "LATITUDE"),
                               const DataColumn(label: Text('ACTION')),
+                              const DataColumn(label: Text('TASKS')),
                             ],
                             horizontalMargin: 20,
                             rowsPerPage: 10,
@@ -523,8 +524,8 @@ class SiteData extends DataTableSource {
       )),
       DataCell(Text(sites[index].region!.toString())),
       DataCell(Text(sites[index].province!.toString())),
-      DataCell(Text(sites[index].longitude!.toString())),
-      DataCell(Text(sites[index].latitude!.toString())),
+      // DataCell(Text(sites[index].longitude!.toString())),
+      // DataCell(Text(sites[index].latitude!.toString())),
       DataCell(IconButton(
         icon: const Icon(Icons.edit),
         onPressed: () {
@@ -548,7 +549,13 @@ class SiteData extends DataTableSource {
             },
           );
         },
-      ))
+      )),
+      DataCell(Row(
+        children: [
+          TextButton(onPressed: () {}, child: const Text('Regular')),
+          TextButton(onPressed: () {}, child: const Text('Preventive'))
+        ],
+      )),
     ]);
   }
 

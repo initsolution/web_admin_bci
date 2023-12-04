@@ -13,7 +13,6 @@ import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
 import 'package:flutter_web_ptb/providers/asset_state.dart';
 import 'package:collection/collection.dart';
-import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_choose_image.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_detail_image.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
@@ -21,9 +20,7 @@ import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master
 import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
 import 'package:flutter_web_ptb/views/widgets/report_reguler_torque_widget.dart';
 import 'package:flutter_web_ptb/views/widgets/report_reguler_verticality.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:progressive_image/progressive_image.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ResultAssetScreen extends ConsumerStatefulWidget {
