@@ -13,6 +13,7 @@ String typeTask = 'Reguler';
 String statusTask = 'All';
 final statusTaskProvider = StateProvider<String>((ref) => statusTask);
 final typeTaskProvider = StateProvider<String>((ref) => typeTask);
+final dueDateTaskProvider = StateProvider<String>((ref) => '');
 
 final taskNotifierProvider =
     AutoDisposeNotifierProvider<TaskNotifier, TaskState>(

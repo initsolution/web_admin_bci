@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +22,7 @@ class DialogAddTask extends ConsumerWidget {
   Employee selectedMaker = Employee();
   Employee selectedVerifier = Employee();
   final _formKey = GlobalKey<FormState>();
+  TextEditingController dueDateInput = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,6 +82,10 @@ class DialogAddTask extends ConsumerWidget {
                       const SizedBox(
                         height: 10,
                       ),
+                      DueDateTask(context),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       SizedBox(
                         width: MediaQuery.of(context).size.width / 2.5,
                         child: ElevatedButton(
@@ -109,7 +116,7 @@ class DialogAddTask extends ConsumerWidget {
     final String typeTask = ref.watch(typeTaskProvider);
     String status = "todo";
     DateTime now = DateTime.now();
-    String createdDate = DateFormat('yyyy-MM-dd').format(now);
+    String dueDate = ref.watch(dueDateTaskProvider);
     // String siteId = selectedSite.id.toString();
     // String nikMaker = selectedMaker.nik.toString();
     // String nikVerifier = selectedVerifier.nik.toString();
@@ -119,7 +126,7 @@ class DialogAddTask extends ConsumerWidget {
     // debugPrint('makerEmployee : ${selectedMaker.nik}');
     // debugPrint('verifierEmployee : ${selectedVerifier.nik}');
     Task task = Task(
-      createdDate: createdDate,
+      dueDate: dueDate,
       submitedDate: "",
       verifiedDate: "",
       status: status,
@@ -128,6 +135,7 @@ class DialogAddTask extends ConsumerWidget {
       makerEmployee: selectedMaker,
       verifierEmployee: selectedVerifier,
       site: selectedSite,
+      created_at: DateFormat('yyyy-MM-dd').format(now),
     );
     if (DEBUG) {
       debugPrint('site : ${task.toString()}');
@@ -229,6 +237,30 @@ class DialogAddTask extends ConsumerWidget {
         // ),
       ),
     );
+  }
+
+  Widget DueDateTask(BuildContext context) {
+    return Consumer(builder: (_, WidgetRef ref, __) {
+      final String dueDate = ref.watch(dueDateTaskProvider);
+      dueDateInput.text = dueDate;
+      return TextField(
+        controller: dueDateInput,
+        decoration: const InputDecoration(
+            icon: Icon(Icons.calendar_today), labelText: "Enter Due Date"),
+        readOnly: true,
+        onTap: () async {
+          DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(1950),
+              lastDate: DateTime(2200));
+          if (pickedDate != null) {
+            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+            ref.read(dueDateTaskProvider.notifier).state = formattedDate;
+          }
+        },
+      );
+    });
   }
 
   Widget LoadMakerEmployee(var stateMaker) {

@@ -379,7 +379,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                SizedBox(width: 400, child: Text('${widget.task.createdDate}'))
+                SizedBox(width: 400, child: Text('${widget.task.created_at}'))
               ],
             ),
           ],

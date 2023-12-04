@@ -335,7 +335,7 @@ class TaskData extends DataTableSource {
             style: const TextStyle(color: Colors.white),
           ))),
       DataCell(Text(task.type!)),
-      DataCell(Text(task.createdDate!)),
+      DataCell(Text(task.created_at ?? '')),
       DataCell(task.status != 'todo'
           ? TextButton(
               style: TextButton.styleFrom(
