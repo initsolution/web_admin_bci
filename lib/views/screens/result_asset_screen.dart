@@ -276,6 +276,20 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                 SizedBox(width: 400, child: Text('${widget.task.created_at}'))
               ],
             ),
+            const SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(
+                  width: 150,
+                  child: Text(
+                    'Due Date',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                SizedBox(width: 400, child: Text('${widget.task.dueDate}'))
+              ],
+            ),
           ],
         )
       ],
@@ -295,26 +309,56 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                  onPressed: () async {
-                    await launchUrlString(
-                        'http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}',
-                        mode: LaunchMode.platformDefault);
-                  },
-                  icon: const Icon(Icons.print)),
+                  onPressed: widget.task.status!.toLowerCase() != 'verified'
+                      ? null
+                      : () async {
+                          await launchUrlString(
+                              'http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}',
+                              mode: LaunchMode.platformDefault);
+                        },
+                  icon: Icon(
+                    Icons.print,
+                    color: widget.task.status!.toLowerCase() != 'verified'
+                        ? Colors.grey
+                        : Colors.black,
+                  )),
               const SizedBox(
                 width: 30,
               ),
               IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () {},
-              ),
-              const SizedBox(
-                width: 30,
-              ),
-              IconButton(
-                icon: const Icon(Icons.save_as_rounded),
+                icon: const Icon(
+                  Icons.refresh,
+                  color: Colors.black,
+                ),
                 onPressed: () {
-                  ref.read(assetNotifierProvider.notifier).updateStatusAsset();
+                  Map<String, dynamic> header = {
+                    'filter': 'task.id||eq||${widget.task.id}',
+                    "join": [
+                      "task",
+                    ],
+                    'sort': 'orderIndex,ASC'
+                  };
+                  Future(() => ref
+                      .read(assetNotifierProvider.notifier)
+                      .getAllAsset(header));
+                },
+              ),
+              const SizedBox(
+                width: 30,
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.save_as_rounded,
+                  color: widget.task.status!.toLowerCase() != 'verified'
+                      ? Colors.black
+                      : Colors.grey,
+                ),
+                onPressed: () {
+                  if (widget.task.status!.toLowerCase() != 'verified') {
+                    ref
+                        .read(assetNotifierProvider.notifier)
+                        .updateStatusAsset();
+                  }
                 },
               ),
               const SizedBox(

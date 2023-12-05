@@ -18,7 +18,6 @@ import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
 
-
 import '../../providers/tenant_provider.dart';
 
 class SiteScreen extends ConsumerStatefulWidget {
@@ -104,7 +103,8 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                               .searchSite(
                                   value)), // onChanged return the value of the field
                           decoration: InputDecoration(
-                              labelText: "Search by Site Name",
+                              labelText:
+                                  "Search by Site Name, Type or Fabricator",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               )),

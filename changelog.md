@@ -127,3 +127,8 @@
 > add due date
 > add site of task : menambahkan task berdasarkan site
 > menambahkan fitur pencarian di task screen
+
+> 06/12/2023 (mip)
+> pencarian task ditambahkan bedasarkan maker dan verifikator
+> menambahkan due date di result asset
+> menambahkan filter pencarian site Type or Fabricator

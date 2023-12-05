@@ -76,8 +76,10 @@ class SiteNotifier extends Notifier<SiteState> {
   searchSite(String search) async {
     state = SiteLoading();
     List<Site> searchSite = sites!
-        .where(
-            (site) => site.name!.toLowerCase().contains(search.toLowerCase()))
+        .where((site) =>
+            site.name!.toLowerCase().contains(search.toLowerCase()) ||
+            site.towerType!.toLowerCase().contains(search.toLowerCase()) ||
+            site.fabricator!.toLowerCase().contains(search.toLowerCase()))
         .toList();
     state = SiteLoaded(sites: searchSite);
   }

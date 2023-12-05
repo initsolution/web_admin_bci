@@ -178,7 +178,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                                 .searchTask(
                                     value)), // onChanged return the value of the field
                             decoration: InputDecoration(
-                                labelText: "Search by Site Name",
+                                labelText:
+                                    "Search by Site Name, Maker or Verifier",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 )),
