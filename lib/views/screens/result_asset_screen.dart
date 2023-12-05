@@ -33,23 +33,10 @@ class ResultAssetScreen extends ConsumerStatefulWidget {
 
 class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
   bool confirmAll = false;
-  // var anchor;
-  // final pdf = pw.Document();
   List<ReportRegulerTorque>? reportRegulerTorque;
+
   @override
   Widget build(BuildContext context) {
-    // var value = ref.watch(userDataProvider.select((value) => value.username));
-    // ref.listen(
-    //   assetNotifierProvider,
-    //   (previous, next) {
-    // if (next is AssetLoaded) {
-    //   debugPrint('pass pdf');
-    // List<Asset> assets = next.assets;
-    // var groupedItems = groupBy(assets, (e) => e.category);
-    // ref.read(asyncPdfProvider.notifier).createPDF(groupedItems);
-    // }
-    //   },
-    // );
     return Consumer(
       builder: (context, ref, child) {
         var state = ref.watch(assetNotifierProvider);
@@ -111,97 +98,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
               ],
             ),
           );
-
-          // return PortalMasterLayout(
-          //   selectedMenuUri: RouteUri.asset,
-          //   body: widget.task.type == 'Reguler'
-          //       ?
-          //       // reguler
-          //       DefaultTabController(
-          //           length: 3,
-          //           child: Scaffold(
-          //             body: Column(
-          //               children: [
-          //                 const TabBar(labelColor: Colors.blue, tabs: [
-          //                   Tab(
-          //                     text: 'REPORT TORQUE',
-          //                   ),
-          //                   Tab(
-          //                     text: 'REPORT VERTICALITY',
-          //                   ),
-          //                   Tab(
-          //                     text: 'PHOTOS',
-          //                   ),
-          //                 ]),
-          //                 Expanded(
-          //                   child: TabBarView(children: [
-          //                     SizedBox(
-          //                       child: ReportRegulerTorqueWidget(
-          //                         reportRegulerTorque: reportRegulerTorque!,
-          //                       ),
-          //                     ),
-          //                     SizedBox(
-          //                       child: ReportRegulerVerticalityWidget(
-          //                           reportRegulerVerticality:
-          //                               widget.task.reportRegulerVerticality!),
-          //                     ),
-          //                     SizedBox(
-          //                       child: formAsset(groupedItems, assets),
-          //                     ),
-          //                   ]),
-          //                 ),
-          //               ],
-          //             ),
-          //           ))
-          //       :
-          //       //preventive
-          //       DefaultTabController(
-          //           length: 2,
-          //           child: Scaffold(
-          //             body: Column(
-          //               children: [
-          //                 const TabBar(labelColor: Colors.blue, tabs: [
-          //                   Tab(
-          //                     text: 'ASSET',
-          //                   ),
-          //                   Tab(
-          //                     text: 'CEKLIST',
-          //                   ),
-          //                 ]),
-          //                 Expanded(
-          //                   child: TabBarView(children: [
-          //                     SizedBox(
-          //                       child: formAsset(groupedItems, assets),
-          //                     ),
-          //                     SizedBox(
-          //                       child: ReportPreventiveWidget(
-          //                         categoryChecklistPreventives:
-          //                             widget.task.categorychecklistprev!,
-          //                       ),
-          //                     )
-          //                   ]),
-          //                 ),
-          //               ],
-          //             ),
-          //           ),
-          //         ),
-          // );
         } else if (state is AssetChangeDataSuccess) {
-          // Map<String, dynamic> params = {
-          //   "join": [
-          //     "site",
-          //     "makerEmployee",
-          //     "verifierEmployee",
-          //     "categorychecklistprev",
-          //     "categorychecklistprev.pointChecklistPreventive",
-          //     "reportRegulerTorque",
-          //     "reportRegulerVerticality",
-          //     "reportRegulerVerticality.valueVerticality"
-          //   ]
-          // };
-          // Future(
-          //     () => ref.read(taskNotifierProvider.notifier).getAllTask(params));
-          // GoRouter.of(context).go(RouteUri.asset);
           Map<String, dynamic> header = {
             'filter': 'task.id||eq||${widget.task.id}',
             "join": [
@@ -376,7 +273,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                SizedBox(width: 400, child: Text('${widget.task.createdDate}'))
+                SizedBox(width: 400, child: Text('${widget.task.created_at}'))
               ],
             ),
           ],
@@ -397,34 +294,6 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // GestureDetector(
-              //   onTap: () {
-              //     GoRouter.of(context).go(
-              //       RouteUri.reportChecklist,
-              //       extra: widget.task.categorychecklistprev!,
-              //     );
-              //   },
-              //   child: Container(
-              //     width: 200,
-              //     padding: const EdgeInsets.all(kDefaultPadding / 2),
-              //     decoration: BoxDecoration(
-              //       color: Colors.blue[900],
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //     child: Row(
-              //       children: [
-              //         SvgPicture.asset('assets/icons/ic_report_checklist.svg',
-              //             width: 24, height: 24),
-              //         const SizedBox(width: 20),
-              //         const Text('REPORT CHECKLIST',
-              //             style: TextStyle(
-              //                 color: Colors.white,
-              //                 fontWeight: FontWeight.bold)),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-              // const Spacer(),
               IconButton(
                   onPressed: () async {
                     await launchUrlString(
@@ -733,91 +602,3 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
     }
   }
 }
-
-
-
-// SliverList.builder(
-//                   itemCount: groupedItems.length,
-//                   itemBuilder: (BuildContext context, int index) {
-//                     String? category = groupedItems.keys.elementAt(index);
-//                     List itemsInCategory = groupedItems[category]!;
-
-//                     // Return a widget representing the category and its items
-//                     return SliverToBoxAdapter(
-//                       child: Container(
-//                         decoration: BoxDecoration(
-//                             border: Border.all(
-//                           color: Colors.red,
-//                         )),
-//                         margin: const EdgeInsets.symmetric(
-//                             vertical: 30, horizontal: 80),
-//                         // padding: ,
-//                         child: Column(
-//                           children: [
-//                             Text(category!,
-//                                 style: const TextStyle(
-//                                     fontWeight: FontWeight.bold, fontSize: 25)),
-//                             const SizedBox(
-//                               height: 20,
-//                             ),
-//                             SliverGrid.builder(
-//                               gridDelegate:
-//                                   const SliverGridDelegateWithMaxCrossAxisExtent(
-//                                       maxCrossAxisExtent: 800,
-//                                       childAspectRatio: 3 / 2,
-//                                       crossAxisSpacing: 20,
-//                                       mainAxisSpacing: 20),
-//                               itemCount: itemsInCategory.length,
-//                               itemBuilder: (BuildContext context, int index) {
-//                                 Asset item = itemsInCategory[index];
-//                                 // debugPrint('${item.toString()} \n');
-//                                 // Return a widget representing the item
-//                                 return SliverToBoxAdapter(
-//                                   child: Container(
-//                                     decoration: BoxDecoration(
-//                                         border: Border.all(
-//                                       color: Colors.green,
-//                                     )),
-//                                     padding: const EdgeInsets.all(10),
-//                                     child: Column(
-//                                       children: [
-//                                         Align(
-//                                           alignment: Alignment.centerRight,
-//                                           child: Checkbox(
-//                                             value: item.isPassed,
-//                                             onChanged: (value) {
-//                                               item.isPassed = value;
-//                                               ref
-//                                                   .read(assetNotifierProvider
-//                                                       .notifier)
-//                                                   .setDataAsset(item);
-//                                             },
-//                                           ),
-//                                         ),
-//                                         SizedBox(
-//                                           height: MediaQuery.of(context)
-//                                                   .size
-//                                                   .height *
-//                                               0.35,
-//                                           width: MediaQuery.of(context)
-//                                                   .size
-//                                                   .width *
-//                                               0.3,
-//                                           child: Image.network(
-//                                             '$urlRepo/asset/getImage/${item.id}',
-//                                             fit: BoxFit.fill,
-//                                           ),
-//                                         ),
-//                                         Text(item.description!),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                 );
-//                               },
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                     );
-//                   },
-//                 )

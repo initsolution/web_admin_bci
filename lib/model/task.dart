@@ -14,7 +14,7 @@ part 'task.g.dart';
 @JsonSerializable()
 class Task {
   int? id;
-  String? createdDate;
+  String? dueDate;
   String? submitedDate;
   String? verifiedDate;
   String? status;
@@ -23,12 +23,13 @@ class Task {
   Employee? makerEmployee;
   Employee? verifierEmployee;
   Site? site;
+  String? created_at;
   List<CategoryChecklistPreventive>? categorychecklistprev;
   List<ReportRegulerTorque>? reportRegulerTorque;
   ReportRegulerVerticality? reportRegulerVerticality;
   Task({
     this.id,
-    this.createdDate,
+    this.dueDate,
     this.submitedDate,
     this.verifiedDate,
     this.status,
@@ -40,11 +41,12 @@ class Task {
     this.categorychecklistprev,
     this.reportRegulerTorque,
     this.reportRegulerVerticality,
+    this.created_at,
   });
 
   Task copyWith({
     int? id,
-    String? createdDate,
+    String? dueDate,
     String? submitedDate,
     String? verifiedDate,
     String? status,
@@ -56,30 +58,31 @@ class Task {
     List<CategoryChecklistPreventive>? categorychecklistprev,
     List<ReportRegulerTorque>? reportRegulerTorque,
     ReportRegulerVerticality? reportRegulerVerticality,
+    String? created_at,
   }) {
     return Task(
-      id: id ?? this.id,
-      createdDate: createdDate ?? this.createdDate,
-      submitedDate: submitedDate ?? this.submitedDate,
-      verifiedDate: verifiedDate ?? this.verifiedDate,
-      status: status ?? this.status,
-      type: type ?? this.type,
-      towerCategory: towerCategory ?? this.towerCategory,
-      makerEmployee: makerEmployee ?? this.makerEmployee,
-      verifierEmployee: verifierEmployee ?? this.verifierEmployee,
-      site: site ?? this.site,
-      categorychecklistprev:
-          categorychecklistprev ?? this.categorychecklistprev,
-      reportRegulerTorque: reportRegulerTorque ?? this.reportRegulerTorque,
-      reportRegulerVerticality:
-          reportRegulerVerticality ?? this.reportRegulerVerticality,
-    );
+        id: id ?? this.id,
+        dueDate: dueDate ?? this.dueDate,
+        submitedDate: submitedDate ?? this.submitedDate,
+        verifiedDate: verifiedDate ?? this.verifiedDate,
+        status: status ?? this.status,
+        type: type ?? this.type,
+        towerCategory: towerCategory ?? this.towerCategory,
+        makerEmployee: makerEmployee ?? this.makerEmployee,
+        verifierEmployee: verifierEmployee ?? this.verifierEmployee,
+        site: site ?? this.site,
+        categorychecklistprev:
+            categorychecklistprev ?? this.categorychecklistprev,
+        reportRegulerTorque: reportRegulerTorque ?? this.reportRegulerTorque,
+        reportRegulerVerticality:
+            reportRegulerVerticality ?? this.reportRegulerVerticality,
+        created_at: created_at ?? created_at);
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'createdDate': createdDate,
+      'dueDate': dueDate,
       'submitedDate': submitedDate,
       'verifiedDate': verifiedDate,
       'status': status,
@@ -93,14 +96,14 @@ class Task {
       'reportRegulerTorque':
           reportRegulerTorque?.map((x) => x.toMap()).toList(),
       'reportRegulerVerticality': reportRegulerVerticality?.toMap(),
+      'created_at': created_at,
     };
   }
 
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
       id: map['id'] != null ? map['id'] as int : null,
-      createdDate:
-          map['createdDate'] != null ? map['createdDate'] as String : null,
+      dueDate: map['dueDate'] != null ? map['dueDate'] as String : null,
       submitedDate:
           map['submitedDate'] != null ? map['submitedDate'] as String : null,
       verifiedDate:
@@ -139,6 +142,8 @@ class Task {
           ? ReportRegulerVerticality.fromMap(
               map['reportRegulerVerticality'] as Map<String, dynamic>)
           : null,
+      created_at:
+          map['created_at'] != null ? map['created_at'] as String : null,
     );
   }
 
@@ -147,7 +152,7 @@ class Task {
   Map<String, dynamic> toJson() => _$TaskToJson(this);
   @override
   String toString() {
-    return 'Task(id: $id, createdDate: $createdDate, submitedDate: $submitedDate, verifiedDate: $verifiedDate, status: $status, type: $type, towerCategory: $towerCategory, makerEmployee: $makerEmployee, verifierEmployee: $verifierEmployee, site: $site, categorychecklistprev: $categorychecklistprev, reportRegulerTorque: $reportRegulerTorque, reportRegulerVerticality: $reportRegulerVerticality)';
+    return 'Task(id: $id, dueDate: $dueDate, submitedDate: $submitedDate, verifiedDate: $verifiedDate, status: $status, type: $type, towerCategory: $towerCategory, makerEmployee: $makerEmployee, verifierEmployee: $verifierEmployee, site: $site, categorychecklistprev: $categorychecklistprev, reportRegulerTorque: $reportRegulerTorque, reportRegulerVerticality: $reportRegulerVerticality, created_at: $created_at)';
   }
 
   @override
@@ -155,7 +160,7 @@ class Task {
     if (identical(this, other)) return true;
 
     return other.id == id &&
-        other.createdDate == createdDate &&
+        other.dueDate == dueDate &&
         other.submitedDate == submitedDate &&
         other.verifiedDate == verifiedDate &&
         other.status == status &&
@@ -166,13 +171,14 @@ class Task {
         other.site == site &&
         listEquals(other.categorychecklistprev, categorychecklistprev) &&
         listEquals(other.reportRegulerTorque, reportRegulerTorque) &&
-        other.reportRegulerVerticality == reportRegulerVerticality;
+        other.reportRegulerVerticality == reportRegulerVerticality &&
+        other.created_at == created_at;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        createdDate.hashCode ^
+        dueDate.hashCode ^
         submitedDate.hashCode ^
         verifiedDate.hashCode ^
         status.hashCode ^

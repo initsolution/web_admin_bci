@@ -119,3 +119,11 @@
 > mengganti progresive image saat melihat asset dan ganti gambar. Untuk ganti gambar masih belum mau ke load gambar nya
 > login admin bisa master
 > solving gambar belum ke load ketika ganti gambar
+
+> 04/12/2023 (mip)
+> Task menambahkan due date dan created_at
+
+> 05/12/2023 (deddy)
+> add due date
+> add site of task : menambahkan task berdasarkan site
+> menambahkan fitur pencarian di task screen

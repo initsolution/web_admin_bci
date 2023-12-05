@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
-import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/model/province.dart';
 import 'package:flutter_web_ptb/model/site.dart';
@@ -19,8 +18,6 @@ import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:pdf/widgets.dart' as pw;
-import 'dart:html' as html;
 
 import '../../providers/tenant_provider.dart';
 
@@ -32,9 +29,6 @@ class SiteScreen extends ConsumerStatefulWidget {
 }
 
 class _SiteScreenState extends ConsumerState<SiteScreen> {
-  final pdf = pw.Document();
-  var anchor;
-
   late List<Site> filterData;
   bool _sortIDAsc = true;
   bool _sortNameAsc = true;
@@ -50,121 +44,12 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
   void initState() {
     Future(() => ref.read(siteNotifierProvider.notifier).getAllSite({}));
     super.initState();
-    // createPDF();
   }
 
   @override
   void dispose() {
     _dataTableHorizontalScrollController.dispose();
     super.dispose();
-  }
-
-  savePDF() async {
-    Uint8List pdfInBytes = await pdf.save();
-    final blob = html.Blob([pdfInBytes], 'application/pdf');
-    final url = html.Url.createObjectUrlFromBlob(blob);
-    anchor = html.document.createElement('a') as html.AnchorElement
-      ..href = url
-      ..style.display = 'none'
-      ..download = 'pdf.pdf';
-    html.document.body!.children.add(anchor);
-  }
-
-  createPDF() async {
-    //contoh1
-    // final profileImage = pw.MemoryImage((await rootBundle.load('hospital_ic.png')).buffer.asUint8List(),);
-    // pdf.addPage(
-    //   pw.Page(
-    //     build: (pw.Context context) => pw.Column(
-    //       children: [
-    //         pw.Text('Hello World1', style: pw.TextStyle(fontSize: 40)),
-    //         pw.Text('Hello World2', style: pw.TextStyle(fontSize: 40)),
-    //         pw.Text('Hello World3', style: pw.TextStyle(fontSize: 40)),
-    //         pw.Image(profileImage),
-    //       ],
-    //     ),
-    //   ),
-    // );
-
-    //contoh2
-    // var reportedItems = [
-    //   ["A1", "B1", "C1", "D1"],
-    //   ["A2", "B2", "C2", "D2"],
-    //   ["A3", "B3", "C3", "D3"]
-    // ];
-    // pdf.addPage(
-    //   pw.Page(
-    //       build: (pw.Context context) => pw.Table(children: [
-    //             for (var i = 0; i < reportedItems.length; i++)
-    //               pw.TableRow(children: [
-    //                 pw.Column(
-    //                     crossAxisAlignment: pw.CrossAxisAlignment.center,
-    //                     mainAxisAlignment: pw.MainAxisAlignment.center,
-    //                     children: [
-    //                       pw.Text(reportedItems[i][0],
-    //                           style: pw.TextStyle(fontSize: 6)),
-    //                       pw.Divider(thickness: 1)
-    //                     ]),
-    //                 pw.Column(
-    //                     crossAxisAlignment: pw.CrossAxisAlignment.center,
-    //                     mainAxisAlignment: pw.MainAxisAlignment.center,
-    //                     children: [
-    //                       pw.Text(reportedItems[i][1],
-    //                           style: pw.TextStyle(fontSize: 6)),
-    //                       pw.Divider(thickness: 1)
-    //                     ]),
-    //                 pw.Column(
-    //                     crossAxisAlignment: pw.CrossAxisAlignment.center,
-    //                     mainAxisAlignment: pw.MainAxisAlignment.center,
-    //                     children: [
-    //                       pw.Text(reportedItems[i][2],
-    //                           style: pw.TextStyle(fontSize: 6)),
-    //                       pw.Divider(thickness: 1)
-    //                     ]),
-    //                 pw.Column(
-    //                     crossAxisAlignment: pw.CrossAxisAlignment.center,
-    //                     mainAxisAlignment: pw.MainAxisAlignment.center,
-    //                     children: [
-    //                       pw.Text(reportedItems[i][3],
-    //                           style: pw.TextStyle(fontSize: 6)),
-    //                       pw.Divider(thickness: 1)
-    //                     ])
-    //               ])
-    //           ])),
-    // );
-
-    //contoh3
-    final profileImage = pw.MemoryImage(
-      (await rootBundle.load('hospital_ic.png')).buffer.asUint8List(),
-    );
-    pdf.addPage(
-      pw.Page(
-          build: (pw.Context context) => pw.Container(
-                height: 1280.0,
-                width: 720.0,
-                padding: const pw.EdgeInsets.all(10.0),
-                child: pw.Center(
-                  child: pw.Column(
-                    children: [
-                      pw.Text('PERIODIC MAINTENANCE TIGHTENING BOLT'),
-                      pw.Text('Site ID'),
-                      pw.Text('Site Name'),
-                      pw.Row(children: [
-                        pw.Column(children: [
-                          pw.Text('Site Information'),
-                          pw.Image(profileImage),
-                        ]),
-                        pw.Column(children: [
-                          pw.Text('Site Information'),
-                          pw.Image(profileImage),
-                        ]),
-                      ]),
-                    ],
-                  ),
-                ),
-              )),
-    );
-    savePDF();
   }
 
   @override
@@ -219,7 +104,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                               .searchSite(
                                   value)), // onChanged return the value of the field
                           decoration: InputDecoration(
-                              labelText: "Search ...",
+                              labelText: "Search by Site Name",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5.0),
                               )),
@@ -399,7 +284,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                     child: Consumer(
                       builder: (context, ref, child) {
                         var state = ref.watch(siteNotifierProvider);
-                        if (DEBUG) debugPrint('state : $state');
+                        // if (DEBUG) debugPrint('state : $state');
                         if (state is SiteLoaded) {
                           DataTableSource data = SiteData(
                               sites: state.sites, ref: ref, context: context);
@@ -550,12 +435,11 @@ class SiteData extends DataTableSource {
           );
         },
       )),
-      DataCell(Row(
-        children: [
-          TextButton(onPressed: () {}, child: const Text('Regular')),
-          TextButton(onPressed: () {}, child: const Text('Preventive'))
-        ],
-      )),
+      DataCell(TextButton(
+          onPressed: () {
+            GoRouter.of(context).go(RouteUri.siteTask, extra: sites[index]);
+          },
+          child: const Text('Manage Task'))),
     ]);
   }
 

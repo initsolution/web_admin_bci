@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
+import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/model/site.dart';
 import 'package:flutter_web_ptb/model/task.dart';
@@ -21,81 +24,68 @@ class DialogAddTask extends ConsumerWidget {
   Employee? selectedMaker;
   Employee? selectedVerifier;
   final _formKey = GlobalKey<FormState>();
+  TextEditingController dueDateInput = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var stateSite = ref.watch(siteNotifierProvider);
-    var stateMaker = ref.watch(employeeNotifierProvider);
-    var stateVerifikator = ref.watch(employeeNotifierProvider);
     return Center(
       child: AlertDialog(
         content: SizedBox(
           width: MediaQuery.of(context).size.width / 2.5,
-          height: MediaQuery.of(context).size.height / 1.4,
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'New Task',
-                            style: TextStyle(fontSize: 30),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Text('Site'),
-                      loadSite(stateSite),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text('Maker'),
-                      loadMakerEmployee(stateMaker),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text('Verifikator'),
-                      loadVerifikatorEmployee(stateVerifikator),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text('Type Task'),
-                      getDropDownTypeTask(),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 2.5,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final isValid = _formKey.currentState!.validate();
-                            debugPrint('isValid : $isValid');
-                            if (isValid) {
-                              saveTask(ref);
-                              Navigator.pop(context);
-                            }
-                          },
-                          child: const Text('SAVE'),
+          // height: MediaQuery.of(context).size.height / 1.4,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Create Task',
+                          style: TextStyle(fontSize: 30),
                         ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 15),
+                    const Text('Site'),
+                    loadSite(),
+                    const SizedBox(height: 10),
+                    const Text('Maker'),
+                    loadMakerEmployee(),
+                    const SizedBox(height: 10),
+                    const Text('Verifikator'),
+                    loadVerifikatorEmployee(),
+                    const SizedBox(height: 10),
+                    const Text('Type Task'),
+                    getDropDownTypeTask(),
+                    const SizedBox(height: 10),
+                    dueDateTask(context),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 2.5,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final isValid = _formKey.currentState!.validate();
+                          debugPrint('isValid : $isValid');
+                          if (isValid) {
+                            saveTask(ref);
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: const Text('SAVE'),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -112,7 +102,7 @@ class DialogAddTask extends ConsumerWidget {
     final String typeTask = ref.watch(typeTaskProvider);
     String status = "todo";
     DateTime now = DateTime.now();
-    String createdDate = DateFormat('yyyy-MM-dd').format(now);
+    String dueDate = ref.watch(dueDateTaskProvider);
     // String siteId = selectedSite.id.toString();
     // String nikMaker = selectedMaker.nik.toString();
     // String nikVerifier = selectedVerifier.nik.toString();
@@ -122,7 +112,7 @@ class DialogAddTask extends ConsumerWidget {
     // debugPrint('makerEmployee : ${selectedMaker.nik}');
     // debugPrint('verifierEmployee : ${selectedVerifier.nik}');
     Task task = Task(
-      createdDate: createdDate,
+      dueDate: dueDate,
       submitedDate: "",
       verifiedDate: "",
       status: status,
@@ -131,6 +121,7 @@ class DialogAddTask extends ConsumerWidget {
       makerEmployee: selectedMaker,
       verifierEmployee: selectedVerifier,
       site: selectedSite,
+      created_at: DateFormat('yyyy-MM-dd').format(now),
     );
     if (DEBUG) {
       debugPrint('site : ${task.toString()}');
@@ -138,48 +129,66 @@ class DialogAddTask extends ConsumerWidget {
     ref.read(taskNotifierProvider.notifier).createTask(task);
   }
 
-  Widget loadSite(var stateSite) {
-    if (stateSite is SiteLoaded) {
-      List<Site> listSite = stateSite.sites;
-      return DropdownSearch<Site>(
-        enabled: isCanEditSite,
-        items: listSite,
-        itemAsString: (item) => item.name!,
-        compareFn: (item1, item2) => item1.isEqual(item2),
-        onChanged: (value) {
-          selectedSite = value!;
-        },
-        popupProps: PopupPropsMultiSelection.dialog(
-          showSearchBox: true,
-          itemBuilder: _customPopupItemBuilderSite,
-          // bottomSheetProps: const BottomSheetProps(elevation: 5),
-          containerBuilder: (context, popupWidget) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('Pilih Site'),
-                Flexible(
-                  child: Container(
-                    child: popupWidget,
-                  ),
-                ),
-              ],
+  Widget loadSite() {
+    if (isCanEditSite) {
+      return Consumer(
+        builder: (context, ref, child) {
+          var stateSite = ref.watch(siteNotifierProvider);
+          if (stateSite is SiteLoaded) {
+            List<Site> listSite = stateSite.sites;
+            return DropdownSearch<Site>(
+              // enabled: isCanEditSite,
+              // selectedItem: selectedSite,
+              items: listSite,
+              itemAsString: (item) => item.name!,
+              compareFn: (item1, item2) => item1.isEqual(item2),
+              onChanged: (value) {
+                selectedSite = value!;
+              },
+              popupProps: PopupPropsMultiSelection.dialog(
+                showSearchBox: true,
+                itemBuilder: _customPopupItemBuilderSite,
+                // bottomSheetProps: const BottomSheetProps(elevation: 5),
+                containerBuilder: (context, popupWidget) {
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text('Pilih Site'),
+                      Flexible(
+                        child: Container(
+                          child: popupWidget,
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              validator: (input) {
+                if (input == null) {
+                  return "Please Select Site";
+                }
+                return null;
+              },
             );
-          },
-        ),
-        validator: (input) {
-          if (input == null) {
-            return "Please Select Site";
+          } else if (stateSite is SiteLoading) {
+            return const CircularProgressIndicator();
+          } else {
+            return const CircularProgressIndicator();
           }
-          return null;
         },
       );
-    } else if (stateSite is SiteLoading) {
-      return const CircularProgressIndicator();
     } else {
-      return const CircularProgressIndicator();
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(kDefaultPadding),
+        decoration: BoxDecoration(
+          border: Border.all(width: 1, color: Colors.black26),
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Text(selectedSite?.name ?? ""),
+      );
     }
   }
 
@@ -235,131 +244,165 @@ class DialogAddTask extends ConsumerWidget {
     );
   }
 
-  Widget loadMakerEmployee(var stateMaker) {
-    if (stateMaker is EmployeeLoaded) {
-      List<Employee> listMaker = [];
-      for (var maker in stateMaker.employees) {
-        if (maker.role == 'Maker') {
-          listMaker.add(maker);
-          // if (listMaker.length < 1) {
-          //   listMaker.add(maker);
-          // }
-        }
-      }
-      double width = 500;
-      double height = 500;
-      if (listMaker.length == 1) {
-        height = 160;
-      } else if (listMaker.length == 2) {
-        height = 210;
-      } else if (listMaker.length >= 3 && listMaker.length <= 7) {
-        height = ((listMaker.length - 2) * 50) + 200;
-      }
-      return DropdownSearch<Employee>(
-        items: listMaker,
-        itemAsString: (item) => item.name!,
-        compareFn: (item1, item2) => item1.name == item2.name,
-        onChanged: (value) {
-          selectedMaker = value!;
-        },
-        popupProps: PopupPropsMultiSelection.dialog(
-          showSearchBox: true,
-          constraints: BoxConstraints.tight(
-            Size(width, height),
-          ),
-          itemBuilder: _customPopupItemBuilderMaker,
-          // bottomSheetProps: const BottomSheetProps(elevation: 5),
-          containerBuilder: (context, popupWidget) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('Pilih Maker'),
-                Flexible(
-                  child: Container(
-                    child: popupWidget,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-        validator: (input) {
-          if (input == null) {
-            return "Please Select Maker Employee";
+  Widget dueDateTask(BuildContext context) {
+    return Consumer(builder: (_, WidgetRef ref, __) {
+      final String dueDate = ref.watch(dueDateTaskProvider);
+      dueDateInput.text = dueDate;
+      return TextField(
+        controller: dueDateInput,
+        decoration: const InputDecoration(
+            icon: Icon(Icons.calendar_today), labelText: "Enter Due Date"),
+        readOnly: true,
+        onTap: () async {
+          DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime.now(),
+              lastDate: DateTime(2200));
+          if (pickedDate != null) {
+            String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+            ref.read(dueDateTaskProvider.notifier).state = formattedDate;
           }
-          return null;
         },
-        // dropdownBuilder: _customPopupItemBuilderExample,
       );
-    } else if (stateMaker is EmployeeLoading) {
-      return const CircularProgressIndicator();
-    } else {
-      return const CircularProgressIndicator();
-    }
+    });
   }
 
-  Widget loadVerifikatorEmployee(var stateVerifikator) {
-    if (stateVerifikator is EmployeeLoaded) {
-      List<Employee> listMaker = [];
-      for (var maker in stateVerifikator.employees) {
-        if (maker.role == 'Verify') {
-          listMaker.add(maker);
-        }
-      }
-      double width = 500;
-      double height = 500;
-      if (listMaker.length == 1) {
-        height = 160;
-      } else if (listMaker.length == 2) {
-        height = 210;
-      } else if (listMaker.length >= 3 && listMaker.length <= 7) {
-        height = ((listMaker.length - 2) * 50) + 200;
-      }
-      return DropdownSearch<Employee>(
-        items: listMaker,
-        itemAsString: (item) => item.name!,
-        compareFn: (item1, item2) => item1.name == item2.name,
-        onChanged: (value) {
-          selectedVerifier = value!;
-        },
-        popupProps: PopupPropsMultiSelection.dialog(
-          showSearchBox: true,
-          constraints: BoxConstraints.tight(
-            Size(width, height),
-          ),
-          itemBuilder: _customPopupItemBuilderMaker,
-          // bottomSheetProps: const BottomSheetProps(elevation: 5),
-          containerBuilder: (context, popupWidget) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('Pilih Verifikator'),
-                Flexible(
-                  child: Container(
-                    child: popupWidget,
-                  ),
-                ),
-              ],
-            );
-          },
-        ),
-        validator: (input) {
-          if (input == null) {
-            return "Please Select Verifikator Employee";
+  Widget loadMakerEmployee() {
+    return Consumer(
+      builder: (context, ref, child) {
+        var stateMaker = ref.watch(employeeNotifierProvider);
+        if (stateMaker is EmployeeLoaded) {
+          List<Employee> listMaker = [];
+          for (var maker in stateMaker.employees) {
+            if (maker.role == 'Maker') {
+              listMaker.add(maker);
+              // if (listMaker.length < 1) {
+              //   listMaker.add(maker);
+              // }
+            }
           }
-          return null;
-        },
-        // dropdownBuilder: _customPopupItemBuilderExample,
-      );
-    } else if (stateVerifikator is EmployeeLoading) {
-      return const CircularProgressIndicator();
-    } else {
-      return const CircularProgressIndicator();
-    }
+          double width = 500;
+          double height = 500;
+          if (listMaker.length == 1) {
+            height = 160;
+          } else if (listMaker.length == 2) {
+            height = 210;
+          } else if (listMaker.length >= 3 && listMaker.length <= 7) {
+            height = ((listMaker.length - 2) * 50) + 200;
+          }
+          return DropdownSearch<Employee>(
+            items: listMaker,
+            itemAsString: (item) => item.name!,
+            compareFn: (item1, item2) => item1.name == item2.name,
+            onChanged: (value) {
+              selectedMaker = value!;
+            },
+            popupProps: PopupPropsMultiSelection.dialog(
+              showSearchBox: true,
+              constraints: BoxConstraints.tight(
+                Size(width, height),
+              ),
+              itemBuilder: _customPopupItemBuilderMaker,
+              // bottomSheetProps: const BottomSheetProps(elevation: 5),
+              containerBuilder: (context, popupWidget) {
+                return Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('Pilih Maker'),
+                    Flexible(
+                      child: Container(
+                        child: popupWidget,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            validator: (input) {
+              if (input == null) {
+                return "Please Select Maker Employee";
+              }
+              return null;
+            },
+            // dropdownBuilder: _customPopupItemBuilderExample,
+          );
+        } else if (stateMaker is EmployeeLoading) {
+          return const CircularProgressIndicator();
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
+    );
+  }
+
+  Widget loadVerifikatorEmployee() {
+    return Consumer(
+      builder: (context, ref, child) {
+        var stateVerifikator = ref.watch(employeeNotifierProvider);
+        if (stateVerifikator is EmployeeLoaded) {
+          List<Employee> listMaker = [];
+          for (var maker in stateVerifikator.employees) {
+            if (maker.role == 'Verify') {
+              listMaker.add(maker);
+            }
+          }
+          double width = 500;
+          double height = 500;
+          if (listMaker.length == 1) {
+            height = 160;
+          } else if (listMaker.length == 2) {
+            height = 210;
+          } else if (listMaker.length >= 3 && listMaker.length <= 7) {
+            height = ((listMaker.length - 2) * 50) + 200;
+          }
+          return DropdownSearch<Employee>(
+            items: listMaker,
+            itemAsString: (item) => item.name!,
+            compareFn: (item1, item2) => item1.name == item2.name,
+            onChanged: (value) {
+              selectedVerifier = value!;
+            },
+            popupProps: PopupPropsMultiSelection.dialog(
+              showSearchBox: true,
+              constraints: BoxConstraints.tight(
+                Size(width, height),
+              ),
+              itemBuilder: _customPopupItemBuilderMaker,
+              // bottomSheetProps: const BottomSheetProps(elevation: 5),
+              containerBuilder: (context, popupWidget) {
+                return Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('Pilih Verifikator'),
+                    Flexible(
+                      child: Container(
+                        child: popupWidget,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            validator: (input) {
+              if (input == null) {
+                return "Please Select Verifikator Employee";
+              }
+              return null;
+            },
+            // dropdownBuilder: _customPopupItemBuilderExample,
+          );
+        } else if (stateVerifikator is EmployeeLoading) {
+          return const CircularProgressIndicator();
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
+    );
   }
 
   // Widget LoadVerifikatorEmployee(var stateMaker) {
