@@ -194,10 +194,15 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                           child: TextField(
                             onChanged: (value) => Future(() => ref
                                 .read(masterAssetNotifierProvider.notifier)
-                                .searchMasterAsset(
-                                    value)), // onChanged return the value of the field
+                                .searchMasterAsset(value)),
+                            onSubmitted: (value) {
+                              Future(() => ref
+                                  .read(masterAssetNotifierProvider.notifier)
+                                  .searchMasterAsset(value));
+                            }, // onChanged return the value of the field
                             decoration: InputDecoration(
-                                labelText: "Search Task Type",
+                                labelText:
+                                    "Search Task Type, Sectionm Fabricator, Category",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 )),

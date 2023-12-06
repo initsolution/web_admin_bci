@@ -100,8 +100,12 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                         child: TextField(
                           onChanged: (value) => Future(() => ref
                               .read(siteNotifierProvider.notifier)
-                              .searchSite(
-                                  value)), // onChanged return the value of the field
+                              .searchSite(value)),
+                          onSubmitted: (value) {
+                            Future(() => ref
+                                .read(siteNotifierProvider.notifier)
+                                .searchSite(value));
+                          }, // onChanged return the value of the field
                           decoration: InputDecoration(
                               labelText:
                                   "Search by Site Name, Type or Fabricator",

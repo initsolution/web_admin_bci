@@ -235,8 +235,12 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                           child: TextField(
                             onChanged: (value) => Future(() => ref
                                 .read(employeeNotifierProvider.notifier)
-                                .searchEmployee(
-                                    value)), // onChanged return the value of the field
+                                .searchEmployee(value)),
+                            onSubmitted: (value) {
+                              Future(() => ref
+                                  .read(employeeNotifierProvider.notifier)
+                                  .searchEmployee(value));
+                            }, // onChanged return the value of the field
                             decoration: InputDecoration(
                               labelText: "Search Name",
                               border: OutlineInputBorder(

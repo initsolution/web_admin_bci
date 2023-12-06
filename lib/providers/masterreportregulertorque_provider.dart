@@ -96,7 +96,8 @@ class MasterReportRegulerTorqueNotifier
     List<MasterReportRegulerTorque> searchMasterReportRegulerTorque =
         masterReportRegulerTorque!
             .where((e) =>
-                e.fabricator!.toLowerCase().contains(search.toLowerCase()))
+                e.fabricator!.toLowerCase().contains(search.toLowerCase()) ||
+                e.towerSegment!.toLowerCase().contains(search.toLowerCase()))
             .toList();
     state = MasterReportRegulerTorqueStateLoaded(
         masterReportRegulerTorque: searchMasterReportRegulerTorque);

@@ -175,8 +175,12 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                           child: TextField(
                             onChanged: (value) => Future(() => ref
                                 .read(taskNotifierProvider.notifier)
-                                .searchTask(
-                                    value)), // onChanged return the value of the field
+                                .searchTask(value)),
+                            onSubmitted: (value) {
+                              Future(() => ref
+                                  .read(taskNotifierProvider.notifier)
+                                  .searchTask(value));
+                            }, // onChanged return the value of the field
                             decoration: InputDecoration(
                                 labelText:
                                     "Search by Site Name, Maker or Verifier",

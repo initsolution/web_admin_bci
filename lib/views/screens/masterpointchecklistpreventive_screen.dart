@@ -32,8 +32,8 @@ class MasterPointChecklistPreventivetData extends DataTableSource {
       // DataCell(Text(masterData[index].kriteria!)),
       DataCell(ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 300),
-        child: Text(masterData[index].kriteria!,
-            overflow: TextOverflow.ellipsis),
+        child:
+            Text(masterData[index].kriteria!, overflow: TextOverflow.ellipsis),
       )),
       DataCell(Row(
         children: [
@@ -320,8 +320,14 @@ class _MasterPointChecklistPreventiveScreenState
                               .read(
                                   masterPointChecklistPreventiveNotifierProvider
                                       .notifier)
-                              .searchMasterPointChecklistPrev(
-                                  value)), // onChanged return the value of the field
+                              .searchMasterPointChecklistPrev(value)),
+                          onSubmitted: (value) {
+                            Future(() => ref
+                                .read(
+                                    masterPointChecklistPreventiveNotifierProvider
+                                        .notifier)
+                                .searchMasterPointChecklistPrev(value));
+                          }, // onChanged return the value of the field
                           decoration: InputDecoration(
                               labelText: "Search Uraian",
                               border: OutlineInputBorder(

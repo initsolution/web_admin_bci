@@ -105,8 +105,11 @@ class MasterPointChecklistPreventiveNotifier
     state = MasterPointChecklistPreventiveLoading();
     List<MasterPointChecklistPreventive> searchMasterPointChecklistPrev =
         masterPointChecklistPreventives!
-            .where(
-                (e) => e.uraian!.toLowerCase().contains(search.toLowerCase()))
+            .where((e) =>
+                e.uraian!.toLowerCase().contains(search.toLowerCase()) ||
+                e.mcategorychecklistpreventive!.categoryName!
+                    .toLowerCase()
+                    .contains(search.toLowerCase()))
             .toList();
     state = MasterPointChecklistPreventiveLoaded(
         masterPointChecklistPreventive: searchMasterPointChecklistPrev);

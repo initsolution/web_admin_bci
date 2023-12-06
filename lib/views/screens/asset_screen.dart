@@ -131,8 +131,12 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                           child: TextField(
                             onChanged: (value) => Future(() => ref
                                 .read(taskNotifierProvider.notifier)
-                                .searchTask(
-                                    value)), // onChanged return the value of the field
+                                .searchTask(value)),
+                            onSubmitted: (value) {
+                              Future(() => ref
+                                  .read(taskNotifierProvider.notifier)
+                                  .searchTask(value));
+                            }, // onChanged return the value of the field
                             decoration: InputDecoration(
                                 labelText:
                                     "Search by Site Name, Maker or Verifier",
@@ -247,6 +251,9 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                     DataColumn(label: Text('Status')),
                     DataColumn(label: Text('Type')),
                     DataColumn(label: Text('Created Date')),
+                    DataColumn(label: Text('Due Date')),
+                    DataColumn(label: Text('Submitted Date')),
+                    DataColumn(label: Text('Verified Date')),
                     DataColumn(label: Text('Detail')),
                     DataColumn(label: Text('Verifikasi')),
                     DataColumn(label: Text('Print')),
@@ -336,7 +343,12 @@ class TaskData extends DataTableSource {
             style: const TextStyle(color: Colors.white),
           ))),
       DataCell(Text(task.type!)),
-      DataCell(Text(task.created_at ?? '')),
+      DataCell(Text(tasks[index]
+          .created_at!
+          .substring(0, tasks[index].created_at!.indexOf('T')))),
+      DataCell(Text(tasks[index].dueDate!)),
+      DataCell(Text(tasks[index].submitedDate!)),
+      DataCell(Text(tasks[index].verifiedDate!)),
       DataCell(task.status != 'todo'
           ? TextButton(
               style: TextButton.styleFrom(

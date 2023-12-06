@@ -193,8 +193,14 @@ class _MasterCategoryChecklistPreventiveScreenState
                                 .read(
                                     masterCategoryChecklistPreventivNotifierProvider
                                         .notifier)
-                                .searchCategoryChecklistPrev(
-                                    value)), // onChanged return the value of the field
+                                .searchCategoryChecklistPrev(value)),
+                            onSubmitted: (value) {
+                              Future(() => ref
+                                  .read(
+                                      masterCategoryChecklistPreventivNotifierProvider
+                                          .notifier)
+                                  .searchCategoryChecklistPrev(value));
+                            }, // onChanged return the value of the field
                             decoration: InputDecoration(
                                 labelText: "Search Category",
                                 border: OutlineInputBorder(

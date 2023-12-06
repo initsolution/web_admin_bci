@@ -89,7 +89,14 @@ class MasterAssetNotifier extends Notifier<MasterAssetState> {
     state = MasterAssetLoading();
     List<MasterAsset> searchMasterAsset = masterAssets!
         .where((masterAsset) =>
-            masterAsset.taskType!.toLowerCase().contains(search.toLowerCase()))
+            masterAsset.taskType!
+                .toLowerCase()
+                .contains(search.toLowerCase()) ||
+            masterAsset.section!.toLowerCase().contains(search.toLowerCase()) ||
+            masterAsset.fabricator!
+                .toLowerCase()
+                .contains(search.toLowerCase()) ||
+            masterAsset.category!.toLowerCase().contains(search.toLowerCase()))
         .toList();
     state = MasterAssetLoaded(masterAssets: searchMasterAsset);
   }

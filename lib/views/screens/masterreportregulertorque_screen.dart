@@ -292,8 +292,14 @@ class _MasterReportRegulerTorqueScreenState
                             onChanged: (value) => Future(() => ref
                                 .read(masterReportRegulerTorqueNotifierProvider
                                     .notifier)
-                                .searchMasterReportRegulerTorque(
-                                    value)), // onChanged return the value of the field
+                                .searchMasterReportRegulerTorque(value)),
+                            onSubmitted: (value) {
+                              Future(() => ref
+                                  .read(
+                                      masterReportRegulerTorqueNotifierProvider
+                                          .notifier)
+                                  .searchMasterReportRegulerTorque(value));
+                            }, // onChanged return the value of the field
                             decoration: InputDecoration(
                                 labelText: "Search Fabricator",
                                 border: OutlineInputBorder(
