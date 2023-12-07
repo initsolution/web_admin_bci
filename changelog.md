@@ -133,3 +133,6 @@
 > menambahkan due date di result asset
 > menambahkan filter pencarian site Type or Fabricator
 > optimize filter search dan on submit semua screen
+
+> 07/12/2023 (mip)
+> menambahkan obscure text di password ketika edit dan tambah employee

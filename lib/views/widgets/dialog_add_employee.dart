@@ -121,7 +121,7 @@ class DialogAddEmployee extends ConsumerWidget {
                 TextFormField(
                   controller: passwordController,
                   keyboardType: TextInputType.text,
-                  obscureText: false,
+                  obscureText: true,
                   decoration: const InputDecoration(
                     hintText: 'Please type your Password',
                   ),
@@ -196,17 +196,17 @@ class DialogAddEmployee extends ConsumerWidget {
                   height: 20,
                 ),
                 SizedBox(
-                width: MediaQuery.of(context).size.width / 2.5,
-                child: ElevatedButton(
+                  width: MediaQuery.of(context).size.width / 2.5,
+                  child: ElevatedButton(
                     onPressed: () {
-                    final isValid = _formKey.currentState!.validate();
-                    if (isValid) {
+                      final isValid = _formKey.currentState!.validate();
+                      if (isValid) {
                         saveEmployee(ref);
                         Navigator.pop(context);
-                    }
+                      }
                     },
                     child: Text(isEdit ? 'EDIT' : 'SAVE'),
-                ),
+                  ),
                 ),
               ],
             ),

@@ -1,6 +1,9 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
@@ -89,7 +92,7 @@ class DialogProfileEmployee extends ConsumerWidget {
                 TextField(
                   controller: passwordController,
                   keyboardType: TextInputType.text,
-                  obscureText: false,
+                  obscureText: true,
                   decoration: const InputDecoration(
                     hintText: 'Please type your Password',
                   ),
@@ -110,33 +113,45 @@ class DialogProfileEmployee extends ConsumerWidget {
                   height: 10,
                 ),
                 const Text('E-Sign'),
-                InkWell(
-                  onTap: () {
-                    pickFile();
-                  },
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 30.0,
-                      width: 30.0,
-                      margin: const EdgeInsets.only(
-                        left: 183.00,
-                        top: 10.00,
-                        right: 113.00,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white70,
-                        borderRadius: BorderRadius.circular(
-                          5.00,
+                Column(
+                  children: [
+                    employee.urlEsign != null
+                        ? Image.network(
+                            '$urlRepo/employee/getImage/${employee.nik}',
+                            width: 100,
+                            height: 100,
+                          )
+                        : const SizedBox(height: 10),
+                    const SizedBox(height: 10),
+                    InkWell(
+                      onTap: () {
+                        pickFile();
+                      },
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Container(
+                          height: 30.0,
+                          width: 30.0,
+                          margin: const EdgeInsets.only(
+                            left: 183.00,
+                            top: 10.00,
+                            right: 113.00,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white70,
+                            borderRadius: BorderRadius.circular(
+                              5.00,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.camera_alt_rounded,
+                            size: 20,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                      child: const Icon(
-                        Icons.camera_alt_rounded,
-                        size: 20,
-                        color: Colors.black,
-                      ),
                     ),
-                  ),
+                  ],
                 ),
                 const SizedBox(
                   height: 10,
@@ -173,7 +188,7 @@ class DialogProfileEmployee extends ConsumerWidget {
       required TextEditingController phoneController,
       TextEditingController? passwordController,
       required Employee employeeOri}) {
-    debugPrint('ori : ${employeeOri.toString()}');
+    // debugPrint('ori : ${employeeOri.toString()}');
     Employee employee = Employee(
         nik: nikController.text,
         name: nameController.text,
