@@ -82,7 +82,10 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
 
   createEmployee(Employee employee) async {
     state = EmployeeLoading();
-    final httpResponse = await employeeRepo.createEmployee(employee);
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    final httpResponse =
+        await employeeRepo.createEmployee(employee, 'Bearer $token');
     debugPrint('${httpResponse.response.statusCode}');
     if (httpResponse.response.statusCode == 201) {
       state = EmployeeDataChangeSuccess();
@@ -93,7 +96,8 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
     state = EmployeeLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    HttpResponse httpResponse = await employeeRepo.deleteEmployee(nik, token);
+    HttpResponse httpResponse =
+        await employeeRepo.deleteEmployee(nik, 'Bearer $token');
     if (httpResponse.response.statusCode == 201 ||
         httpResponse.response.statusCode == 200) {
       state = EmployeeDataChangeSuccess();
@@ -103,8 +107,11 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
   updateEmployeeWithFile({required employee, List<int>? file}) async {
     if (file != null) {
       if (file.isNotEmpty) {
+        final sharedPref = await SharedPreferences.getInstance();
+        var token = sharedPref.getString(StorageKeys.token) ?? '';
         state = EmployeeLoading();
         final httpResponse = await employeeRepo.updateEmployeeWithFile(
+            'Bearer $token',
             employee.nik!,
             employee.name,
             employee.email,
@@ -118,8 +125,10 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
       }
     } else {
       state = EmployeeLoading();
-      final httpResponse =
-          await employeeRepo.updateEmployee(employee.nik!, employee);
+      final sharedPref = await SharedPreferences.getInstance();
+      var token = sharedPref.getString(StorageKeys.token) ?? '';
+      final httpResponse = await employeeRepo.updateEmployee(
+          employee.nik!, employee, 'Bearer $token');
       debugPrint('${httpResponse.response.statusCode}');
       if (httpResponse.response.statusCode == 200) {
         state = EmployeeDataChangeSuccess();

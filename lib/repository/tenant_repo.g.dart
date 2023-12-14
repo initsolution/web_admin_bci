@@ -89,12 +89,14 @@ class _TenantRepo implements TenantRepo {
 
   @override
   Future<HttpResponse<dynamic>> updateTenant(
+    String token,
     int id,
     Tenant tenant,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(tenant.toJson());
     final _result =

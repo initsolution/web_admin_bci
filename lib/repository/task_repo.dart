@@ -24,8 +24,10 @@ abstract class TaskRepo {
       @Body() Task task, @Header('Authorization') String token);
 
   @PATCH('/task/{id}')
-  Future<HttpResponse> updateTask(@Path() int id, @Body() Task task);
+  Future<HttpResponse> updateTask(
+      @Header('Authorization') String token, @Path() int id, @Body() Task task);
 
   @DELETE('/task/{id}')
-  Future<HttpResponse> deleteTask(@Path() int id);
+  Future<HttpResponse> deleteTask(
+      @Header('Authorization') String token, @Path() int id);
 }

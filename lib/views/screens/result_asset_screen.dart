@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -355,9 +356,22 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                 ),
                 onPressed: () {
                   if (widget.task.status!.toLowerCase() != 'verified') {
-                    ref
-                        .read(assetNotifierProvider.notifier)
-                        .updateStatusAsset();
+                    if (widget.task.verifierEmployee!.urlEsign != null) {
+                      ref
+                          .read(assetNotifierProvider.notifier)
+                          .updateStatusAsset();
+                    } else {
+                      final dialog = AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.error,
+                        desc: 'Isi terlebih dahulu e-sign verifikator',
+                        width: kDialogWidth,
+                        btnOkText: 'OK',
+                        btnOkOnPress: () {},
+                      );
+
+                      dialog.show();
+                    }
                   }
                 },
               ),

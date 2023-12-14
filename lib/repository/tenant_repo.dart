@@ -19,5 +19,6 @@ abstract class TenantRepo {
       @Body() Tenant tenant, @Header('Authorization') String token);
 
   @PATCH('/tenant/{id}')
-  Future<HttpResponse> updateTenant(@Path() int id, @Body() Tenant tenant);
+  Future<HttpResponse> updateTenant(@Header('Authorization') String token,
+      @Path() int id, @Body() Tenant tenant);
 }

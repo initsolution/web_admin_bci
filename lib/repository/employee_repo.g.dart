@@ -55,10 +55,14 @@ class _EmployeeRepo implements EmployeeRepo {
   }
 
   @override
-  Future<HttpResponse<dynamic>> createEmployee(Employee employee) async {
+  Future<HttpResponse<dynamic>> createEmployee(
+    Employee employee,
+    String token,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(employee.toJson());
     final _result =
@@ -87,10 +91,12 @@ class _EmployeeRepo implements EmployeeRepo {
   Future<HttpResponse<dynamic>> updateEmployee(
     String nik,
     Employee employee,
+    String token,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(employee.toJson());
     final _result =
@@ -146,6 +152,7 @@ class _EmployeeRepo implements EmployeeRepo {
 
   @override
   Future<HttpResponse<dynamic>> updateEmployeeWithFile(
+    String token,
     String nik,
     String? name,
     String? email,
@@ -156,7 +163,8 @@ class _EmployeeRepo implements EmployeeRepo {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = FormData();
     if (name != null) {
       _data.fields.add(MapEntry(

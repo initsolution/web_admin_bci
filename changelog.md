@@ -136,3 +136,7 @@
 
 > 07/12/2023 (mip)
 > menambahkan obscure text di password ketika edit dan tambah employee
+
+> 14/12/2023 (mip)
+> menambahkan bearer untuk authorized
+> menambahkan exception jika belum upload e-sign

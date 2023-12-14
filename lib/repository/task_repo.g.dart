@@ -123,12 +123,14 @@ class _TaskRepo implements TaskRepo {
 
   @override
   Future<HttpResponse<dynamic>> updateTask(
+    String token,
     int id,
     Task task,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(task.toJson());
     final _result =
@@ -154,10 +156,14 @@ class _TaskRepo implements TaskRepo {
   }
 
   @override
-  Future<HttpResponse<dynamic>> deleteTask(int id) async {
+  Future<HttpResponse<dynamic>> deleteTask(
+    String token,
+    int id,
+  ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch(_setStreamType<HttpResponse<dynamic>>(Options(

@@ -18,11 +18,12 @@ abstract class EmployeeRepo {
       @Queries() Map<String, dynamic>? header);
 
   @POST('/employee')
-  Future<HttpResponse> createEmployee(@Body() Employee employee);
+  Future<HttpResponse> createEmployee(
+      @Body() Employee employee, @Header('Authorization') String token);
 
   @PATCH('/employee/{nik}')
-  Future<HttpResponse> updateEmployee(
-      @Path() String nik, @Body() Employee employee);
+  Future<HttpResponse> updateEmployee(@Path() String nik,
+      @Body() Employee employee, @Header('Authorization') String token);
 
   @POST('/employee/login')
   Future<HttpResponse> login(@Body() Map<String, dynamic> login);
@@ -30,6 +31,7 @@ abstract class EmployeeRepo {
   @PATCH('/employee/updateWithFile/{nik}')
   @MultiPart()
   Future<HttpResponse> updateEmployeeWithFile(
+    @Header('Authorization') String token,
     @Path() String nik,
     @Part(name: 'name') String? name,
     @Part(name: 'email') String? email,

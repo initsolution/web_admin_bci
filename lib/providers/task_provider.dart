@@ -102,7 +102,9 @@ class TaskNotifier extends AutoDisposeNotifier<TaskState> {
 
   deleteTask(int id) async {
     state = TaskLoading();
-    final httpResponse = await taskRepo.deleteTask(id);
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    final httpResponse = await taskRepo.deleteTask('Bearer $token', id);
     if (DEBUG) debugPrint(httpResponse.response.statusCode.toString());
     state = TaskDataChangeSuccess();
   }
