@@ -140,3 +140,7 @@
 > 14/12/2023 (mip)
 > menambahkan bearer untuk authorized
 > menambahkan exception jika belum upload e-sign
+
+> 23/12/2023 (mip)
+> membuat filter not before
+> icon untuk web

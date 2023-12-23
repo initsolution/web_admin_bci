@@ -16,6 +16,7 @@ import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_task.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_delete_task.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_edit_task.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -386,6 +387,15 @@ class TaskData extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
+    // debugPrint('${tasks[index].id}');
+    // debugPrint('${tasks[index].notBefore}');
+    DateTime? notBefore;
+    if (tasks[index].notBefore != null) {
+      notBefore = DateTime.parse(tasks[index].notBefore!);
+      // debugPrint(
+      //     'perbandingan not before dan now ${DateTime.now().isBefore(notBefore)}');
+    }
+
     return DataRow(cells: [
       DataCell(Padding(
           padding: const EdgeInsets.only(left: 30),
@@ -414,19 +424,47 @@ class TaskData extends DataTableSource {
       DataCell(Text(tasks[index].dueDate!)),
       DataCell(Text(tasks[index].submitedDate!)),
       DataCell(Text(tasks[index].verifiedDate!)),
-      DataCell(IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return SizedBox(
-                  child: DialogDeleteTask(
-                task: tasks[index],
-              ));
+      DataCell(Row(
+        children: [
+          tasks[index].notBefore != null
+              ? IconButton(
+                  icon: Icon(
+                    Icons.settings,
+                    color: DateTime.now().isBefore(notBefore!)
+                        ? Colors.blue
+                        : Colors.grey,
+                  ),
+                  onPressed: DateTime.now().isBefore(notBefore)
+                      ? () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                  child: DialogEditTask(
+                                isCanEditSite: false,
+                                selectedSite: tasks[index].site,
+                              ));
+                            },
+                          );
+                        }
+                      : null,
+                )
+              : Container(),
+          IconButton(
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return SizedBox(
+                      child: DialogDeleteTask(
+                    task: tasks[index],
+                  ));
+                },
+              );
             },
-          );
-        },
+          )
+        ],
       )),
     ]);
   }

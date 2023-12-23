@@ -11,6 +11,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       dueDate: json['dueDate'] as String?,
       submitedDate: json['submitedDate'] as String?,
       verifiedDate: json['verifiedDate'] as String?,
+      notBefore: json['notBefore'] as String?,
       status: json['status'] as String?,
       type: json['type'] as String?,
       towerCategory: json['towerCategory'] as String?,
@@ -23,6 +24,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
       site: json['site'] == null
           ? null
           : Site.fromJson(json['site'] as Map<String, dynamic>),
+      created_at: json['created_at'] as String?,
       categorychecklistprev: (json['categorychecklistprev'] as List<dynamic>?)
           ?.map((e) =>
               CategoryChecklistPreventive.fromJson(e as Map<String, dynamic>))
@@ -34,7 +36,6 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
           ? null
           : ReportRegulerVerticality.fromJson(
               json['reportRegulerVerticality'] as Map<String, dynamic>),
-      created_at: json['created_at'] as String?,
     );
 
 Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
@@ -42,6 +43,7 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'dueDate': instance.dueDate,
       'submitedDate': instance.submitedDate,
       'verifiedDate': instance.verifiedDate,
+      'notBefore': instance.notBefore,
       'status': instance.status,
       'type': instance.type,
       'towerCategory': instance.towerCategory,
