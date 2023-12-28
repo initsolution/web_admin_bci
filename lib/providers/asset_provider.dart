@@ -115,4 +115,18 @@ class AssetNotifier extends Notifier<AssetState> {
     }
     idSelected = -1;
   }
+
+  changeImageFromLocal(int idAsset, List<int>? file, int idTask) async {
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    HttpResponse response =
+        await assetRepo.changeImageFromLocal(file!, token, idTask, idAsset);
+    if (response.response.statusCode == 200) {
+      state = AssetChangeDataSuccess();
+    } else {
+      state = AssetErrorServer(
+          message: response.response.statusMessage,
+          statusCode: response.response.statusCode);
+    }
+  }
 }

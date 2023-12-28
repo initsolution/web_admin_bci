@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
+import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/constants/values.dart';
 import 'package:flutter_web_ptb/model/asset.dart';
 import 'package:flutter_web_ptb/model/categorychecklistpreventive.dart';
@@ -376,8 +377,7 @@ class TaskData extends DataTableSource {
           ? const Icon(Icons.print_disabled)
           : IconButton(
               onPressed: () async {
-                await launchUrlString(
-                    'http://103.82.241.80:3000/task/downloadPdf/${task.id}',
+                await launchUrlString('$urlRepo/task/downloadPdf/${task.id}',
                     mode: LaunchMode.platformDefault);
                 // Map<String, dynamic> header = {
                 //   'filter': 'task.id||eq||${task.id}',

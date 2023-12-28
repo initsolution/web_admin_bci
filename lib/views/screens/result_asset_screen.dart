@@ -14,6 +14,7 @@ import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
 import 'package:flutter_web_ptb/providers/asset_state.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_change_image_from_local.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_choose_image.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_detail_image.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
@@ -531,6 +532,31 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                                               ),
                                               label: const Text(
                                                 'Replace',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              )),
+                                          ElevatedButton.icon(
+                                              style: const ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStatePropertyAll(
+                                                          Colors.lightBlue)),
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return DialogChangeImageFromLocal(
+                                                        idAsset: item.id!,
+                                                        idTask: widget.task.id!,
+                                                      );
+                                                    });
+                                              },
+                                              icon: const Icon(
+                                                Icons.photo_library_rounded,
+                                                color: Colors.white,
+                                                size: 18,
+                                              ),
+                                              label: const Text(
+                                                'Change offline',
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               )),
