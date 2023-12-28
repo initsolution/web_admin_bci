@@ -157,9 +157,10 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
       }
     } on DioException catch (error) {
       if (error.response!.statusCode == 404) {
+        debugPrint(error.response!.data["message"]);
         state = EmployeeErrorServer(
-            message: 'Email ${error.response!.statusMessage}',
-            statusCode: error.response!.statusCode);
+            message: error.response!.data["message"],
+            statusCode: error.response!.data["statusCode"]);
       }
     }
   }
