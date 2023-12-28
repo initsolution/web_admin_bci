@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/model/asset.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
-import 'package:progressive_image/progressive_image.dart';
 
 class DialogChooseImage extends ConsumerWidget {
   final List<Asset> assets;

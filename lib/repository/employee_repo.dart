@@ -44,4 +44,7 @@ abstract class EmployeeRepo {
   @DELETE('/employee/{nik}')
   Future<HttpResponse> deleteEmployee(
       @Path() String nik, @Header('Authorization') String token);
+
+  @GET('/employee/resetDataPassword/{email}')
+  Future<HttpResponse<dynamic>> resetDataPassword(@Path() String email);
 }

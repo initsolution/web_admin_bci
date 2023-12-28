@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
+import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/constants/values.dart';
 import 'package:flutter_web_ptb/model/asset.dart';
@@ -92,6 +93,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
 
   @override
   void initState() {
+    Future(() => ref.read(statusTaskProvider.notifier).state = statusTask);
     dateRange = DateTimeRange(
         start: DateTime.now().subtract(const Duration(days: 30)),
         end: DateTime.now());
@@ -280,7 +282,6 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
   }
 
   Widget getDropdownStatus() {
-    List<String> dataStatus = ['All', 'Todo', 'Review', 'Verified'];
     final String status = ref.watch(statusTaskProvider);
     return Consumer(builder: (_, WidgetRef ref, __) {
       return DropdownButtonFormField(
@@ -299,7 +300,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
           ref.read(taskNotifierProvider.notifier).filterStatus(value!);
           ref.read(statusTaskProvider.notifier).state = value;
         },
-        items: dataStatus.map<DropdownMenuItem<String>>((String value) {
+        items: listStatus.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
@@ -627,9 +628,11 @@ class TaskData extends DataTableSource {
         return Colors.blue;
       case 'review':
         return Colors.amber;
-      case 'verified':
+      case 'accepted':
         return Colors.green;
-      case 'notverified':
+      case 'rejected':
+        return Colors.red;
+      case 'expired':
         return Colors.red;
       default:
         return Colors.red;

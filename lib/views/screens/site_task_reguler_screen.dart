@@ -16,6 +16,7 @@ import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_task.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_delete_task.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_edit_task.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -341,7 +342,6 @@ class _SiteTaskRegulerScreenState extends ConsumerState<SiteTaskRegulerScreen> {
   }
 
   Widget getDropdownStatus() {
-    List<String> dataStatus = ['All', 'Todo', 'Review', 'Verified'];
     final String status = ref.watch(statusTaskProvider);
     return Consumer(builder: (_, WidgetRef ref, __) {
       return DropdownButtonFormField(
@@ -354,7 +354,7 @@ class _SiteTaskRegulerScreenState extends ConsumerState<SiteTaskRegulerScreen> {
           ref.read(taskNotifierProvider.notifier).filterStatus(value!);
           ref.read(statusTaskProvider.notifier).state = value;
         },
-        items: dataStatus.map<DropdownMenuItem<String>>((String value) {
+        items: listStatus.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
@@ -372,6 +372,12 @@ class SiteTaskData extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
+    DateTime? notBefore;
+    if (tasks[index].notBefore != null) {
+      notBefore = DateTime.parse(tasks[index].notBefore!);
+      // debugPrint(
+      //     'perbandingan not before dan now ${DateTime.now().isBefore(notBefore)}');
+    }
     return DataRow(cells: [
       DataCell(Padding(
           padding: const EdgeInsets.only(left: 30),
@@ -400,19 +406,50 @@ class SiteTaskData extends DataTableSource {
       DataCell(Text(tasks[index].dueDate!)),
       DataCell(Text(tasks[index].submitedDate!)),
       DataCell(Text(tasks[index].verifiedDate!)),
-      DataCell(IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return SizedBox(
-                  child: DialogDeleteTask(
-                task: tasks[index],
-              ));
+      DataCell(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          tasks[index].notBefore != null
+              ? IconButton(
+                  splashRadius: 20,
+                  icon: Icon(
+                    Icons.settings,
+                    color: DateTime.now().isBefore(notBefore!)
+                        ? Colors.blue
+                        : Colors.grey,
+                  ),
+                  onPressed: DateTime.now().isBefore(notBefore)
+                      ? () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return SizedBox(
+                                  child: DialogEditTask(
+                                isCanEditSite: false,
+                                task: tasks[index],
+                              ));
+                            },
+                          );
+                        }
+                      : null,
+                )
+              : const Spacer(),
+          IconButton(
+            splashRadius: 20,
+            icon: const Icon(Icons.delete),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return SizedBox(
+                      child: DialogDeleteTask(
+                    task: tasks[index],
+                  ));
+                },
+              );
             },
-          );
-        },
+          )
+        ],
       )),
     ]);
   }
@@ -432,9 +469,11 @@ class SiteTaskData extends DataTableSource {
         return Colors.blue;
       case 'review':
         return Colors.amber;
-      case 'verified':
+      case 'accepted':
         return Colors.green;
-      case 'notverified':
+      case 'rejected':
+        return Colors.red;
+      case 'expired':
         return Colors.red;
       default:
         return Colors.red;

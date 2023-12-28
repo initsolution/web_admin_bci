@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,9 +16,9 @@ import 'package:intl/intl.dart';
 // ignore: must_be_immutable
 class DialogEditTask extends ConsumerWidget {
   final bool isCanEditSite;
-  DialogEditTask({super.key, this.selectedSite, this.isCanEditSite = false});
+  DialogEditTask({super.key, this.task, this.isCanEditSite = false});
 
-  Site? selectedSite;
+  Task? task;
   Employee? selectedMaker;
   Employee? selectedVerifier;
   final _formKey = GlobalKey<FormState>();
@@ -28,6 +26,8 @@ class DialogEditTask extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    selectedMaker = task!.makerEmployee;
+    selectedVerifier = task!.verifierEmployee;
     return Center(
       child: AlertDialog(
         content: SizedBox(
@@ -45,7 +45,7 @@ class DialogEditTask extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Create Task',
+                          'Edit Task',
                           style: TextStyle(fontSize: 30),
                         ),
                         IconButton(
@@ -78,7 +78,7 @@ class DialogEditTask extends ConsumerWidget {
                           final isValid = _formKey.currentState!.validate();
                           debugPrint('isValid : $isValid');
                           if (isValid) {
-                            saveTask(ref);
+                            editTask(ref);
                             Navigator.pop(context);
                           }
                         },
@@ -96,37 +96,26 @@ class DialogEditTask extends ConsumerWidget {
     );
   }
 
-  void saveTask(WidgetRef ref) {
-    // if(selectedSite == null || selectedMaker == null || selectedVerifier == null)
-    // return
-    final String typeTask = ref.watch(typeTaskProvider);
-    String status = "todo";
-    DateTime now = DateTime.now();
+  void editTask(WidgetRef ref) {
     String dueDate = ref.watch(dueDateTaskProvider);
-    // String siteId = selectedSite.id.toString();
-    // String nikMaker = selectedMaker.nik.toString();
-    // String nikVerifier = selectedVerifier.nik.toString();
-    // debugPrint('createdDate : $createdDate');
-    // debugPrint('typeTask : $typeTask');
-    // debugPrint('site : ${selectedSite.id}');
-    // debugPrint('makerEmployee : ${selectedMaker.nik}');
-    // debugPrint('verifierEmployee : ${selectedVerifier.nik}');
-    Task task = Task(
+    Task t = Task(
+      id: task!.id,
       dueDate: dueDate,
       submitedDate: "",
       verifiedDate: "",
-      status: status,
-      type: typeTask,
+      status: task!.status,
+      type: task!.type,
+      notBefore: task!.notBefore,
       towerCategory: "-",
       makerEmployee: selectedMaker,
       verifierEmployee: selectedVerifier,
-      site: selectedSite,
-      created_at: DateFormat('yyyy-MM-dd').format(now),
+      site: task!.site,
+      created_at: task!.created_at,
     );
     if (DEBUG) {
-      debugPrint('site : ${task.toString()}');
+      debugPrint('site : ${t.toString()}');
     }
-    ref.read(taskNotifierProvider.notifier).createTask(task);
+    ref.read(taskNotifierProvider.notifier).updateTask(t);
   }
 
   Widget loadSite() {
@@ -143,7 +132,7 @@ class DialogEditTask extends ConsumerWidget {
               itemAsString: (item) => item.name!,
               compareFn: (item1, item2) => item1.isEqual(item2),
               onChanged: (value) {
-                selectedSite = value!;
+                task!.site = value!;
               },
               popupProps: PopupPropsMultiSelection.dialog(
                 showSearchBox: true,
@@ -187,7 +176,7 @@ class DialogEditTask extends ConsumerWidget {
           border: Border.all(width: 1, color: Colors.black26),
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Text(selectedSite?.name ?? ""),
+        child: Text(task!.site?.name ?? ""),
       );
     }
   }
@@ -293,6 +282,7 @@ class DialogEditTask extends ConsumerWidget {
           }
           return DropdownSearch<Employee>(
             items: listMaker,
+            selectedItem: selectedMaker,
             itemAsString: (item) => item.name!,
             compareFn: (item1, item2) => item1.name == item2.name,
             onChanged: (value) {
@@ -360,6 +350,7 @@ class DialogEditTask extends ConsumerWidget {
           }
           return DropdownSearch<Employee>(
             items: listMaker,
+            selectedItem: selectedVerifier,
             itemAsString: (item) => item.name!,
             compareFn: (item1, item2) => item1.name == item2.name,
             onChanged: (value) {
@@ -475,21 +466,14 @@ class DialogEditTask extends ConsumerWidget {
   // }
 
   Widget getDropDownTypeTask() {
-    List<String> listTypeTask = ['Reguler', 'Preventive'];
-    return Consumer(builder: (_, WidgetRef ref, __) {
-      final String typeTask = ref.watch(typeTaskProvider);
-      return DropdownButton(
-        value: typeTask.isNotEmpty ? typeTask : null,
-        onChanged: (value) {
-          ref.read(typeTaskProvider.notifier).state = value!;
-        }, // =========== Here the error occurs ==========================
-        items: listTypeTask.map<DropdownMenuItem<String>>((String value) {
-          return DropdownMenuItem<String>(
-            value: value,
-            child: Text(value),
-          );
-        }).toList(),
-      );
-    });
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(kDefaultPadding),
+      decoration: BoxDecoration(
+        border: Border.all(width: 1, color: Colors.black26),
+        borderRadius: BorderRadius.circular(5),
+      ),
+      child: Text(task!.type ?? ""),
+    );
   }
 }

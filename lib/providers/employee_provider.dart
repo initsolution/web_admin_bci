@@ -144,4 +144,23 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
         .toList();
     state = EmployeeLoaded(employees: searchEmployee);
   }
+
+  resetDataPassword(String email) async {
+    state = EmployeeLoading();
+    try {
+      var httpResponse = await employeeRepo.resetDataPassword(email);
+      debugPrint('${httpResponse.response.statusCode}');
+      var response = httpResponse.response;
+      debugPrint('response : ${response.data}');
+      if (response.statusCode == 202) {
+        state = EmployeeResetPassword(message: response.data["message"]);
+      }
+    } on DioException catch (error) {
+      if (error.response!.statusCode == 404) {
+        state = EmployeeErrorServer(
+            message: 'Email ${error.response!.statusMessage}',
+            statusCode: error.response!.statusCode);
+      }
+    }
+  }
 }

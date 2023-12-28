@@ -52,3 +52,11 @@ class EmployeeLoginHTTPResponse extends EmployeeState {
   @override
   List<Object?> get props => [httpResponse];
 }
+
+class EmployeeResetPassword extends EmployeeState {
+  String? message;
+  EmployeeResetPassword({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

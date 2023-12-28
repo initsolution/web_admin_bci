@@ -110,6 +110,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
     //     "reportRegulerVerticality.valueVerticality"
     //   ]
     // };
+    Future(() => ref.read(statusTaskProvider.notifier).state = statusTask);
     dateRange = DateTimeRange(
         start: DateTime.now().subtract(const Duration(days: 30)),
         end: DateTime.now());
@@ -309,7 +310,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                     child: Consumer(
                       builder: (context, ref, child) {
                         var state = ref.watch(taskNotifierProvider);
-                        if (DEBUG) debugPrint('state : $state');
+                        // if (DEBUG) debugPrint('state : $state');
                         if (state is TaskLoaded) {
                           DataTableSource data =
                               TaskData(tasks: state.tasks, context: context);
@@ -356,8 +357,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
   }
 
   Widget getDropdownStatus() {
-    List<String> dataStatus = ['All', 'Todo', 'Review', 'Verified'];
     final String status = ref.watch(statusTaskProvider);
+    debugPrint('status : ${status}');
     return Consumer(builder: (_, WidgetRef ref, __) {
       return DropdownButtonFormField(
         decoration: InputDecoration(
@@ -369,7 +370,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
           ref.read(taskNotifierProvider.notifier).filterStatus(value!);
           ref.read(statusTaskProvider.notifier).state = value;
         },
-        items: dataStatus.map<DropdownMenuItem<String>>((String value) {
+        items: listStatus.map<DropdownMenuItem<String>>((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
@@ -425,9 +426,11 @@ class TaskData extends DataTableSource {
       DataCell(Text(tasks[index].submitedDate!)),
       DataCell(Text(tasks[index].verifiedDate!)),
       DataCell(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           tasks[index].notBefore != null
               ? IconButton(
+                  splashRadius: 20,
                   icon: Icon(
                     Icons.settings,
                     color: DateTime.now().isBefore(notBefore!)
@@ -442,15 +445,16 @@ class TaskData extends DataTableSource {
                               return SizedBox(
                                   child: DialogEditTask(
                                 isCanEditSite: false,
-                                selectedSite: tasks[index].site,
+                                task: tasks[index],
                               ));
                             },
                           );
                         }
                       : null,
                 )
-              : Container(),
+              : const Spacer(),
           IconButton(
+            splashRadius: 20,
             icon: const Icon(Icons.delete),
             onPressed: () {
               showDialog(
@@ -484,9 +488,11 @@ class TaskData extends DataTableSource {
         return Colors.blue;
       case 'review':
         return Colors.amber;
-      case 'verified':
+      case 'accepted':
         return Colors.green;
-      case 'notverified':
+      case 'rejected':
+        return Colors.red;
+      case 'expired':
         return Colors.red;
       default:
         return Colors.red;

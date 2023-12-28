@@ -9,6 +9,7 @@ import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_button_theme.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_reset_password.dart';
 import 'package:flutter_web_ptb/views/widgets/public_master_layout/public_master_layout.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formData = FormData();
 
   final _isFormLoading = false;
+  TextEditingController resetPasswordController = TextEditingController();
 
   _doLogin() {
     if (_formKey.currentState?.validate() ?? false) {
@@ -213,6 +215,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 onPressed:
                                     (_isFormLoading ? null : () => _doLogin()),
                                 child: const Text('Login'),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(bottom: kDefaultPadding),
+                            child: SizedBox(
+                              height: 40.0,
+                              width: double.infinity,
+                              child: TextButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return SizedBox(
+                                          child: DialogResetPassword());
+                                    },
+                                  );
+                                },
+                                child: const Text('Reset Password'),
                               ),
                             ),
                           ),
