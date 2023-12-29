@@ -151,3 +151,6 @@
 > change reset password message
 > (mip)
 > add change image from local
+
+> 29/12/2023
+> change task verified to accepted
