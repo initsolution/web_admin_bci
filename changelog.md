@@ -154,3 +154,6 @@
 
 > 29/12/2023
 > change task verified to accepted
+
+> 02/01/2024
+> add constant variable

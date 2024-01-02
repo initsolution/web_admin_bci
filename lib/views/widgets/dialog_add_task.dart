@@ -98,7 +98,7 @@ class DialogAddTask extends ConsumerWidget {
     // if(selectedSite == null || selectedMaker == null || selectedVerifier == null)
     // return
     final String typeTask = ref.watch(typeTaskProvider);
-    String status = "todo";
+    String status = STATUS_TODO;
     DateTime now = DateTime.now();
     String dueDate = ref.watch(dueDateTaskProvider);
     // String siteId = selectedSite.id.toString();

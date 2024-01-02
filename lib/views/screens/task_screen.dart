@@ -484,15 +484,15 @@ class TaskData extends DataTableSource {
 
   getColorIcon(String? status) {
     switch (status) {
-      case 'todo':
+      case STATUS_TODO:
         return Colors.blue;
-      case 'review':
+      case STATUS_REVIEW:
         return Colors.amber;
-      case 'accepted':
+      case STATUS_ACCEPTED:
         return Colors.green;
-      case 'rejected':
+      case STATUS_REJECTED:
         return Colors.red;
-      case 'expired':
+      case STATUS_EXPIRED:
         return Colors.red;
       default:
         return Colors.red;
