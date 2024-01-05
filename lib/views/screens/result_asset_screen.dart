@@ -6,6 +6,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
+import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/model/asset.dart';
@@ -311,7 +312,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                  onPressed: widget.task.status!.toLowerCase() != 'verified'
+                  onPressed: widget.task.status!.toLowerCase() != STATUS_ACCEPTED
                       ? null
                       : () async {
                           await launchUrlString(
@@ -320,7 +321,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                         },
                   icon: Icon(
                     Icons.print,
-                    color: widget.task.status!.toLowerCase() != 'verified'
+                    color: widget.task.status!.toLowerCase() != STATUS_ACCEPTED
                         ? Colors.grey
                         : Colors.black,
                   )),
@@ -351,12 +352,12 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
               IconButton(
                 icon: Icon(
                   Icons.save_as_rounded,
-                  color: widget.task.status!.toLowerCase() != 'verified'
+                  color: widget.task.status!.toLowerCase() != STATUS_ACCEPTED
                       ? Colors.black
                       : Colors.grey,
                 ),
                 onPressed: () {
-                  if (widget.task.status!.toLowerCase() != 'verified') {
+                  if (widget.task.status!.toLowerCase() != STATUS_ACCEPTED) {
                     if (widget.task.verifierEmployee!.urlEsign != null) {
                       ref
                           .read(assetNotifierProvider.notifier)

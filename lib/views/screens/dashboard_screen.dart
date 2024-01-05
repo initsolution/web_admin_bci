@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_ptb/constants/constants.dart';
 import 'package:flutter_web_ptb/constants/dimens.dart';
 import 'package:flutter_web_ptb/constants/values.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
@@ -122,15 +123,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     totalTask = tasks.length;
                     totalVerified = tasks
                         .where((element) =>
-                            element.status!.toLowerCase() == 'verified')
+                            element.status!.toLowerCase() == STATUS_ACCEPTED)
                         .length;
                     totalReview = tasks
                         .where((element) =>
-                            element.status!.toLowerCase() == 'review')
+                            element.status!.toLowerCase() == STATUS_REVIEW)
                         .length;
                     totalTodo = tasks
                         .where((element) =>
-                            element.status!.toLowerCase() == 'todo')
+                            element.status!.toLowerCase() == STATUS_TODO)
                         .length;
                   }
                   return Wrap(

@@ -152,5 +152,11 @@
 > (mip)
 > add change image from local
 
+> 29/12/2023
+> change task verified to accepted
+
+> 02/01/2024
+> add constant variable
+
 > 05/01/2024 (deddy)
 > ui/ux replace, reupload, show detail asset

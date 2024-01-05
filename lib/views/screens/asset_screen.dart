@@ -351,7 +351,7 @@ class TaskData extends DataTableSource {
       DataCell(Text(tasks[index].dueDate!)),
       DataCell(Text(tasks[index].submitedDate!)),
       DataCell(Text(tasks[index].verifiedDate!)),
-      DataCell(task.status != 'todo'
+      DataCell(task.status != STATUS_TODO
           ? TextButton(
               style: TextButton.styleFrom(
                   backgroundColor: Colors.black, foregroundColor: Colors.white),
@@ -370,26 +370,34 @@ class TaskData extends DataTableSource {
               },
             )
           : Container()),
-      DataCell(task.status == 'verified'
+      DataCell(task.status == STATUS_ACCEPTED
           ? const Icon(Icons.verified_outlined)
           : Container()),
-      DataCell(task.status != 'verified'
-          ? const Icon(Icons.print_disabled)
-          : IconButton(
-              onPressed: () async {
-                await launchUrlString('$urlRepo/task/downloadPdf/${task.id}',
-                    mode: LaunchMode.platformDefault);
-                // Map<String, dynamic> header = {
-                //   'filter': 'task.id||eq||${task.id}',
-                //   "join": [
-                //     "task",
-                //   ],
-                //   'sort': 'orderIndex,ASC'
-                // };
-                // ref.read(assetNotifierProvider.notifier).getAllAsset(header);
-                // downloadPDF(task);
-              },
-              icon: const Icon(Icons.print)))
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      DataCell(Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          task.status != STATUS_ACCEPTED
+              ? const Icon(Icons.print_disabled)
+              : IconButton(
+                  splashRadius: 20,
+                  onPressed: () async {
+                    await launchUrlString(
+                        '$urlRepo/task/downloadPdf/${task.id}',
+                        mode: LaunchMode.platformDefault);
+                    // Map<String, dynamic> header = {
+                    //   'filter': 'task.id||eq||${task.id}',
+                    //   "join": [
+                    //     "task",
+                    //   ],
+                    //   'sort': 'orderIndex,ASC'
+                    // };
+                    // ref.read(assetNotifierProvider.notifier).getAllAsset(header);
+                    // downloadPDF(task);
+                  },
+                  icon: const Icon(Icons.print))
+        ],
+      ))
     ]);
   }
 
@@ -624,15 +632,15 @@ class TaskData extends DataTableSource {
 
   getColorIcon(String? status) {
     switch (status) {
-      case 'todo':
+      case STATUS_TODO:
         return Colors.blue;
-      case 'review':
+      case STATUS_REVIEW:
         return Colors.amber;
-      case 'accepted':
+      case STATUS_ACCEPTED:
         return Colors.green;
-      case 'rejected':
+      case STATUS_REJECTED:
         return Colors.red;
-      case 'expired':
+      case STATUS_EXPIRED:
         return Colors.red;
       default:
         return Colors.red;
