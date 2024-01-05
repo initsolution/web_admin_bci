@@ -151,3 +151,6 @@
 > change reset password message
 > (mip)
 > add change image from local
+
+> 05/01/2024 (deddy)
+> ui/ux replace, reupload, show detail asset

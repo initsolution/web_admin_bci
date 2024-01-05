@@ -4,91 +4,140 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
 
 // ignore: must_be_immutable
-class DialogChangeImageFromLocal extends ConsumerWidget {
+class DialogChangeImageFromLocal extends ConsumerStatefulWidget {
   final int idAsset;
   final int idTask;
-  DialogChangeImageFromLocal(
-      {super.key, required this.idAsset, required this.idTask});
+  final String description;
+  const DialogChangeImageFromLocal(
+      {super.key,
+      required this.idAsset,
+      required this.idTask,
+      required this.description});
 
+  @override
+  ConsumerState<DialogChangeImageFromLocal> createState() =>
+      _DialogChangeImageFromLocalState();
+}
+
+class _DialogChangeImageFromLocalState
+    extends ConsumerState<DialogChangeImageFromLocal> {
   FilePickerResult? result;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return AlertDialog(
       content: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.5,
-          height: MediaQuery.of(context).size.height * 0.2,
+          width: 530,
+          height: 660,
           child: Column(
             children: [
               InkWell(
                 onTap: () {
                   pickFile();
                 },
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    height: 30.0,
-                    width: 30.0,
-                    margin: const EdgeInsets.only(
-                      left: 183.00,
-                      top: 10.00,
-                      right: 113.00,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.circular(
-                        5.00,
+                child: result != null
+                    ? Container(
+                        height: 500.0,
+                        width: 500.0,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5.00),
+                        ),
+                        child: Image.memory(result!.files.first.bytes!),
+                      )
+                    : Container(
+                        height: 500.0,
+                        width: 500.0,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(5.00),
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt_rounded,
+                          size: 20,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    child: const Icon(
-                      Icons.camera_alt_rounded,
-                      size: 20,
-                      color: Colors.black,
+              ),
+              const SizedBox(height: 20),
+              SizedBox(
+                height: 100,
+                child: SingleChildScrollView(
+                  child: Expanded(
+                    child: Text(
+                      softWrap: true,
+                      widget.description,
                     ),
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  if (result != null) {
-                    ref
-                        .read(assetNotifierProvider.notifier)
-                        .changeImageFromLocal(
-                            idAsset, result!.files.first.bytes, idTask);
-                    Navigator.pop(context);
-                  }
-                },
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    height: 30.0,
-                    width: 30.0,
-                    margin: const EdgeInsets.only(
-                      left: 183.00,
-                      top: 10.00,
-                      right: 113.00,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white70,
-                      borderRadius: BorderRadius.circular(
-                        5.00,
-                      ),
-                    ),
-                    child: const Icon(
-                      Icons.upload,
-                      size: 20,
-                      color: Colors.black,
-                    ),
+              SizedBox(
+                width: 530,
+                height: 40,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.lightBlue),
+                  onPressed: () {
+                    if (result != null) {
+                      ref
+                          .read(assetNotifierProvider.notifier)
+                          .changeImageFromLocal(widget.idAsset,
+                              result!.files.first.bytes, widget.idTask);
+                      Navigator.pop(context);
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.upload,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                  label: const Text(
+                    'Upload',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-              )
+              ),
+              // InkWell(
+              //   onTap: () {
+              //     if (result != null) {
+              //       ref
+              //           .read(assetNotifierProvider.notifier)
+              //           .changeImageFromLocal(widget.idAsset,
+              //               result!.files.first.bytes, widget.idTask);
+              //       Navigator.pop(context);
+              //     }
+              //   },
+              //   child: Container(
+              //     width: 500.0,
+              //     height: 40,
+              //     decoration: BoxDecoration(
+              //       color: Colors.lightBlue,
+              //       borderRadius: BorderRadius.circular(5.00),
+              //     ),
+              //     child: const Row(
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         Icon(
+              //           Icons.upload,
+              //           size: 20,
+              //           color: Colors.white,
+              //         ),
+              //         SizedBox(width: 10),
+              //         Text(
+              //           'Upload',
+              //           style: TextStyle(color: Colors.white),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // )
             ],
           )),
     );
   }
 
-  void pickFile() async {
-    result = await FilePicker.platform.pickFiles(
+  Future<void> pickFile() async {
+    await FilePicker.platform.pickFiles(
       dialogTitle: 'Get E-Sign',
       type: FileType.custom,
       allowMultiple: false,
@@ -102,6 +151,12 @@ class DialogChangeImageFromLocal extends ConsumerWidget {
         }
       },
       allowedExtensions: ['jpg'],
-    );
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          result = value;
+        });
+      }
+    });
   }
 }

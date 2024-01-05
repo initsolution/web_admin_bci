@@ -17,6 +17,10 @@ class DialogChooseImage extends ConsumerWidget {
     return AlertDialog(
       actions: [
         TextButton(
+            style: TextButton.styleFrom(
+                minimumSize: const Size(200, 40),
+                backgroundColor:
+                    idSelect == -1 ? Colors.grey : Colors.lightBlue),
             onPressed: idSelect == -1
                 ? null
                 : () {
@@ -26,20 +30,16 @@ class DialogChooseImage extends ConsumerWidget {
                     ref.invalidate(idSelectedAsset);
                     Navigator.pop(context);
                   },
-            child: Text(
-              'OK',
-              style:
-                  TextStyle(color: idSelect == -1 ? Colors.grey : Colors.green),
-            )),
+            child: const Text('OK', style: TextStyle(color: Colors.white))),
         TextButton(
+            style: TextButton.styleFrom(
+                minimumSize: const Size(200, 40),
+                backgroundColor: Colors.lightBlue),
             onPressed: () {
               ref.invalidate(idSelectedAsset);
               Navigator.pop(context);
             },
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: Colors.red),
-            ))
+            child: const Text('Cancel', style: TextStyle(color: Colors.white))),
       ],
       content: SizedBox(
           width: MediaQuery.of(context).size.width / 0.5,
@@ -51,7 +51,7 @@ class DialogChooseImage extends ConsumerWidget {
                   crossAxisCount: 3,
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
-                  childAspectRatio: 1.0,
+                  childAspectRatio: 3 / 2,
                 ),
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {

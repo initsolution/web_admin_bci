@@ -456,36 +456,48 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                                           context: context,
                                           builder: (context) {
                                             return DialogDetailImage(
-                                                id: item.id!);
+                                              id: item.id!,
+                                              description:
+                                                  item.description ?? '',
+                                            );
                                           }),
-                                      child: Image.network(
-                                        '$urlRepo/asset/getImage/${item.id}',
-                                        fit: BoxFit.contain,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.3,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.3,
-                                        loadingBuilder: (BuildContext context,
-                                            Widget child,
-                                            ImageChunkEvent? loadingProgress) {
-                                          if (loadingProgress == null) {
-                                            return child;
-                                          }
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                              value: loadingProgress
-                                                          .expectedTotalBytes !=
-                                                      null
-                                                  ? loadingProgress
-                                                          .cumulativeBytesLoaded /
-                                                      loadingProgress
-                                                          .expectedTotalBytes!
-                                                  : null,
-                                            ),
-                                          );
-                                        },
+                                      child: Container(
+                                        color: const Color.fromARGB(
+                                            255, 207, 216, 220),
+                                        width: 550,
+                                        height: 200,
+                                        child: Image.network(
+                                          '$urlRepo/asset/getImage/${item.id}',
+                                          fit: BoxFit.contain,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.3,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.3,
+                                          loadingBuilder: (BuildContext context,
+                                              Widget child,
+                                              ImageChunkEvent?
+                                                  loadingProgress) {
+                                            if (loadingProgress == null) {
+                                              return child;
+                                            }
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        loadingProgress
+                                                            .expectedTotalBytes!
+                                                    : null,
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       )
                                       // ProgressiveImage.assetNetwork(
                                       //   fit: BoxFit.contain,
@@ -547,16 +559,19 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                                                       return DialogChangeImageFromLocal(
                                                         idAsset: item.id!,
                                                         idTask: widget.task.id!,
+                                                        description:
+                                                            item.description ??
+                                                                '',
                                                       );
                                                     });
                                               },
                                               icon: const Icon(
-                                                Icons.photo_library_rounded,
+                                                Icons.upload,
                                                 color: Colors.white,
                                                 size: 18,
                                               ),
                                               label: const Text(
-                                                'Change offline',
+                                                'Reupload',
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               )),
@@ -582,7 +597,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                                   child: Text(
                                     item.description!,
                                     overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                    maxLines: 3,
                                   ),
                                 ),
                               ),
