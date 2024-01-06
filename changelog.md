@@ -160,3 +160,7 @@
 
 > 05/01/2024 (deddy)
 > ui/ux replace, reupload, show detail asset
+
+> 06/01/2024
+> add note task for verifikator
+> solving bug saat get token in portalmasterlayout

@@ -27,6 +27,7 @@ class Task {
   List<CategoryChecklistPreventive>? categorychecklistprev;
   List<ReportRegulerTorque>? reportRegulerTorque;
   ReportRegulerVerticality? reportRegulerVerticality;
+  String? note;
   Task({
     this.id,
     this.dueDate,
@@ -43,6 +44,7 @@ class Task {
     this.categorychecklistprev,
     this.reportRegulerTorque,
     this.reportRegulerVerticality,
+    this.note,
   });
 
   Task copyWith({
@@ -61,6 +63,7 @@ class Task {
     List<CategoryChecklistPreventive>? categorychecklistprev,
     List<ReportRegulerTorque>? reportRegulerTorque,
     ReportRegulerVerticality? reportRegulerVerticality,
+    String? note,
   }) {
     return Task(
       id: id ?? this.id,
@@ -102,6 +105,7 @@ class Task {
       'reportRegulerTorque':
           reportRegulerTorque?.map((x) => x.toMap()).toList(),
       'reportRegulerVerticality': reportRegulerVerticality?.toMap(),
+      'note': note,
     };
   }
 
@@ -150,6 +154,7 @@ class Task {
           ? ReportRegulerVerticality.fromMap(
               map['reportRegulerVerticality'] as Map<String, dynamic>)
           : null,
+      note: map['note'] != null ? map['note'] as String : null,
     );
   }
 
@@ -159,7 +164,7 @@ class Task {
 
   @override
   String toString() {
-    return 'Task(id: $id, dueDate: $dueDate, submitedDate: $submitedDate, verifiedDate: $verifiedDate, notBefore: $notBefore, status: $status, type: $type, towerCategory: $towerCategory, makerEmployee: $makerEmployee, verifierEmployee: $verifierEmployee, site: $site, created_at: $created_at, categorychecklistprev: $categorychecklistprev, reportRegulerTorque: $reportRegulerTorque, reportRegulerVerticality: $reportRegulerVerticality)';
+    return 'Task(id: $id, dueDate: $dueDate, submitedDate: $submitedDate, verifiedDate: $verifiedDate, notBefore: $notBefore, status: $status, type: $type, towerCategory: $towerCategory, makerEmployee: $makerEmployee, verifierEmployee: $verifierEmployee, site: $site, created_at: $created_at, categorychecklistprev: $categorychecklistprev, reportRegulerTorque: $reportRegulerTorque, reportRegulerVerticality: $reportRegulerVerticality, note: $note)';
   }
 
   @override
@@ -180,7 +185,8 @@ class Task {
         other.created_at == created_at &&
         listEquals(other.categorychecklistprev, categorychecklistprev) &&
         listEquals(other.reportRegulerTorque, reportRegulerTorque) &&
-        other.reportRegulerVerticality == reportRegulerVerticality;
+        other.reportRegulerVerticality == reportRegulerVerticality &&
+        other.note == note;
   }
 
   @override
@@ -199,6 +205,7 @@ class Task {
         created_at.hashCode ^
         categorychecklistprev.hashCode ^
         reportRegulerTorque.hashCode ^
-        reportRegulerVerticality.hashCode;
+        reportRegulerVerticality.hashCode ^
+        note.hashCode;
   }
 }

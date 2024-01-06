@@ -57,8 +57,10 @@ class PortalMasterLayout extends ConsumerWidget {
 
     return Consumer(builder: (context, snapshot, child) {
       var token = ref.watch(userDataProvider.select((value) => value.token));
+      if(token == "-") {
+      }
       var role = "";
-      if (token != '') {
+      if (token != '-') {
         Map<String, dynamic> decodedToken =
             JwtDecoder.decode(token)['employee'];
         role = decodedToken['role'];
