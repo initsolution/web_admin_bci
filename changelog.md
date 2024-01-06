@@ -164,3 +164,4 @@
 > 06/01/2024
 > add note task for verifikator
 > solving bug saat get token in portalmasterlayout
+> solving bug statusTask

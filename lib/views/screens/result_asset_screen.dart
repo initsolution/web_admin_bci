@@ -632,7 +632,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
   }
 
   Widget formNote() {
-    statusTask = widget.task.status!;
+    var statusTask = widget.task.status!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
