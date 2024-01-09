@@ -15,6 +15,7 @@ import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
 import 'package:flutter_web_ptb/providers/asset_state.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_change_image_from_local.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_choose_image.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_detail_image.dart';
@@ -37,6 +38,13 @@ class ResultAssetScreen extends ConsumerStatefulWidget {
 class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
   bool confirmAll = false;
   List<ReportRegulerTorque>? reportRegulerTorque;
+  final TextEditingController noteController = TextEditingController();
+
+  @override
+  void dispose() {
+    noteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +102,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                       children: [
                         _buildTaskInfo(),
                         formAsset(groupedItems, assets),
+                        formNote(),
                       ],
                     ),
                   ),
@@ -312,13 +321,14 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                  onPressed: widget.task.status!.toLowerCase() != STATUS_ACCEPTED
-                      ? null
-                      : () async {
-                          await launchUrlString(
-                              'http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}',
-                              mode: LaunchMode.platformDefault);
-                        },
+                  onPressed:
+                      widget.task.status!.toLowerCase() != STATUS_ACCEPTED
+                          ? null
+                          : () async {
+                              await launchUrlString(
+                                  'http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}',
+                                  mode: LaunchMode.platformDefault);
+                            },
                   icon: Icon(
                     Icons.print,
                     color: widget.task.status!.toLowerCase() != STATUS_ACCEPTED
@@ -359,9 +369,13 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                 onPressed: () {
                   if (widget.task.status!.toLowerCase() != STATUS_ACCEPTED) {
                     if (widget.task.verifierEmployee!.urlEsign != null) {
+                      var note = noteController.text;
                       ref
                           .read(assetNotifierProvider.notifier)
                           .updateStatusAsset();
+                      Task task = widget.task;
+                      task.note = note;
+                      ref.read(taskNotifierProvider.notifier).updateTask(task);
                     } else {
                       final dialog = AwesomeDialog(
                         context: context,
@@ -614,6 +628,36 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget formNote() {
+    var statusTask = widget.task.status!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Feedback for Maker',
+          style: TextStyle(fontWeight: FontWeight.w200),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+          child: statusTask == STATUS_REVIEW
+              ? TextField(
+                  controller: noteController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 10,
+                )
+              : Text(widget.task.note!),
+        )
+      ],
     );
   }
 

@@ -36,6 +36,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) => Task(
           ? null
           : ReportRegulerVerticality.fromJson(
               json['reportRegulerVerticality'] as Map<String, dynamic>),
+      note: json['note'] as String?,
     );
 
 Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
@@ -54,4 +55,5 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'categorychecklistprev': instance.categorychecklistprev,
       'reportRegulerTorque': instance.reportRegulerTorque,
       'reportRegulerVerticality': instance.reportRegulerVerticality,
+      'note': instance.note,
     };
