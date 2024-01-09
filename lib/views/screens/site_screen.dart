@@ -1,5 +1,7 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'dart:convert';
-import 'dart:math';
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -270,121 +272,113 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
         cardTheme: appDataTableTheme.cardTheme,
         dataTableTheme: appDataTableTheme.dataTableThemeData,
       ),
-      child: SizedBox(
-          width: double.infinity,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final double dataTableWidth =
-                  max(kScreenWidthMd, constraints.maxWidth);
-              return Scrollbar(
-                controller: _dataTableHorizontalScrollController,
-                thumbVisibility: true,
-                trackVisibility: true,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  controller: _dataTableHorizontalScrollController,
-                  child: SizedBox(
-                    width: dataTableWidth,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        var state = ref.watch(siteNotifierProvider);
-                        // if (DEBUG) debugPrint('state : $state');
-                        if (state is SiteLoaded) {
-                          DataTableSource data = SiteData(
-                              sites: state.sites, ref: ref, context: context);
-                          filterData = state.sites;
-                          return PaginatedDataTable(
-                            headingRowHeight: 50,
-                            columnSpacing: 0,
-                            source: data,
-                            columns: [
-                              DataColumn(
-                                label: const Text('ID'),
-                                tooltip: "SITE ID",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              DataColumn(
-                                label: const Text('NAME'),
-                                tooltip: "SITE NAME",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              DataColumn(
-                                label: const Text('TYPE'),
-                                tooltip: "TOWER TYPE",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              DataColumn(
-                                label: const Text('HEIGHT'),
-                                tooltip: "TOWER HEIGHT",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              DataColumn(
-                                label: const Text('FABRICATOR'),
-                                tooltip: "FABRICATOR",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              const DataColumn(
-                                label: Text('TENANTS'),
-                                tooltip: "TENANTS",
-                              ),
-                              DataColumn(
-                                label: const Text('ADDRESS'),
-                                tooltip: "SITE ADDRESS",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              DataColumn(
-                                label: const Text('REGION'),
-                                tooltip: "SITE REGION",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              DataColumn(
-                                label: const Text('PROVINCE'),
-                                tooltip: "SITE PROVINCE",
-                                onSort: (columnIndex, _) {
-                                  sort(columnIndex);
-                                },
-                              ),
-                              // const DataColumn(
-                              //     label: Text('LONG'), tooltip: "LONGITUDE"),
-                              // const DataColumn(
-                              //     label: Text('LAT'), tooltip: "LATITUDE"),
-                              const DataColumn(label: Text('ACTION')),
-                              const DataColumn(label: Text('TASKS')),
-                            ],
-                            horizontalMargin: 20,
-                            rowsPerPage: 10,
-                            showCheckboxColumn: false,
-                          );
-                        } else if (state is SiteLoading) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-                        return Container();
-                      },
+      child: Scrollbar(
+        controller: _dataTableHorizontalScrollController,
+        thumbVisibility: true,
+        trackVisibility: true,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          controller: _dataTableHorizontalScrollController,
+          child: SizedBox(
+            width: window.screen?.width?.toDouble() ?? 1940,
+            child: Consumer(
+              builder: (context, ref, child) {
+                var state = ref.watch(siteNotifierProvider);
+                // if (DEBUG) debugPrint('state : $state');
+                if (state is SiteLoaded) {
+                  DataTableSource data =
+                      SiteData(sites: state.sites, ref: ref, context: context);
+                  filterData = state.sites;
+                  return PaginatedDataTable(
+                    headingRowHeight: 50,
+                    columnSpacing: 0,
+                    source: data,
+                    columns: [
+                      DataColumn(
+                        label: const Text('ID'),
+                        tooltip: "SITE ID",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('NAME'),
+                        tooltip: "SITE NAME",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('TYPE'),
+                        tooltip: "TOWER TYPE",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('HEIGHT'),
+                        tooltip: "TOWER HEIGHT",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('FABRICATOR'),
+                        tooltip: "FABRICATOR",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      const DataColumn(
+                        label: Text('TENANTS'),
+                        tooltip: "TENANTS",
+                      ),
+                      DataColumn(
+                        label: const Text('ADDRESS'),
+                        tooltip: "SITE ADDRESS",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('REGION'),
+                        tooltip: "SITE REGION",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      DataColumn(
+                        label: const Text('PROVINCE'),
+                        tooltip: "SITE PROVINCE",
+                        onSort: (columnIndex, _) {
+                          sort(columnIndex);
+                        },
+                      ),
+                      // const DataColumn(
+                      //     label: Text('LONG'), tooltip: "LONGITUDE"),
+                      // const DataColumn(
+                      //     label: Text('LAT'), tooltip: "LATITUDE"),
+                      const DataColumn(label: Text('ACTION')),
+                      const DataColumn(label: Text('TASKS')),
+                    ],
+                    horizontalMargin: 20,
+                    rowsPerPage: 10,
+                    showCheckboxColumn: false,
+                  );
+                } else if (state is SiteLoading) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                ),
-              );
-            },
-          )),
+                  );
+                }
+                return Container();
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -416,6 +410,7 @@ class SiteData extends DataTableSource {
       // DataCell(Text(sites[index].longitude!.toString())),
       // DataCell(Text(sites[index].latitude!.toString())),
       DataCell(IconButton(
+        splashRadius: 20,
         icon: const Icon(Icons.edit),
         onPressed: () {
           Map<String, dynamic> header = {"filter": "isActive||eq||true"};

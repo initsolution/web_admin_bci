@@ -4,6 +4,7 @@ import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme.dart';
 import 'package:flutter_web_ptb/utils/app_focus_helper.dart';
+import 'package:flutter_web_ptb/utils/custom_scrollbar.dart';
 import 'package:go_router/go_router.dart';
 
 class RootApp extends ConsumerStatefulWidget {
@@ -44,6 +45,7 @@ class _RootAppState extends ConsumerState<RootApp> {
         },
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
+          scrollBehavior: MyCustomScrollBehavior(),
           routeInformationProvider: _appRouter!.routeInformationProvider,
           routeInformationParser: _appRouter!.routeInformationParser,
           routerDelegate: _appRouter!.routerDelegate,

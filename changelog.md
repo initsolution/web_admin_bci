@@ -160,3 +160,6 @@
 
 > 05/01/2024 (deddy)
 > ui/ux replace, reupload, show detail asset
+
+> 09/01/2024 (deddy)
+> scroll table and layout table

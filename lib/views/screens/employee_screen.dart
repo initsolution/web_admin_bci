@@ -1,5 +1,6 @@
-import 'dart:math';
+// ignore_for_file: avoid_web_libraries_in_flutter
 
+import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_web_ptb/app_router.dart';
@@ -84,92 +85,82 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
         cardTheme: appDataTableTheme.cardTheme,
         dataTableTheme: appDataTableTheme.dataTableThemeData,
       ),
-      child: SizedBox(
-          width: double.infinity,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final double dataTableWidth =
-                  max(kScreenWidthMd, constraints.maxWidth);
-              return Scrollbar(
-                  controller: _dataTableHorizontalScrollController,
-                  thumbVisibility: true,
-                  trackVisibility: true,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    controller: _dataTableHorizontalScrollController,
-                    child: SizedBox(
-                      width: dataTableWidth,
-                      child: Consumer(
-                        builder: (context, ref, child) {
-                          var state = ref.watch(employeeNotifierProvider);
-                          if (state is EmployeeLoaded) {
-                            filterData = state.employees;
-                            DataTableSource data = EmployeeData(
-                                employees: filterData,
-                                context: context,
-                                ref: ref);
-                            return PaginatedDataTable(
-                              // sortColumnIndex: 0,
-                              source: data,
-                              columns: [
-                                DataColumn(
-                                  label: const Padding(
-                                    padding: EdgeInsets.only(left: 30),
-                                    child: Text('Nik'),
-                                  ),
-                                  onSort: (columnIndex, _) {
-                                    sort(columnIndex);
-                                  },
-                                ),
-                                DataColumn(
-                                  label: const Text('Name'),
-                                  onSort: (columnIndex, _) {
-                                    sort(columnIndex);
-                                  },
-                                ),
-                                DataColumn(
-                                  label: const Text('Email'),
-                                  onSort: (columnIndex, _) {
-                                    sort(columnIndex);
-                                  },
-                                ),
-                                DataColumn(
-                                  label: const Text('Hp'),
-                                  onSort: (columnIndex, _) {
-                                    sort(columnIndex);
-                                  },
-                                ),
-                                const DataColumn(
-                                  label: Text('Status Aktif'),
-                                ),
-                                const DataColumn(
-                                  label: Text('Status Karyawan'),
-                                ),
-                                const DataColumn(
-                                  label: Text('Role'),
-                                ),
-                                const DataColumn(
-                                  label: Text('Action'),
-                                ),
-                              ],
-                              horizontalMargin: 10,
-                              rowsPerPage: 10,
-                              showCheckboxColumn: false,
-                            );
-                          } else if (state is EmployeeLoading) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(20),
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-                          return Container();
-                        },
+      child: Scrollbar(
+          controller: _dataTableHorizontalScrollController,
+          thumbVisibility: true,
+          trackVisibility: true,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            controller: _dataTableHorizontalScrollController,
+            child: SizedBox(
+              width: window.screen?.width?.toDouble() ?? 1940,
+              child: Consumer(
+                builder: (context, ref, child) {
+                  var state = ref.watch(employeeNotifierProvider);
+                  if (state is EmployeeLoaded) {
+                    filterData = state.employees;
+                    DataTableSource data = EmployeeData(
+                        employees: filterData, context: context, ref: ref);
+                    return PaginatedDataTable(
+                      // sortColumnIndex: 0,
+                      source: data,
+                      columns: [
+                        DataColumn(
+                          label: const Padding(
+                            padding: EdgeInsets.only(left: 30),
+                            child: Text('Nik'),
+                          ),
+                          onSort: (columnIndex, _) {
+                            sort(columnIndex);
+                          },
+                        ),
+                        DataColumn(
+                          label: const Text('Name'),
+                          onSort: (columnIndex, _) {
+                            sort(columnIndex);
+                          },
+                        ),
+                        DataColumn(
+                          label: const Text('Email'),
+                          onSort: (columnIndex, _) {
+                            sort(columnIndex);
+                          },
+                        ),
+                        DataColumn(
+                          label: const Text('Hp'),
+                          onSort: (columnIndex, _) {
+                            sort(columnIndex);
+                          },
+                        ),
+                        const DataColumn(
+                          label: Text('Status Aktif'),
+                        ),
+                        const DataColumn(
+                          label: Text('Status Karyawan'),
+                        ),
+                        const DataColumn(
+                          label: Text('Role'),
+                        ),
+                        const DataColumn(
+                          label: Text('Action'),
+                        ),
+                      ],
+                      horizontalMargin: 10,
+                      rowsPerPage: 10,
+                      showCheckboxColumn: false,
+                    );
+                  } else if (state is EmployeeLoading) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: CircularProgressIndicator(),
                       ),
-                    ),
-                  ));
-            },
+                    );
+                  }
+                  return Container();
+                },
+              ),
+            ),
           )),
     );
   }
@@ -327,6 +318,7 @@ class EmployeeData extends DataTableSource {
       DataCell(Row(
         children: [
           IconButton(
+            splashRadius: 20,
             icon: const Icon(Icons.edit),
             onPressed: () {
               showDialog(
@@ -342,6 +334,7 @@ class EmployeeData extends DataTableSource {
             },
           ),
           IconButton(
+            splashRadius: 20,
             icon: const Icon(Icons.delete),
             onPressed: () {
               showDialog(

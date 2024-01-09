@@ -13,7 +13,7 @@ class _TenantRepo implements TenantRepo {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://103.82.241.80:3000';
+    baseUrl ??= 'http://103.82.241.80:3001';
   }
 
   final Dio _dio;

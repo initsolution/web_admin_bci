@@ -1,4 +1,6 @@
-import 'dart:math';
+// ignore_for_file: avoid_web_libraries_in_flutter
+
+import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -292,67 +294,59 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
         cardTheme: appDataTableTheme.cardTheme,
         dataTableTheme: appDataTableTheme.dataTableThemeData,
       ),
-      child: SizedBox(
-          width: double.infinity,
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final double dataTableWidth =
-                  max(kScreenWidthMd, constraints.maxWidth);
-              return Scrollbar(
-                controller: _dataTableHorizontalScrollController,
-                thumbVisibility: true,
-                trackVisibility: true,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  controller: _dataTableHorizontalScrollController,
-                  child: SizedBox(
-                    width: dataTableWidth,
-                    child: Consumer(
-                      builder: (context, ref, child) {
-                        var state = ref.watch(taskNotifierProvider);
-                        // if (DEBUG) debugPrint('state : $state');
-                        if (state is TaskLoaded) {
-                          DataTableSource data =
-                              TaskData(tasks: state.tasks, context: context);
-                          return PaginatedDataTable(
-                            source: data,
-                            columns: const [
-                              DataColumn(
-                                  label: Padding(
-                                padding: EdgeInsets.only(left: 30),
-                                child: Text('Site'),
-                              )),
-                              DataColumn(label: Text('Maker')),
-                              DataColumn(label: Text('Verifier')),
-                              DataColumn(label: Text('Status')),
-                              DataColumn(label: Text('Type')),
-                              DataColumn(label: Text('Created Date')),
-                              DataColumn(label: Text('Due Date')),
-                              DataColumn(label: Text('Submitted Date')),
-                              DataColumn(label: Text('Verified Date')),
-                              DataColumn(label: Text('Delete')),
-                            ],
-                            columnSpacing: 50,
-                            horizontalMargin: 10,
-                            rowsPerPage: 10,
-                            showCheckboxColumn: false,
-                          );
-                        } else if (state is TaskLoading) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-                        return Container();
-                      },
+      child: Scrollbar(
+        controller: _dataTableHorizontalScrollController,
+        thumbVisibility: true,
+        trackVisibility: true,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          controller: _dataTableHorizontalScrollController,
+          child: SizedBox(
+            width: window.screen?.width?.toDouble() ?? 1940,
+            child: Consumer(
+              builder: (context, ref, child) {
+                var state = ref.watch(taskNotifierProvider);
+                // if (DEBUG) debugPrint('state : $state');
+                if (state is TaskLoaded) {
+                  DataTableSource data =
+                      TaskData(tasks: state.tasks, context: context);
+                  return PaginatedDataTable(
+                    source: data,
+                    columns: const [
+                      DataColumn(
+                          label: Padding(
+                        padding: EdgeInsets.only(left: 30),
+                        child: Text('Site'),
+                      )),
+                      DataColumn(label: Text('Maker')),
+                      DataColumn(label: Text('Verifier')),
+                      DataColumn(label: Text('Status')),
+                      DataColumn(label: Text('Type')),
+                      DataColumn(label: Text('Created Date')),
+                      DataColumn(label: Text('Due Date')),
+                      DataColumn(label: Text('Submitted Date')),
+                      DataColumn(label: Text('Verified Date')),
+                      DataColumn(label: Text('Delete')),
+                    ],
+                    columnSpacing: 20,
+                    horizontalMargin: 10,
+                    rowsPerPage: 10,
+                    showCheckboxColumn: false,
+                  );
+                } else if (state is TaskLoading) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(20),
+                      child: CircularProgressIndicator(),
                     ),
-                  ),
-                ),
-              );
-            },
-          )),
+                  );
+                }
+                return Container();
+              },
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -419,40 +413,44 @@ class TaskData extends DataTableSource {
           ))),
       // DataCell(Text(tasks[index].status!)),
       DataCell(Text(tasks[index].type!)),
-      DataCell(Text(tasks[index]
-          .created_at!
-          .substring(0, tasks[index].created_at!.indexOf('T')))),
-      DataCell(Text(tasks[index].dueDate!)),
-      DataCell(Text(tasks[index].submitedDate!)),
-      DataCell(Text(tasks[index].verifiedDate!)),
+      DataCell(Text(tasks[index].created_at != ''
+          ? DateFormat('dd-M-yyyy')
+              .format(DateTime.parse(tasks[index].created_at!))
+          : '')),
+      DataCell(Text(tasks[index].dueDate != ''
+          ? DateFormat('dd-M-yyyy')
+              .format(DateTime.parse(tasks[index].dueDate!))
+          : '')),
+      DataCell(Text(tasks[index].submitedDate != ''
+          ? DateFormat('dd-M-yyyy')
+              .format(DateTime.parse(tasks[index].submitedDate!))
+          : '')),
+      DataCell(Text(tasks[index].verifiedDate != ''
+          ? DateFormat('dd-M-yyyy')
+              .format(DateTime.parse(tasks[index].verifiedDate!))
+          : '')),
       DataCell(Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          tasks[index].notBefore != null
+          tasks[index].notBefore != null && DateTime.now().isBefore(notBefore!)
               ? IconButton(
                   splashRadius: 20,
-                  icon: Icon(
-                    Icons.settings,
-                    color: DateTime.now().isBefore(notBefore!)
-                        ? Colors.blue
-                        : Colors.grey,
-                  ),
-                  onPressed: DateTime.now().isBefore(notBefore)
-                      ? () {
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return SizedBox(
-                                  child: DialogEditTask(
-                                isCanEditSite: false,
-                                task: tasks[index],
-                              ));
-                            },
-                          );
-                        }
-                      : null,
-                )
-              : const Spacer(),
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SizedBox(
+                            child: DialogEditTask(
+                          isCanEditSite: false,
+                          task: tasks[index],
+                        ));
+                      },
+                    );
+                  })
+              : IconButton(
+                  splashRadius: 20,
+                  onPressed: () {},
+                  icon: const Icon(Icons.edit_off)),
           IconButton(
             splashRadius: 20,
             icon: const Icon(Icons.delete),
