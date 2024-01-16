@@ -168,3 +168,7 @@
 
 > 09/01/2024 (deddy)
 > scroll table and layout table
+
+> 16/01/2024
+> hide button Detail saat status task todo, expired, dan rejected
+> ganti icon rumah sakit 

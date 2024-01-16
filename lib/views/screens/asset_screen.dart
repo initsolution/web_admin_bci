@@ -369,7 +369,9 @@ class TaskData extends DataTableSource {
           ? DateFormat('dd-M-yyyy')
               .format(DateTime.parse(tasks[index].verifiedDate!))
           : '')),
-      DataCell(task.status != STATUS_TODO
+      DataCell(task.status != STATUS_TODO &&
+              task.status != STATUS_EXPIRED &&
+              task.status != STATUS_REJECTED
           ? TextButton(
               style: TextButton.styleFrom(
                   backgroundColor: Colors.black, foregroundColor: Colors.white),
@@ -389,7 +391,11 @@ class TaskData extends DataTableSource {
             )
           : Container()),
       DataCell(task.status == STATUS_ACCEPTED
-          ? const Center(child: Icon(Icons.verified_outlined, color: Colors.green,))
+          ? const Center(
+              child: Icon(
+              Icons.verified_outlined,
+              color: Colors.green,
+            ))
           : Container()),
       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       DataCell(Row(
