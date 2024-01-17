@@ -3,6 +3,7 @@ import 'package:flutter_web_ptb/constants/values.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/repository/employee_repo.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:riverpod/riverpod.dart';
 // ignore: depend_on_referenced_packages
@@ -50,6 +51,11 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
+      Employee employee =
+          Employee.fromMap(JwtDecoder.decode(token)['employee']);
+      if (employee.role! != 'SuperAdmin') {
+        header = {'filter': 'role||ne||SuperAdmin'};
+      }
       final HttpResponse data =
           await employeeRepo.getAllEmployee('Bearer $token', header);
       if (data.response.statusCode == 200) {
