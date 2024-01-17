@@ -171,3 +171,7 @@
 
 > 11/01/2024 (mip)
 > edit employee not show superadmin
+
+> 16/01/2024
+> hide button Detail saat status task todo, expired, dan rejected
+> ganti icon rumah sakit 

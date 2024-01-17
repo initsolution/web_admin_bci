@@ -351,7 +351,9 @@ class SidebarHeader extends ConsumerWidget {
               radius: 20.0,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(50),
-                child: Image.asset("assets/hospital_ic.png"),
+                child: Image.asset(
+                  "assets/images/ic_profile.png",
+                ),
               ),
             ),
             const SizedBox(width: kDefaultPadding * 0.5),
