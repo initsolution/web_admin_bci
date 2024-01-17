@@ -178,3 +178,6 @@
 
 > 17/01/2024 (mip)
 > employee change e sign save memory image
+
+> 17/01/2024 (dedddy)
+> change esign container dialog profile

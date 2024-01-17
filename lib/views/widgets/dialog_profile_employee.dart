@@ -10,10 +10,9 @@ import 'package:flutter_web_ptb/providers/employee_provider.dart';
 import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class DialogProfileEmployee extends ConsumerStatefulWidget {
-  DialogProfileEmployee({super.key});
+  const DialogProfileEmployee({super.key});
 
   @override
   ConsumerState<DialogProfileEmployee> createState() =>
@@ -57,7 +56,7 @@ class _DialogProfileEmployee extends ConsumerState<DialogProfileEmployee> {
             TextEditingController(text: employee.hp);
         return AlertDialog(
           content: SizedBox(
-              width: MediaQuery.of(context).size.width / 1.5,
+              width: MediaQuery.of(context).size.width / 2,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,21 +167,13 @@ class _DialogProfileEmployee extends ConsumerState<DialogProfileEmployee> {
                                   child:
                                       Image.memory(result!.files.first.bytes!),
                                 )
-                              : Align(
-                                  alignment: Alignment.centerLeft,
+                              : Center(
                                   child: Container(
-                                    height: 30.0,
-                                    width: 30.0,
-                                    margin: const EdgeInsets.only(
-                                      left: 183.00,
-                                      top: 10.00,
-                                      right: 113.00,
-                                    ),
+                                    height: 200.0,
+                                    width: double.infinity,
                                     decoration: BoxDecoration(
-                                      color: Colors.white70,
-                                      borderRadius: BorderRadius.circular(
-                                        5.00,
-                                      ),
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(5.00),
                                     ),
                                     child: const Icon(
                                       Icons.camera_alt_rounded,
@@ -194,9 +185,7 @@ class _DialogProfileEmployee extends ConsumerState<DialogProfileEmployee> {
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 20),
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 1.5,
                       child: ElevatedButton(
