@@ -54,7 +54,7 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
       Employee employee =
           Employee.fromMap(JwtDecoder.decode(token)['employee']);
       if (employee.role! != 'SuperAdmin') {
-        header = {'filter': 'role||ne||SuperAdmin'};
+        header!.addAll({'filter': 'role||ne||SuperAdmin'});
       }
       final HttpResponse data =
           await employeeRepo.getAllEmployee('Bearer $token', header);
@@ -167,6 +167,31 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
         state = EmployeeErrorServer(
             message: error.response!.data["message"],
             statusCode: error.response!.data["statusCode"]);
+      }
+    }
+  }
+
+  getOneEmployee(String nik) async {
+    state = EmployeeLoading();
+    final sharedPref = await SharedPreferences.getInstance();
+    try {
+      var token = sharedPref.getString(StorageKeys.token) ?? '';
+
+      final HttpResponse data =
+          await employeeRepo.getOneEmployee('Bearer $token', nik);
+      if (data.response.statusCode == 200) {
+        // debugPrint('data emp : ${httpResponse.data}');
+        Employee employee = Employee.fromJson(data.data);
+        state = EmployeeGotOne(employee: employee);
+      }
+    } on DioException catch (error) {
+      // debugPrint(error.response!.statusCode.toString());
+      if (error.response!.statusCode == 401) {
+        state = EmployeeErrorServer(
+            message: error.response!.statusMessage,
+            statusCode: error.response!.statusCode);
+      } else if (error.response!.statusCode == 404) {
+        state = EmployeeLoadedEmpty();
       }
     }
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:retrofit/retrofit.dart';
@@ -59,4 +61,12 @@ class EmployeeResetPassword extends EmployeeState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class EmployeeGotOne extends EmployeeState {
+  Employee employee;
+  EmployeeGotOne({required this.employee});
+
+  @override
+  List<Object?> get props => [employee];
 }

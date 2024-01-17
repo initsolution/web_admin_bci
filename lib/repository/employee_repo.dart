@@ -17,6 +17,10 @@ abstract class EmployeeRepo {
       @Header('Authorization') String token,
       @Queries() Map<String, dynamic>? header);
 
+  @GET('/employee/{nik}')
+  Future<HttpResponse<dynamic>> getOneEmployee(
+      @Header('Authorization') String token, @Path() String nik);
+
   @POST('/employee')
   Future<HttpResponse> createEmployee(
       @Body() Employee employee, @Header('Authorization') String token);

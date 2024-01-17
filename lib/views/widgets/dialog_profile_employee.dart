@@ -3,182 +3,232 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_web_ptb/app_router.dart';
 import 'package:flutter_web_ptb/constants/url.dart';
 import 'package:flutter_web_ptb/model/employee.dart';
 import 'package:flutter_web_ptb/providers/employee_provider.dart';
+import 'package:flutter_web_ptb/providers/employee_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
-class DialogProfileEmployee extends ConsumerWidget {
+class DialogProfileEmployee extends ConsumerStatefulWidget {
   DialogProfileEmployee({super.key});
-  FilePickerResult? result;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    String token = ref.watch(userDataProvider.select((value) => value.token));
-    Employee employee = Employee.fromMap(JwtDecoder.decode(token)['employee']);
-    TextEditingController nikController =
-        TextEditingController(text: employee.nik);
-    TextEditingController nameController =
-        TextEditingController(text: employee.name);
-    TextEditingController emailController =
-        TextEditingController(text: employee.email);
-    TextEditingController passwordController = TextEditingController();
-    TextEditingController phoneController =
-        TextEditingController(text: employee.hp);
+  ConsumerState<DialogProfileEmployee> createState() =>
+      _DialogProfileEmployee();
+}
 
-    return AlertDialog(
-      content: SizedBox(
-          width: MediaQuery.of(context).size.width / 1.5,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+class _DialogProfileEmployee extends ConsumerState<DialogProfileEmployee> {
+  FilePickerResult? result;
+  @override
+  Widget build(BuildContext context) {
+    // String token = ref.watch(userDataProvider.select((value) => value.token));
+    // Employee employee = Employee.fromMap(JwtDecoder.decode(token)['employee']);
+    ref.listen(employeeNotifierProvider, (previous, next) {
+      if (next is EmployeeErrorServer) {
+        if (next.statusCode == 401) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please login again')),
+          );
+          // context.read<UserDataProvider>().clearUserDataAsync();
+          ref.read(userDataProvider.notifier).clearUserDataAsync();
+          GoRouter.of(context).go(RouteUri.login);
+        }
+      } else if (next is EmployeeDataChangeSuccess) {
+        ref.read(employeeNotifierProvider.notifier).getAllEmployee();
+        Navigator.pop(context);
+      }
+    });
+
+    return Consumer(builder: (context, ref, child) {
+      var state = ref.watch(employeeNotifierProvider);
+      if (state is EmployeeGotOne) {
+        Employee employee = state.employee;
+        TextEditingController nikController =
+            TextEditingController(text: employee.nik);
+        TextEditingController nameController =
+            TextEditingController(text: employee.name);
+        TextEditingController emailController =
+            TextEditingController(text: employee.email);
+        TextEditingController passwordController = TextEditingController();
+        TextEditingController phoneController =
+            TextEditingController(text: employee.hp);
+        return AlertDialog(
+          content: SizedBox(
+              width: MediaQuery.of(context).size.width / 1.5,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Profile ${nameController.text}',
-                      style: const TextStyle(fontSize: 30),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('NIK'),
-                TextField(
-                  controller: nikController,
-                  keyboardType: TextInputType.text,
-                  obscureText: false,
-                  decoration: const InputDecoration(
-                    hintText: 'Please type your NIK',
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('NAME'),
-                TextField(
-                  controller: nameController,
-                  keyboardType: TextInputType.text,
-                  obscureText: false,
-                  decoration: const InputDecoration(
-                    hintText: 'Please type your NAME',
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('EMAIL'),
-                TextField(
-                  controller: emailController,
-                  keyboardType: TextInputType.text,
-                  obscureText: false,
-                  decoration: const InputDecoration(
-                    hintText: 'Please type your EMAIL',
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('Password'),
-                TextField(
-                  controller: passwordController,
-                  keyboardType: TextInputType.text,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    hintText: 'Please type your Password',
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('Phone Number'),
-                TextField(
-                  controller: phoneController,
-                  keyboardType: TextInputType.text,
-                  obscureText: false,
-                  decoration: const InputDecoration(
-                    hintText: 'Please type your Phone Number',
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Text('E-Sign'),
-                Column(
-                  children: [
-                    employee.urlEsign != null
-                        ? Image.network(
-                            '$urlRepo/employee/getImage/${employee.nik}',
-                            width: 100,
-                            height: 100,
-                          )
-                        : const SizedBox(height: 10),
-                    const SizedBox(height: 10),
-                    InkWell(
-                      onTap: () {
-                        pickFile();
-                      },
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          height: 30.0,
-                          width: 30.0,
-                          margin: const EdgeInsets.only(
-                            left: 183.00,
-                            top: 10.00,
-                            right: 113.00,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white70,
-                            borderRadius: BorderRadius.circular(
-                              5.00,
-                            ),
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt_rounded,
-                            size: 20,
-                            color: Colors.black,
-                          ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Profile ${nameController.text}',
+                          style: const TextStyle(fontSize: 30),
                         ),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('NIK'),
+                    TextField(
+                      controller: nikController,
+                      keyboardType: TextInputType.text,
+                      obscureText: false,
+                      decoration: const InputDecoration(
+                        hintText: 'Please type your NIK',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('NAME'),
+                    TextField(
+                      controller: nameController,
+                      keyboardType: TextInputType.text,
+                      obscureText: false,
+                      decoration: const InputDecoration(
+                        hintText: 'Please type your NAME',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('EMAIL'),
+                    TextField(
+                      controller: emailController,
+                      keyboardType: TextInputType.text,
+                      obscureText: false,
+                      decoration: const InputDecoration(
+                        hintText: 'Please type your EMAIL',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('Password'),
+                    TextField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.text,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        hintText: 'Please type your Password',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('Phone Number'),
+                    TextField(
+                      controller: phoneController,
+                      keyboardType: TextInputType.text,
+                      obscureText: false,
+                      decoration: const InputDecoration(
+                        hintText: 'Please type your Phone Number',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    const Text('E-Sign'),
+                    Column(
+                      children: [
+                        result != null
+                            ? Container()
+                            : employee.urlEsign != null
+                                ? Image.network(
+                                    '$urlRepo/employee/getImage/${employee.nik}',
+                                    width: 100,
+                                    height: 100,
+                                  )
+                                : const SizedBox(height: 10),
+                        const SizedBox(height: 10),
+                        InkWell(
+                          onTap: () {
+                            pickFile();
+                          },
+                          child: result != null
+                              ? Container(
+                                  height: 500.0,
+                                  width: 500.0,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(5.00),
+                                  ),
+                                  child:
+                                      Image.memory(result!.files.first.bytes!),
+                                )
+                              : Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Container(
+                                    height: 30.0,
+                                    width: 30.0,
+                                    margin: const EdgeInsets.only(
+                                      left: 183.00,
+                                      top: 10.00,
+                                      right: 113.00,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white70,
+                                      borderRadius: BorderRadius.circular(
+                                        5.00,
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.camera_alt_rounded,
+                                      size: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 1.5,
+                      child: ElevatedButton(
+                        onPressed: () => {
+                          editEmployee(ref,
+                              nikController: nikController,
+                              nameController: nameController,
+                              emailController: emailController,
+                              phoneController: phoneController,
+                              passwordController:
+                                  passwordController.value.toString().isNotEmpty
+                                      ? passwordController
+                                      : null,
+                              employeeOri: employee),
+                        },
+                        child: const Text('Edit'),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width / 1.5,
-                  child: ElevatedButton(
-                    onPressed: () => {
-                      editEmployee(ref,
-                          nikController: nikController,
-                          nameController: nameController,
-                          emailController: emailController,
-                          phoneController: phoneController,
-                          passwordController:
-                              passwordController.value.toString().isNotEmpty
-                                  ? passwordController
-                                  : null,
-                          employeeOri: employee),
-                      Navigator.pop(context),
-                    },
-                    child: const Text('Edit'),
-                  ),
-                ),
-              ],
-            ),
-          )),
-    );
+              )),
+        );
+      } else if (state is EmployeeLoading) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.all(20),
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+      return Container();
+    });
   }
 
   void editEmployee(WidgetRef ref,
@@ -204,6 +254,7 @@ class DialogProfileEmployee extends ConsumerWidget {
       ref.read(employeeNotifierProvider.notifier).updateEmployeeWithFile(
           employee: employee, file: result!.files.first.bytes);
     } else {
+      employee.urlEsign = employeeOri.urlEsign!;
       ref
           .read(employeeNotifierProvider.notifier)
           .updateEmployeeWithFile(employee: employee, file: null);
@@ -211,7 +262,7 @@ class DialogProfileEmployee extends ConsumerWidget {
   }
 
   void pickFile() async {
-    result = await FilePicker.platform.pickFiles(
+    await FilePicker.platform.pickFiles(
       dialogTitle: 'Get E-Sign',
       type: FileType.custom,
       allowMultiple: false,
@@ -225,6 +276,12 @@ class DialogProfileEmployee extends ConsumerWidget {
         }
       },
       allowedExtensions: ['png'],
-    );
+    ).then((value) {
+      if (value != null) {
+        setState(() {
+          result = value;
+        });
+      }
+    });
   }
 }
