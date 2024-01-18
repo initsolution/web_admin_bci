@@ -26,7 +26,7 @@ class ProfileCard extends ConsumerWidget {
               .read(employeeNotifierProvider.notifier)
               .getOneEmployee(employee.nik!));
 
-          return SizedBox(child: DialogProfileEmployee());
+          return const SizedBox(child: DialogProfileEmployee());
         },
       ),
       child: Container(
