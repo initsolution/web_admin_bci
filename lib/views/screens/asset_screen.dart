@@ -384,7 +384,9 @@ class TaskData extends DataTableSource {
                   ],
                   'sort': 'orderIndex,ASC'
                 };
-                ref.read(assetNotifierProvider.notifier).getAllAsset(header);
+                Future(() => ref
+                    .read(assetNotifierProvider.notifier)
+                    .getAllAsset(header));
 
                 GoRouter.of(context).go(RouteUri.resultAsset, extra: task);
               },

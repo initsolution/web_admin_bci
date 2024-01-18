@@ -105,7 +105,8 @@ class TaskNotifier extends AutoDisposeNotifier<TaskState> {
     state = TaskLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    final httpResponse = await taskRepo.updateTask('Bearer $token', taskId!, task);
+    final httpResponse =
+        await taskRepo.updateTask('Bearer $token', taskId!, task);
     if (DEBUG) debugPrint('result : ${httpResponse.response.statusCode}');
     if (httpResponse.response.statusCode == 200) {
       state = TaskDataChangeSuccess();

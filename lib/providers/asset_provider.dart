@@ -37,11 +37,15 @@ class AssetNotifier extends Notifier<AssetState> {
       final HttpResponse data =
           await assetRepo.getAllAsset('bearer $token', header);
       if (data.response.statusCode == 200) {
+        // debugPrint(data.data);
         List<Asset> assets =
             (data.data as List).map((e) => Asset.fromJson(e)).toList();
         if (assets.isEmpty) {
+          debugPrint('asset null');
           state = AssetLoadedEmpty();
         } else {
+          debugPrint('asset not null');
+          debugPrint(assets.toString());
           dataAsset = assets;
           state = AssetLoaded(assets: dataAsset!);
         }

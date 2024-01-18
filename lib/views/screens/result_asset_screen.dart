@@ -655,7 +655,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                   keyboardType: TextInputType.multiline,
                   maxLines: 10,
                 )
-              : Text(widget.task.note!),
+              : Text(widget.task.note ?? ''),
         )
       ],
     );
