@@ -12,8 +12,10 @@ import '../repository/site_repo.dart';
 
 int province = 0;
 String kabupaten = "";
+bool pju = false;
 final provinceNotifierProvider = StateProvider<int>((ref) => province);
 final kabupatenNotifierProvider = StateProvider<String>((ref) => kabupaten);
+final isHavePjuProvider = StateProvider<bool>((ref) => pju);
 
 final siteNotifierProvider = NotifierProvider<SiteNotifier, SiteState>(
   () {
@@ -68,7 +70,8 @@ class SiteNotifier extends Notifier<SiteState> {
       httpResponse = await siteRepo.createSite(site, 'Bearer $token');
     }
     if (DEBUG) debugPrint(httpResponse.data.toString());
-    if (httpResponse.response.statusCode == 201) {
+    if (httpResponse.response.statusCode == 201 ||
+        httpResponse.response.statusCode == 200) {
       state = SiteDataChangeSuccess();
     }
   }
@@ -79,7 +82,10 @@ class SiteNotifier extends Notifier<SiteState> {
         .where((site) =>
             site.name!.toLowerCase().contains(search.toLowerCase()) ||
             site.towerType!.toLowerCase().contains(search.toLowerCase()) ||
-            site.fabricator!.toLowerCase().contains(search.toLowerCase()))
+            site.fabricator!.toLowerCase().contains(search.toLowerCase()) ||
+            site.id!.toLowerCase().contains(search.toLowerCase()) ||
+            site.region!.toLowerCase().contains(search.toLowerCase())
+            )
         .toList();
     state = SiteLoaded(sites: searchSite);
   }

@@ -303,12 +303,15 @@ class _SiteTaskRegulerScreenState extends ConsumerState<SiteTaskRegulerScreen> {
                             source: data,
                             columns: const [
                               DataColumn(
-                                  label: Padding(
-                                padding: EdgeInsets.only(left: 30),
-                                child: Text('Site'),
-                              )),
+                                label: Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text('Site ID'),
+                                ),
+                              ),
+                              DataColumn(label: Text('Site Name')),
                               DataColumn(label: Text('Maker')),
                               DataColumn(label: Text('Verifier')),
+                              DataColumn(label: Text('Region')),
                               DataColumn(label: Text('Status')),
                               DataColumn(label: Text('Type')),
                               DataColumn(label: Text('Created Date')),
@@ -380,10 +383,12 @@ class SiteTaskData extends DataTableSource {
     }
     return DataRow(cells: [
       DataCell(Padding(
-          padding: const EdgeInsets.only(left: 30),
-          child: Text(tasks[index].site!.name!))),
+          padding: const EdgeInsets.only(left: 10),
+          child: Text(tasks[index].site!.id!))),
+      DataCell(Text(tasks[index].site!.name!)),
       DataCell(Text(tasks[index].makerEmployee!.name!)),
       DataCell(Text(tasks[index].verifierEmployee!.name!)),
+      DataCell(Text(tasks[index].site!.region!)),
       DataCell(Container(
           width: 80,
           padding: const EdgeInsets.symmetric(vertical: 4),
@@ -463,7 +468,7 @@ class SiteTaskData extends DataTableSource {
   @override
   int get selectedRowCount => 0;
 
-    getColorIcon(String? status) {
+  getColorIcon(String? status) {
     switch (status) {
       case STATUS_TODO:
         return Colors.blue;

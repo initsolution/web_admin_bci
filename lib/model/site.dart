@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'site.g.dart';
@@ -11,6 +13,7 @@ class Site {
   int? towerHeight;
   String? fabricator;
   String? tenants;
+  bool? isHavePJU;
   String? region;
   String? province;
   String? address;
@@ -24,6 +27,7 @@ class Site {
     this.towerHeight,
     this.fabricator,
     this.tenants,
+    this.isHavePJU,
     this.region,
     this.province,
     this.address,
@@ -42,6 +46,7 @@ class Site {
     int? towerHeight,
     String? fabricator,
     String? tenants,
+    bool? isHavePJU,
     String? region,
     String? province,
     String? address,
@@ -55,6 +60,7 @@ class Site {
       towerHeight: towerHeight ?? this.towerHeight,
       fabricator: fabricator ?? this.fabricator,
       tenants: tenants ?? this.tenants,
+      isHavePJU: isHavePJU ?? this.isHavePJU,
       region: region ?? this.region,
       province: province ?? this.province,
       address: address ?? this.address,
@@ -71,6 +77,7 @@ class Site {
       'towerHeight': towerHeight,
       'fabricator': fabricator,
       'tenants': tenants,
+      'isHavePJU': isHavePJU,
       'region': region,
       'province': province,
       'address': address,
@@ -84,11 +91,10 @@ class Site {
       id: map['id'] != null ? map['id'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       towerType: map['towerType'] != null ? map['towerType'] as String : null,
-      towerHeight:
-          map['towerHeight'] != null ? map['towerHeight'] as int : null,
-      fabricator:
-          map['fabricator'] != null ? map['fabricator'] as String : null,
+      towerHeight: map['towerHeight'] != null ? map['towerHeight'] as int : null,
+      fabricator: map['fabricator'] != null ? map['fabricator'] as String : null,
       tenants: map['tenants'] != null ? map['tenants'] as String : null,
+      isHavePJU: map['isHavePJU'] != null ? map['isHavePJU'] as bool : null,
       region: map['region'] != null ? map['region'] as String : null,
       province: map['province'] != null ? map['province'] as String : null,
       address: map['address'] != null ? map['address'] as String : null,
@@ -99,39 +105,42 @@ class Site {
 
   @override
   String toString() {
-    return 'Site(id: $id, name: $name, towerType: $towerType, towerHeight: $towerHeight, fabricator: $fabricator, tenants: $tenants, region: $region, province: $province, address: $address, longitude: $longitude, latitude: $latitude)';
+    return 'Site(id: $id, name: $name, towerType: $towerType, towerHeight: $towerHeight, fabricator: $fabricator, tenants: $tenants, isHavePJU: $isHavePJU, region: $region, province: $province, address: $address, longitude: $longitude, latitude: $latitude)';
   }
 
   @override
   bool operator ==(covariant Site other) {
     if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.name == name &&
-        other.towerType == towerType &&
-        other.towerHeight == towerHeight &&
-        other.fabricator == fabricator &&
-        other.tenants == tenants &&
-        other.region == region &&
-        other.province == province &&
-        other.address == address &&
-        other.longitude == longitude &&
-        other.latitude == latitude;
+  
+    return 
+      other.id == id &&
+      other.name == name &&
+      other.towerType == towerType &&
+      other.towerHeight == towerHeight &&
+      other.fabricator == fabricator &&
+      other.tenants == tenants &&
+      other.isHavePJU == isHavePJU &&
+      other.region == region &&
+      other.province == province &&
+      other.address == address &&
+      other.longitude == longitude &&
+      other.latitude == latitude;
   }
 
   @override
   int get hashCode {
     return id.hashCode ^
-        name.hashCode ^
-        towerType.hashCode ^
-        towerHeight.hashCode ^
-        fabricator.hashCode ^
-        tenants.hashCode ^
-        region.hashCode ^
-        province.hashCode ^
-        address.hashCode ^
-        longitude.hashCode ^
-        latitude.hashCode;
+      name.hashCode ^
+      towerType.hashCode ^
+      towerHeight.hashCode ^
+      fabricator.hashCode ^
+      tenants.hashCode ^
+      isHavePJU.hashCode ^
+      region.hashCode ^
+      province.hashCode ^
+      address.hashCode ^
+      longitude.hashCode ^
+      latitude.hashCode;
   }
 
   bool isEqual(Site site) {

@@ -333,6 +333,10 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                         label: Text('TENANTS'),
                         tooltip: "TENANTS",
                       ),
+                      const DataColumn(
+                        label: Text('PJU'),
+                        tooltip: "PJU",
+                      ),
                       DataColumn(
                         label: const Text('ADDRESS'),
                         tooltip: "SITE ADDRESS",
@@ -400,6 +404,11 @@ class SiteData extends DataTableSource {
           constraints: const BoxConstraints(maxWidth: 80),
           child: Text(sites[index].fabricator!.toString()))),
       DataCell(Text(sites[index].tenants!.toString())),
+      DataCell(
+        sites[index].isHavePJU == true
+            ? const Text("Ada")
+            : const Text("Tidak Ada"),
+      ),
       DataCell(ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 200),
         child: Text(sites[index].address!.toString(),

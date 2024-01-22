@@ -132,7 +132,11 @@ class TaskNotifier extends AutoDisposeNotifier<TaskState> {
                 .contains(search.toLowerCase()) ||
             task.verifierEmployee!.name!
                 .toLowerCase()
-                .contains(search.toLowerCase()))
+                .contains(search.toLowerCase()) ||
+            task.site!.id!.toLowerCase().contains(search.toLowerCase()) ||
+            task.site!.region!.toLowerCase().contains(search.toLowerCase())    
+                )
+                
         .toList();
     state = TaskLoaded(tasks: searchTask);
   }

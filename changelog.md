@@ -182,3 +182,10 @@
 
 > 17/01/2024 (dedddy)
 > change esign container dialog profile
+
+> 22/01/2024
+> Add PJU option in Site
+> Add Site ID, Region coloum in Task
+> Searching Task by Region, Site ID
+> Searching Site by Region, Site ID
+> Bug Update Site

@@ -28,6 +28,8 @@ class DialogAddEditSite extends ConsumerWidget {
   TextEditingController addressController = TextEditingController();
   TextEditingController longitudeController = TextEditingController();
   TextEditingController latitudeController = TextEditingController();
+  bool isHavePju = false;
+  List<Province> listProvince = [];
   String province = "";
   String kabupaten = "";
   List<String> selectedTenants = [];
@@ -47,23 +49,28 @@ class DialogAddEditSite extends ConsumerWidget {
         addressController.text = site!.address ?? '';
         longitudeController.text = site!.longitude ?? '';
         latitudeController.text = site!.latitude ?? '';
+        print('site!.tenants! = ${site!.tenants!}');
         if (stateTenant is TenantLoaded) {
           dtTenant = stateTenant.tenants;
+          print('dtTenant : ${dtTenant.toString()}');
           if (site!.tenants!.contains(';')) {
             var pecahTenant = site!.tenants!.split(';');
             for (var i = 0; i < pecahTenant.length; i++) {
               int idxTenant = dtTenant.indexWhere(
                   (element) => element.kodeTenant == pecahTenant[i]);
               Tenant tenant = dtTenant[idxTenant];
-              selectedTenants.add('${pecahTenant[i]} - ${tenant.name}');
+              selectedTenants.add('${pecahTenant[i]}-${tenant.name}');
             }
           } else {
             int idxTenant = dtTenant
                 .indexWhere((element) => element.kodeTenant == site!.tenants!);
+            debugPrint('idxTenant : ${idxTenant}');
             Tenant tenant = dtTenant[idxTenant];
-            selectedTenants.add('${tenant.kodeTenant} - ${tenant.name}');
+            selectedTenants.add('${tenant.kodeTenant}-${tenant.name}');
           }
         }
+        isHavePju = site!.isHavePJU!;
+        Future(() => ref.read(isHavePjuProvider.notifier).state = isHavePju);
       }
     }
 
@@ -196,7 +203,7 @@ class DialogAddEditSite extends ConsumerWidget {
                   DropDownMultiSelect(
                     selected_values_style: const TextStyle(color: Colors.black),
                     options: stateTenant.tenants
-                        .map((e) => '${e.kodeTenant} - ${e.name}')
+                        .map((e) => '${e.kodeTenant}-${e.name}')
                         .toList(),
                     selectedValues: selectedTenants,
                     whenEmpty: 'Select Tenants',
@@ -210,6 +217,11 @@ class DialogAddEditSite extends ConsumerWidget {
                 //     initialValue: stateTenant.tenants)
                 else if (stateTenant is TenantLoading)
                   const CircularProgressIndicator(),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Text('Is Have PJU'),
+                loadPJU(),
                 const SizedBox(
                   height: 10,
                 ),
@@ -237,7 +249,7 @@ class DialogAddEditSite extends ConsumerWidget {
                     future: getProvinceData(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
-                        List<Province> data = snapshot.data!;
+                        listProvince = snapshot.data!;
                         final int selectedProvince =
                             ref.watch(provinceNotifierProvider);
                         final String selectedKabupaten =
@@ -250,18 +262,17 @@ class DialogAddEditSite extends ConsumerWidget {
                                 children: [
                                   const Text('Province'),
                                   DropdownButton(
-                                    value: data[selectedProvince],
+                                    value: listProvince[selectedProvince],
                                     hint: const Text('Select a Province'),
-                                    items: data.map((value) {
+                                    items: listProvince.map((value) {
                                       return DropdownMenuItem<Province>(
                                         value: value,
                                         child: Text(value.province.toString()),
                                       );
                                     }).toList(),
                                     onChanged: (Province? value) {
-                                      // debugPrint('value : ${data.indexOf(value!)}');
                                       province = value!.province.toString();
-                                      int idx = data.indexOf(value);
+                                      int idx = listProvince.indexOf(value);
                                       ref
                                           .read(
                                               provinceNotifierProvider.notifier)
@@ -286,7 +297,7 @@ class DialogAddEditSite extends ConsumerWidget {
                                         ? selectedKabupaten
                                         : null,
                                     hint: const Text('Select a City/Region'),
-                                    items: data[selectedProvince]
+                                    items: listProvince[selectedProvince]
                                         .kabupaten!
                                         .map((value) {
                                       return DropdownMenuItem<String>(
@@ -401,6 +412,9 @@ class DialogAddEditSite extends ConsumerWidget {
 
   void saveSite(WidgetRef ref) {
     var kabupaten = ref.read(kabupatenNotifierProvider.notifier).state;
+    var province =
+        listProvince[ref.read(provinceNotifierProvider.notifier).state];
+    isHavePju = ref.watch(isHavePjuProvider);
     var listTenant = "";
     for (var kodeTenant in selectedTenants) {
       var temp = kodeTenant.split("-");
@@ -417,8 +431,9 @@ class DialogAddEditSite extends ConsumerWidget {
       towerHeight: int.parse(towerHeightController.text),
       fabricator: fabricatorController.text,
       tenants: listTenant,
+      isHavePJU: isHavePju,
       region: kabupaten,
-      province: province,
+      province: province.province,
       address: addressController.text,
       latitude: latitudeController.text,
       longitude: longitudeController.text,
@@ -503,5 +518,20 @@ class DialogAddEditSite extends ConsumerWidget {
       list.add(p);
     }
     return list; //latest Dart
+  }
+
+  Widget loadPJU() {
+    return Consumer(builder: (_, WidgetRef ref, __) {
+      bool isActive = ref.watch(isHavePjuProvider);
+      return Switch(
+        // This bool value toggles the switch.
+        value: isActive,
+        activeColor: Colors.blue,
+        onChanged: (bool value) {
+          // This is called when the user toggles the switch.
+          ref.read(isHavePjuProvider.notifier).state = value;
+        },
+      );
+    });
   }
 }
