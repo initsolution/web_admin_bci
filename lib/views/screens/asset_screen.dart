@@ -139,7 +139,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                             }, // onChanged return the value of the field
                             decoration: InputDecoration(
                                 labelText:
-                                    "Search by Site Name, Maker or Verifier",
+                                    "Search by Site Id, Site Name, Maker or Verifier",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 )),
@@ -249,8 +249,13 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                     columns: const [
                       DataColumn(
                           label: Padding(
-                        padding: EdgeInsets.only(left: 30),
-                        child: Text('ID'),
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text('Task ID'),
+                      )),
+                      DataColumn(
+                          label: Padding(
+                        padding: EdgeInsets.only(left: 60),
+                        child: Text('Site ID'),
                       )),
                       DataColumn(
                           label: SizedBox(width: 300, child: Text('Site'))),
@@ -332,8 +337,12 @@ class TaskData extends DataTableSource {
     // debugPrint(task.site?.name.toString());
     return DataRow(cells: [
       DataCell(Padding(
-        padding: const EdgeInsets.only(left: 30),
+        padding: const EdgeInsets.only(left: 20),
         child: SizedBox(width: 30, child: Text(task.id!.toString())),
+      )),
+      DataCell(Padding(
+        padding: const EdgeInsets.only(left: 60),
+        child: SizedBox(width: 30, child: Text(task.site!.id!.toString())),
       )),
       DataCell(Text(task.site!.name!)),
       DataCell(Text(task.makerEmployee!.name!)),

@@ -189,3 +189,7 @@
 > Searching Task by Region, Site ID
 > Searching Site by Region, Site ID
 > Bug Update Site
+
+> 23/01/2024
+> edit verifikator
+> search site id in verifikator

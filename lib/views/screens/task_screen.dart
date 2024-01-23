@@ -19,6 +19,7 @@ import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart
 import 'package:flutter_web_ptb/views/widgets/dialog_add_task.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_delete_task.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_edit_task.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_edit_verifikator.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -187,7 +188,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                             }, // onChanged return the value of the field
                             decoration: InputDecoration(
                                 labelText:
-                                    "Search by Site Name, Maker or Verifier",
+                                    "Search by Site id, Site Name, Maker or Verifier",
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 )),
@@ -385,7 +386,7 @@ class TaskData extends DataTableSource {
 
   @override
   DataRow? getRow(int index) {
-    // debugPrint('${tasks[index].id}');
+    debugPrint(tasks[index].toString());
     // debugPrint('${tasks[index].notBefore}');
     DateTime? notBefore;
     if (tasks[index].notBefore != null) {
@@ -400,7 +401,27 @@ class TaskData extends DataTableSource {
           child: Text(tasks[index].site!.id!))),
       DataCell(Text(tasks[index].site!.name!)),
       DataCell(Text(tasks[index].makerEmployee!.name!)),
-      DataCell(Text(tasks[index].verifierEmployee!.name!)),
+      DataCell(tasks[index].status!.toLowerCase() != 'accepted' &&
+              tasks[index].status!.toLowerCase() != 'expired' &&
+              tasks[index].status!.toLowerCase() != 'rejected'
+          ? TextButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SizedBox(
+                        child: DialogEditVerifikator(
+                      task: tasks[index],
+                    ));
+                  },
+                );
+              },
+              child: Text(
+                tasks[index].verifierEmployee!.name!,
+                style: const TextStyle(color: Colors.blue),
+              ))
+          : Text(tasks[index].verifierEmployee!.name!)),
+
       DataCell(Text(tasks[index].site!.region!)),
       DataCell(Container(
           width: 80,
@@ -434,6 +455,7 @@ class TaskData extends DataTableSource {
           ? DateFormat('dd-M-yyyy')
               .format(DateTime.parse(tasks[index].verifiedDate!))
           : '')),
+      // const DataCell(Text('')),
       DataCell(Row(
         children: [
           tasks[index].notBefore != null && DateTime.now().isBefore(notBefore!)
