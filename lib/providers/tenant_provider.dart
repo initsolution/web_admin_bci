@@ -67,4 +67,16 @@ class TenantNotifier extends Notifier<TenantState> {
       state = TenantDataChangeSuccess();
     }
   }
+
+  updateTenant(Tenant tenant) async {
+    state = TenantLoading();
+    final sharedPref = await SharedPreferences.getInstance();
+    var token = sharedPref.getString(StorageKeys.token) ?? '';
+    final httpResponse =
+        await tenantRepo.updateTenant('Bearer $token', tenant.id!, tenant);
+    if (DEBUG) debugPrint(httpResponse.data.toString());
+    if (httpResponse.response.statusCode == 200) {
+      state = TenantDataChangeSuccess();
+    }
+  }
 }
