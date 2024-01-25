@@ -10,6 +10,7 @@ import 'package:flutter_web_ptb/providers/tenant_state.dart';
 import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/dialog_add_tenant.dart';
+import 'package:flutter_web_ptb/views/widgets/dialog_edit_tenants.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
 import 'package:go_router/go_router.dart';
@@ -81,8 +82,8 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                       builder: (context, ref, child) {
                         var state = ref.watch(tenantNotifierProvider);
                         if (state is TenantLoaded) {
-                          DataTableSource data =
-                              TenantData(tenants: state.tenants);
+                          DataTableSource data = TenantData(
+                              tenants: state.tenants, context: context);
                           filterData = state.tenants;
                           return PaginatedDataTable(
                             source: data,
@@ -103,6 +104,9 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                                 },
                               ),
                               const DataColumn(label: Text('Is Active')),
+                              const DataColumn(
+                                label: Text('Action'),
+                              ),
                             ],
                             columnSpacing: 100,
                             horizontalMargin: 10,
@@ -252,7 +256,8 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
 
 class TenantData extends DataTableSource {
   final List<Tenant> tenants;
-  TenantData({required this.tenants});
+  final BuildContext context;
+  TenantData({required this.tenants, required this.context});
 
   @override
   DataRow? getRow(int index) {
@@ -263,6 +268,24 @@ class TenantData extends DataTableSource {
       )),
       DataCell(Text(tenants[index].name!)),
       DataCell(Text(tenants[index].isActive == true ? 'Active' : 'Deactive')),
+      DataCell(Row(
+        children: [
+          IconButton(
+            splashRadius: 20,
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return DialogEditTenant(
+                    tenant: tenants[index],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ))
     ]);
   }
 

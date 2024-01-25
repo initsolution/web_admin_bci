@@ -193,3 +193,6 @@
 > 23/01/2024
 > edit verifikator
 > search site id in verifikator
+
+> 25/01/2024
+> Tambah fungsi Edit Tenant
