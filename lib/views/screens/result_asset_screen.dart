@@ -326,7 +326,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                           ? null
                           : () async {
                               await launchUrlString(
-                                  'http://103.82.241.80:3000/task/downloadPdf/${widget.task.id}',
+                                  '$urlRepo/task/downloadPdf/${widget.task.id}',
                                   mode: LaunchMode.platformDefault);
                             },
                   icon: Icon(
@@ -372,10 +372,10 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                       var note = noteController.text;
                       ref
                           .read(assetNotifierProvider.notifier)
-                          .updateStatusAsset();
-                      Task task = widget.task;
-                      task.note = note;
-                      ref.read(taskNotifierProvider.notifier).updateTask(task);
+                          .updateStatusAsset(note);
+                      // Task task = widget.task;
+                      // task.note = note;
+                      // ref.read(taskNotifierProvider.notifier).updateTask(task);
                     } else {
                       final dialog = AwesomeDialog(
                         context: context,

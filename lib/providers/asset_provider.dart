@@ -82,12 +82,12 @@ class AssetNotifier extends Notifier<AssetState> {
     state = AssetLoaded(assets: dataAsset!);
   }
 
-  updateStatusAsset() async {
+  updateStatusAsset(String? note) async {
     // state = AssetLoading();
     final sharedPref = await SharedPreferences.getInstance();
     var token = sharedPref.getString(StorageKeys.token) ?? '';
-    HttpResponse response =
-        await assetRepo.updateStatusAll(token, {'asset': dataAsset!});
+    HttpResponse response = await assetRepo
+        .updateStatusAll(token, {'asset': dataAsset!, 'note': note});
     debugPrint('response : ${response.response.statusCode}');
     if (response.response.statusCode == 200) {
       state = AssetChangeDataSuccess();

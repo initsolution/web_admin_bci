@@ -190,6 +190,9 @@
 > Searching Site by Region, Site ID
 > Bug Update Site
 
-> 23/01/2024
+> 23/01/2024 (mip)
 > edit verifikator
 > search site id in verifikator
+
+> 25/01/2024 (mip)
+> solve bug result asset (add note)

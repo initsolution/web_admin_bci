@@ -18,8 +18,9 @@ abstract class AssetRepo {
 
   @PATCH('$base/updateStatusAll')
   Future<HttpResponse<dynamic>> updateStatusAll(
-      @Header('Authorization') String token,
-      @Body() Map<String, List<Asset>> data);
+    @Header('Authorization') String token,
+    @Body() Map<String, dynamic> data,
+  );
 
   @PATCH('$base/changeImage')
   Future<HttpResponse<dynamic>> changeImage(

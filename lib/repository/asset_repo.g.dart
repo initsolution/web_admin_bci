@@ -57,7 +57,7 @@ class _AssetRepo implements AssetRepo {
   @override
   Future<HttpResponse<dynamic>> updateStatusAll(
     String token,
-    Map<String, List<Asset>> data,
+    Map<String, dynamic> data,
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
