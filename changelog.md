@@ -194,8 +194,7 @@
 > edit verifikator
 > search site id in verifikator
 
-> 25/01/2024
+> 25/01/2024((yossi & mip))
 > Tambah fungsi Edit Tenant
-
-> 25/01/2024 (mip)
 > solve bug result asset (add note)
+
