@@ -200,3 +200,6 @@
 
 >01/02/2024(mip)
 > solve bug employee
+
+>01/02/2024
+> Tenant Boleh Kosong

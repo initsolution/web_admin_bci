@@ -65,8 +65,10 @@ class DialogAddEditSite extends ConsumerWidget {
             int idxTenant = dtTenant
                 .indexWhere((element) => element.kodeTenant == site!.tenants!);
             debugPrint('idxTenant : ${idxTenant}');
-            Tenant tenant = dtTenant[idxTenant];
-            selectedTenants.add('${tenant.kodeTenant}-${tenant.name}');
+            if (idxTenant != -1) {
+              Tenant tenant = dtTenant[idxTenant];
+              selectedTenants.add('${tenant.kodeTenant}-${tenant.name}');
+            }
           }
         }
         isHavePju = site!.isHavePJU!;
@@ -376,12 +378,14 @@ class DialogAddEditSite extends ConsumerWidget {
                     onPressed: () {
                       final isValid = _formKey.currentState!.validate();
                       if (isValid) {
-                        if (selectedTenants.isNotEmpty) {
-                          saveSite(ref);
-                          Navigator.pop(context);
-                        } else {
-                          showToast(context, 'Please Input Tenant');
-                        }
+                        saveSite(ref);
+                        Navigator.pop(context);
+                        // if (selectedTenants.isNotEmpty) {
+                        //   saveSite(ref);
+                        //   Navigator.pop(context);
+                        // } else {
+                        //   showToast(context, 'Please Input Tenant');
+                        // }
                       }
                     },
                     child: Text(isEdit ? 'EDIT' : 'SAVE'),
