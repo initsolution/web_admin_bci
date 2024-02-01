@@ -51,11 +51,11 @@ class EmployeeNotifier extends Notifier<EmployeeState> {
     final sharedPref = await SharedPreferences.getInstance();
     try {
       var token = sharedPref.getString(StorageKeys.token) ?? '';
-      Employee employee =
-          Employee.fromMap(JwtDecoder.decode(token)['employee']);
-      if (employee.role! != 'SuperAdmin') {
-        header!.addAll({'filter': 'role||ne||SuperAdmin'});
-      }
+      // Employee employee =
+      //     Employee.fromMap(JwtDecoder.decode(token)['employee']);
+      // if (employee.role! != 'SuperAdmin') {
+      //   header!.addAll({'filter': 'role||ne||SuperAdmin'});
+      // }
       final HttpResponse data =
           await employeeRepo.getAllEmployee('Bearer $token', header);
       if (data.response.statusCode == 200) {

@@ -198,3 +198,5 @@
 > Tambah fungsi Edit Tenant
 > solve bug result asset (add note)
 
+>01/02/2024(mip)
+> solve bug employee
