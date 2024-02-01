@@ -200,5 +200,8 @@
 
 > 01/02/2024(mip)
 > solve bug employee
+
+> 01/02/2024 (yossi, deddy)
+> Tenant Boleh Kosong
 > solve icon button splash radius
 > responsive action menu
