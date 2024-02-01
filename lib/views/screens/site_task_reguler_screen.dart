@@ -192,7 +192,7 @@ class _SiteTaskRegulerScreenState extends ConsumerState<SiteTaskRegulerScreen> {
                       const SizedBox(width: 10),
                       datePick(),
                       const SizedBox(width: 30),
-                      IconButton(
+                      IconButton(splashRadius: 20,
                         icon: const Icon(Icons.add),
                         onPressed: () {
                           showDialog(
@@ -208,7 +208,7 @@ class _SiteTaskRegulerScreenState extends ConsumerState<SiteTaskRegulerScreen> {
                         },
                       ),
                       const SizedBox(width: 30),
-                      IconButton(
+                      IconButton(splashRadius: 20,
                         icon: const Icon(Icons.refresh),
                         onPressed: () {
                           ref

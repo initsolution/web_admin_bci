@@ -210,6 +210,7 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                         ),
                         const Spacer(),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.add),
                           onPressed: () => {
                             showDialog(
@@ -225,6 +226,7 @@ class _MasterAssetScreenState extends ConsumerState<MasterAssetScreen> {
                           width: 30,
                         ),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.refresh),
                           onPressed: () {
                             ref
@@ -285,6 +287,7 @@ class MasterAssetData extends DataTableSource {
       DataCell(Row(
         children: [
           IconButton(
+            splashRadius: 20,
             icon: const Icon(Icons.edit),
             onPressed: () {
               showDialog(
@@ -301,6 +304,7 @@ class MasterAssetData extends DataTableSource {
             },
           ),
           IconButton(
+            splashRadius: 20,
             icon: const Icon(Icons.delete),
             onPressed: () {
               showDialog(

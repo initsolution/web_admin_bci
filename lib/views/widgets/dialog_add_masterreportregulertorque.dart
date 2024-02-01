@@ -54,6 +54,7 @@ class DialogAddMasterReportRegulerTorque extends ConsumerWidget {
                       style: const TextStyle(fontSize: 30),
                     ),
                     IconButton(
+                      splashRadius: 20,
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.pop(context);

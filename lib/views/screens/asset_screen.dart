@@ -157,6 +157,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                         datePick(),
                         const SizedBox(width: 30),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.refresh),
                           onPressed: () {
                             ref

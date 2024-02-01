@@ -45,7 +45,7 @@ class DialogAddOrEditMasterAsset extends ConsumerWidget {
                       '${(isEdit ? 'Edit' : 'New')} Master Asset',
                       style: const TextStyle(fontSize: 30),
                     ),
-                    IconButton(
+                    IconButton(splashRadius: 20,
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.pop(context);

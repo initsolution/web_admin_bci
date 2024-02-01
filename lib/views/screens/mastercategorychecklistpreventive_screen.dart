@@ -210,6 +210,7 @@ class _MasterCategoryChecklistPreventiveScreenState
                         ),
                         const Spacer(),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.add),
                           onPressed: () => {
                             showDialog(
@@ -226,6 +227,7 @@ class _MasterCategoryChecklistPreventiveScreenState
                           width: 30,
                         ),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.refresh),
                           onPressed: () {
                             ref
@@ -285,6 +287,7 @@ class MasterCategoryChecklistPreventivetData extends DataTableSource {
       DataCell(Row(
         children: [
           IconButton(
+            splashRadius: 20,
             icon: const Icon(Icons.edit),
             onPressed: () {
               showDialog(
@@ -301,6 +304,7 @@ class MasterCategoryChecklistPreventivetData extends DataTableSource {
             },
           ),
           IconButton(
+            splashRadius: 20,
             icon: const Icon(Icons.delete),
             onPressed: () {
               showDialog(

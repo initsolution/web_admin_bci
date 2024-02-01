@@ -81,6 +81,7 @@ class _SidebarState extends ConsumerState<Sidebar> {
               height: kToolbarHeight,
               padding: const EdgeInsets.only(left: 8.0),
               child: IconButton(
+                splashRadius: 20,
                 onPressed: () {
                   if (Scaffold.of(context).isDrawerOpen) {
                     Scaffold.of(context).closeDrawer();

@@ -69,7 +69,8 @@ class _DialogProfileEmployee extends ConsumerState<DialogProfileEmployee> {
                           style: const TextStyle(fontSize: 30),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.close),
+                          splashRadius: 20,
+                          icon: const Icon(Icons.close, color: Colors.black),
                           onPressed: () {
                             Navigator.pop(context);
                           },

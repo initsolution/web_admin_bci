@@ -117,7 +117,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                         ),
                       ),
                       const Spacer(),
-                      IconButton(
+                      IconButton(splashRadius: 20,
                         icon: const Icon(Icons.add),
                         onPressed: () {
                           Map<String, dynamic> header = {
@@ -137,7 +137,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                       const SizedBox(
                         width: 30,
                       ),
-                      IconButton(
+                      IconButton(splashRadius: 20,
                         icon: const Icon(Icons.refresh),
                         onPressed: () {
                           ref
@@ -148,7 +148,7 @@ class _SiteScreenState extends ConsumerState<SiteScreen> {
                       const SizedBox(
                         width: 30,
                       ),
-                      IconButton(
+                      IconButton(splashRadius: 20,
                         icon: const Icon(Icons.filter_list),
                         onPressed: () {
                           showDialog(

@@ -242,6 +242,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                         ),
                         const Spacer(),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.add),
                           onPressed: () => {
                             showDialog(
@@ -256,6 +257,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                           width: 30,
                         ),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.refresh),
                           onPressed: () {
                             ref
@@ -267,6 +269,7 @@ class _EmployeeScreenState extends ConsumerState<EmployeeScreen> {
                           width: 30,
                         ),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.filter_list),
                           onPressed: () {
                             showDialog(

@@ -90,7 +90,7 @@ class DialogAddEditSite extends ConsumerWidget {
                       isEdit ? 'Edit Site' : 'New Site',
                       style: const TextStyle(fontSize: 30),
                     ),
-                    IconButton(
+                    IconButton(splashRadius: 20,
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         ref.invalidate(provinceNotifierProvider);

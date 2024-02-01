@@ -39,7 +39,7 @@ class DialogAddMasterCategoryChecklistPreventive extends ConsumerWidget {
                       '${isEdit ? 'Edit' : 'New'} Master Category Checklist Preventive',
                       style: const TextStyle(fontSize: 30),
                     ),
-                    IconButton(
+                    IconButton(splashRadius: 20,
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.pop(context);

@@ -321,6 +321,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
+                  splashRadius: 20,
                   onPressed:
                       widget.task.status!.toLowerCase() != STATUS_ACCEPTED
                           ? null
@@ -339,6 +340,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                 width: 30,
               ),
               IconButton(
+                splashRadius: 20,
                 icon: const Icon(
                   Icons.refresh,
                   color: Colors.black,
@@ -360,6 +362,7 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                 width: 30,
               ),
               IconButton(
+                splashRadius: 20,
                 icon: Icon(
                   Icons.save_as_rounded,
                   color: widget.task.status!.toLowerCase() != STATUS_ACCEPTED

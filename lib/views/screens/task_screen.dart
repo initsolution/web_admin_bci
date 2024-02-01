@@ -132,6 +132,8 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     ref.listen(taskNotifierProvider, (previous, next) {
       if (next is TaskErrorServer) {
         if (next.statusCode == 401) {
@@ -147,6 +149,13 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
             () => ref.read(taskNotifierProvider.notifier).getAllTask(params));
       }
     });
+    // var menu;
+    // if (screenWidth >= MediaQuery.of(context).size.width / 2) {
+    //   debugPrint("screen width : ${screenWidth}");
+    //   menu = getRowMenuAction(context);
+    // } else {
+    //   menu = Container();
+    // }
     return PortalMasterLayout(
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
@@ -170,66 +179,9 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(width: 20),
-                        SizedBox(
-                          width: 400,
-                          height: 40,
-                          child: TextField(
-                            onChanged: (value) => Future(() => ref
-                                .read(taskNotifierProvider.notifier)
-                                .searchTask(value)),
-                            onSubmitted: (value) {
-                              Future(() => ref
-                                  .read(taskNotifierProvider.notifier)
-                                  .searchTask(value));
-                            }, // onChanged return the value of the field
-                            decoration: InputDecoration(
-                                labelText:
-                                    "Search by Site id, Site Name, Maker or Verifier",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                )),
-                          ),
-                        ),
-                        const Spacer(),
-                        const Text('Status : '),
-                        const SizedBox(width: 10),
-                        SizedBox(
-                          width: 150,
-                          // height: 40,
-                          child: getDropdownStatus(),
-                        ),
-                        const SizedBox(width: 30),
-                        const Text('Created Date : '),
-                        const SizedBox(width: 10),
-                        datePick(),
-                        const SizedBox(width: 30),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return SizedBox(child: DialogAddTask());
-                              },
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 30),
-                        IconButton(
-                          icon: const Icon(Icons.refresh),
-                          onPressed: () {
-                            ref
-                                .read(taskNotifierProvider.notifier)
-                                .getAllTask(params);
-                          },
-                        ),
-                        const SizedBox(width: 30),
-                      ],
-                    ),
+                    screenWidth >= 880
+                        ? getRowMenuAction(context)
+                        : getRowMenuAction_2(context),
                     const SizedBox(
                       height: 10,
                     ),
@@ -247,6 +199,139 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
           // ),
         ],
       ),
+    );
+  }
+
+  Widget getRowMenuAction_2(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 20),
+            SizedBox(
+              width: 300,
+              height: 40,
+              child: TextField(
+                onChanged: (value) => Future(() =>
+                    ref.read(taskNotifierProvider.notifier).searchTask(value)),
+                onSubmitted: (value) {
+                  Future(() => ref
+                      .read(taskNotifierProvider.notifier)
+                      .searchTask(value));
+                }, // onChanged return the value of the field
+                decoration: InputDecoration(
+                    labelText:
+                        "Search by Site id, Site Name, Maker or Verifier",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    )),
+              ),
+            ),
+            const Spacer(),
+            const Text('Status : '),
+            const SizedBox(width: 10),
+            SizedBox(
+              width: 150,
+              // height: 40,
+              child: getDropdownStatus(),
+            ),
+            const SizedBox(width: 20),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(width: 20),
+            const Text('Created Date : '),
+            const SizedBox(width: 10),
+            datePick(),
+            const Spacer(),
+            IconButton(
+              splashRadius: 20,
+              icon: const Icon(Icons.add),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SizedBox(child: DialogAddTask());
+                  },
+                );
+              },
+            ),
+            const SizedBox(width: 30),
+            IconButton(
+              splashRadius: 20,
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                ref.read(taskNotifierProvider.notifier).getAllTask(params);
+              },
+            ),
+            const SizedBox(width: 20),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget getRowMenuAction(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const SizedBox(width: 20),
+        SizedBox(
+          width: 300,
+          height: 40,
+          child: TextField(
+            onChanged: (value) => Future(() =>
+                ref.read(taskNotifierProvider.notifier).searchTask(value)),
+            onSubmitted: (value) {
+              Future(() =>
+                  ref.read(taskNotifierProvider.notifier).searchTask(value));
+            }, // onChanged return the value of the field
+            decoration: InputDecoration(
+                labelText: "Search by Site id, Site Name, Maker or Verifier",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5.0),
+                )),
+          ),
+        ),
+        const Spacer(),
+        const Text('Status : '),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 150,
+          // height: 40,
+          child: getDropdownStatus(),
+        ),
+        const SizedBox(width: 30),
+        const Text('Created Date : '),
+        const SizedBox(width: 10),
+        datePick(),
+        const SizedBox(width: 30),
+        IconButton(
+          icon: const Icon(Icons.add),
+          splashRadius: 20,
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return SizedBox(child: DialogAddTask());
+              },
+            );
+          },
+        ),
+        const SizedBox(width: 30),
+        IconButton(
+          splashRadius: 20,
+          icon: const Icon(Icons.refresh),
+          onPressed: () {
+            ref.read(taskNotifierProvider.notifier).getAllTask(params);
+          },
+        ),
+        const SizedBox(width: 30),
+      ],
     );
   }
 
@@ -356,7 +441,6 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
 
   Widget getDropdownStatus() {
     final String status = ref.watch(statusTaskProvider);
-    debugPrint('status : ${status}');
     return Consumer(builder: (_, WidgetRef ref, __) {
       return DropdownButtonFormField(
         decoration: InputDecoration(

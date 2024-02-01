@@ -191,6 +191,7 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.add),
                           onPressed: () => {
                             showDialog(
@@ -205,6 +206,7 @@ class _TenantScreenState extends ConsumerState<TenantScreen> {
                           width: 30,
                         ),
                         IconButton(
+                          splashRadius: 20,
                           icon: const Icon(Icons.refresh),
                           onPressed: () {
                             Map<String, dynamic> params = {};

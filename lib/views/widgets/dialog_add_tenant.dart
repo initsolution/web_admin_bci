@@ -30,6 +30,7 @@ class DialogAddTenant extends ConsumerWidget {
                       style: TextStyle(fontSize: 30),
                     ),
                     IconButton(
+                      splashRadius: 20,
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         Navigator.pop(context);
