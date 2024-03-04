@@ -36,7 +36,8 @@ class _RootAppState extends ConsumerState<RootApp> {
   Widget build(BuildContext context) {
     _getDataAsync();
 
-    var isUserLoggedIn = ref.watch(userDataProvider.select((value) => value.username.isNotEmpty));
+    var isUserLoggedIn = ref
+        .watch(userDataProvider.select((value) => value.username.isNotEmpty));
     _appRouter = appRouter(isUserLoggedIn);
     return GestureDetector(
         onTap: () {
@@ -49,7 +50,7 @@ class _RootAppState extends ConsumerState<RootApp> {
           routeInformationProvider: _appRouter!.routeInformationProvider,
           routeInformationParser: _appRouter!.routeInformationParser,
           routerDelegate: _appRouter!.routerDelegate,
-          onGenerateTitle: (context) => 'Web Admin',
+          onGenerateTitle: (context) => 'SIMBA',
           theme: AppThemeData.instance.light(),
         ));
   }

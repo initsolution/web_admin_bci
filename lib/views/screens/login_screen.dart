@@ -136,12 +136,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: kDefaultPadding),
                       child: Image.asset(
-                        'assets/images/app_logo.png',
+                        'assets/images/icon.jpg',
                         height: 80.0,
                       ),
                     ),
                     Text(
-                      'Web App',
+                      'SIMBA',
                       style: themeData.textTheme.headlineMedium!.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -150,7 +150,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       padding:
                           const EdgeInsets.only(bottom: kDefaultPadding * 2.0),
                       child: Text(
-                        'Admin Portal Login',
+                        'Sistem Informasi PT Balcom Indonesia ',
                         style: themeData.textTheme.titleMedium,
                       ),
                     ),

@@ -72,6 +72,9 @@ class _DialogProfileEmployee extends ConsumerState<DialogProfileEmployee> {
                           splashRadius: 20,
                           icon: const Icon(Icons.close, color: Colors.black),
                           onPressed: () {
+                            ref
+                                .read(employeeNotifierProvider.notifier)
+                                .getAllEmployee();
                             Navigator.pop(context);
                           },
                         )

@@ -255,7 +255,7 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                       )),
                       DataColumn(
                           label: Padding(
-                        padding: EdgeInsets.only(left: 60),
+                        padding: EdgeInsets.only(left: 10),
                         child: Text('Site ID'),
                       )),
                       DataColumn(
@@ -342,8 +342,8 @@ class TaskData extends DataTableSource {
         child: SizedBox(width: 30, child: Text(task.id!.toString())),
       )),
       DataCell(Padding(
-        padding: const EdgeInsets.only(left: 60),
-        child: SizedBox(width: 30, child: Text(task.site!.id!.toString())),
+        padding: const EdgeInsets.only(left: 10),
+        child: SizedBox(width: 60, child: Text(task.site!.id!.toString())),
       )),
       DataCell(Text(task.site!.name!)),
       DataCell(Text(task.makerEmployee!.name!)),

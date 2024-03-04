@@ -124,7 +124,7 @@ class TaskNotifier extends AutoDisposeNotifier<TaskState> {
 
   searchTask(String search) async {
     state = TaskLoading();
-    List<Task> searchTask = tasks!
+    tasks = tasks!
         .where((task) =>
             task.site!.name!.toLowerCase().contains(search.toLowerCase()) ||
             task.makerEmployee!.name!
@@ -134,11 +134,9 @@ class TaskNotifier extends AutoDisposeNotifier<TaskState> {
                 .toLowerCase()
                 .contains(search.toLowerCase()) ||
             task.site!.id!.toLowerCase().contains(search.toLowerCase()) ||
-            task.site!.region!.toLowerCase().contains(search.toLowerCase())    
-                )
-                
+            task.site!.region!.toLowerCase().contains(search.toLowerCase()))
         .toList();
-    state = TaskLoaded(tasks: searchTask);
+    state = TaskLoaded(tasks: tasks!);
   }
 
   filterStatus(String status) {
@@ -146,10 +144,10 @@ class TaskNotifier extends AutoDisposeNotifier<TaskState> {
     if (status == 'All') {
       state = TaskLoaded(tasks: tasks!);
     } else {
-      List<Task> searchTask = tasks!
+      tasks = tasks!
           .where((task) => task.status!.toLowerCase() == (status.toLowerCase()))
           .toList();
-      state = TaskLoaded(tasks: searchTask);
+      state = TaskLoaded(tasks: tasks!);
     }
   }
 }
