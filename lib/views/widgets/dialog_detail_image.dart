@@ -24,14 +24,18 @@ class DialogDetailImage extends StatelessWidget {
           const SizedBox(height: 20),
           SizedBox(
             height: 100,
-            child: SingleChildScrollView(
-              child: Expanded(
-                child: Text(
-                  softWrap: true,
-                  description,
-                ),
-              ),
+            child: Text(
+              softWrap: true,
+              description,
             ),
+            // child: SingleChildScrollView(
+            //   child: Expanded(
+            //     child: Text(
+            //       softWrap: true,
+            //       description,
+            //     ),
+            //   ),
+            // ),
           ),
         ],
       ),

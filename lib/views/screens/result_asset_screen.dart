@@ -25,6 +25,7 @@ import 'package:flutter_web_ptb/views/widgets/report_preventive_widget.dart';
 import 'package:flutter_web_ptb/views/widgets/report_reguler_torque_widget.dart';
 import 'package:flutter_web_ptb/views/widgets/report_reguler_verticality.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class ResultAssetScreen extends ConsumerStatefulWidget {
@@ -281,11 +282,14 @@ class _ResultAssetScreenState extends ConsumerState<ResultAssetScreen> {
                 const SizedBox(
                   width: 150,
                   child: Text(
-                    'Create Date',
+                    'Submit Date',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
-                SizedBox(width: 400, child: Text('${widget.task.created_at}'))
+                SizedBox(
+                    width: 400,
+                    child: Text(DateFormat('yyyy-MM-dd')
+                        .format(DateTime.parse(widget.task.submitedDate!))))
               ],
             ),
             const SizedBox(height: 10),
