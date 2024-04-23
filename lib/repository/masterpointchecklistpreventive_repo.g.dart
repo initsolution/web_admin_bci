@@ -14,7 +14,7 @@ class _MasterPointChecklistPreventiveRepo
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://103.82.241.80:3000';
+    baseUrl ??= 'http://93.127.172.20:3000';
   }
 
   final Dio _dio;

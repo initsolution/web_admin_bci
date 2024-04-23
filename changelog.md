@@ -213,3 +213,6 @@
 > 16/03/2024 (mip)
 > change created at to submit date in result screen
 > solve detail image, asset name not show
+
+> 01/04/2024 (mip)
+> change server backend to live
