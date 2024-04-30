@@ -60,16 +60,21 @@ class _DialogChangeImageFromLocalState
                       ),
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                height: 100,
-                child: SingleChildScrollView(
-                  child: Expanded(
-                    child: Text(
-                      softWrap: true,
-                      widget.description,
-                    ),
-                  ),
-                ),
+              // SizedBox(
+              //   height: 100,
+              //   child: SingleChildScrollView(
+              //     child: Expanded(
+              //       child: Text(
+              //         softWrap: true,
+              //         widget.description,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+              Text(
+                softWrap: true,
+                widget.description,
               ),
               SizedBox(
                 width: 530,

@@ -15,6 +15,7 @@ import 'package:flutter_web_ptb/model/task.dart';
 import 'package:flutter_web_ptb/providers/asset_provider.dart';
 import 'package:flutter_web_ptb/providers/task_provider.dart';
 import 'package:flutter_web_ptb/providers/task_state.dart';
+import 'package:flutter_web_ptb/providers/userdata.provider.dart';
 import 'package:flutter_web_ptb/theme/theme_extensions/app_data_table_theme.dart';
 import 'package:flutter_web_ptb/views/widgets/header.dart';
 import 'package:flutter_web_ptb/views/widgets/portal_master_layout/portal_master_layout.dart';
@@ -101,6 +102,21 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(taskNotifierProvider, (previous, next) {
+      if (next is TaskErrorServer) {
+        if (next.statusCode == 401) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Please login again')),
+          );
+          // context.read<UserDataProvider>().clearUserDataAsync();
+          ref.read(userDataProvider.notifier).clearUserDataAsync();
+          GoRouter.of(context).go(RouteUri.login);
+        }
+      } else if (next is TaskDataChangeSuccess) {
+        Future(
+            () => ref.read(taskNotifierProvider.notifier).getAllTask(params));
+      }
+    });
     return PortalMasterLayout(
       body: ListView(
         padding: const EdgeInsets.all(kDefaultPadding),
@@ -243,8 +259,11 @@ class _AssetScreenState extends ConsumerState<AssetScreen> {
                 // if (DEBUG) debugPrint('state : $state');
                 if (state is TaskLoaded) {
                   debugPrint('TaskLoaded 2');
-                  DataTableSource data =
-                      TaskData(tasks: state.tasks, context: context, ref: ref);
+                  DataTableSource data = TaskData(
+                    tasks: state.tasks,
+                    context: context,
+                    ref: ref,
+                  );
                   return PaginatedDataTable(
                     source: data,
                     columns: const [
@@ -330,7 +349,11 @@ class TaskData extends DataTableSource {
   final List<Task> tasks;
   final BuildContext context;
   final WidgetRef ref;
-  TaskData({required this.tasks, required this.context, required this.ref});
+  TaskData({
+    required this.tasks,
+    required this.context,
+    required this.ref,
+  });
 
   @override
   DataRow? getRow(int index) {
@@ -348,20 +371,60 @@ class TaskData extends DataTableSource {
       DataCell(Text(task.site!.name!)),
       DataCell(Text(task.makerEmployee!.name!)),
       DataCell(Text(task.verifierEmployee!.name!)),
-      DataCell(Container(
-          width: 80,
-          padding: const EdgeInsets.symmetric(vertical: 4),
-          decoration: BoxDecoration(
-            color: getColorIcon(task.status),
-            borderRadius: const BorderRadius.all(
-              Radius.circular(5),
-            ),
-          ),
-          child: Text(
-            task.status!,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white),
-          ))),
+      DataCell(
+        GestureDetector(
+            child: Container(
+                width: 80,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                decoration: BoxDecoration(
+                  color: getColorIcon(task.status),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(5),
+                  ),
+                ),
+                child: Text(
+                  task.status!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ))),
+        onTap: task.status == 'rejected'
+            ? () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Accepted Task'),
+                      content: Text(
+                          'Do you want to accepted ask  ${task.site!.id!}?'),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Task update = task;
+                              update.status = 'accepted';
+                              ref
+                                  .read(taskNotifierProvider.notifier)
+                                  .updateTask(update);
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Yes',
+                              style: TextStyle(color: Colors.green),
+                            )),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'No',
+                              style: TextStyle(color: Colors.red),
+                            ))
+                      ],
+                    );
+                  },
+                );
+              }
+            : null,
+      ),
       DataCell(Text(task.type!)),
       DataCell(Text(tasks[index].created_at != ''
           ? DateFormat('dd-M-yyyy')

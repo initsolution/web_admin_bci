@@ -216,3 +216,7 @@
 
 > 01/04/2024 (mip)
 > change server backend to live
+
+> 30/04/2024 (mip)
+> fix bug change image from local
+> change status rejected to accepted
