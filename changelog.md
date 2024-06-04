@@ -220,3 +220,7 @@
 > 30/04/2024 (mip)
 > fix bug change image from local
 > change status rejected to accepted
+
+> 04/06/2024 (mip)
+> add task id on task screen
+> add versions

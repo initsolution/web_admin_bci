@@ -399,6 +399,7 @@ class _TaskScreenState extends ConsumerState<TaskScreen> {
                   return PaginatedDataTable(
                     source: data,
                     columns: const [
+                      DataColumn(label: Text('Task ID')),
                       DataColumn(
                         label: Padding(
                           padding: EdgeInsets.only(left: 10),
@@ -480,6 +481,7 @@ class TaskData extends DataTableSource {
     }
 
     return DataRow(cells: [
+      DataCell(Text(tasks[index].id.toString())),
       DataCell(Padding(
           padding: const EdgeInsets.only(left: 10),
           child: Text(tasks[index].site!.id!))),
